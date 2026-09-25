@@ -1,0 +1,59 @@
+.shuffle-parent {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  will-change: transform;
+  line-height: 1.2;
+  font-size: inherit;
+  font-family: inherit;
+  text-transform: inherit;
+  visibility: hidden;
+  position: relative;
+  overflow: visible;
+}
+
+.shuffle-parent.is-ready {
+  visibility: visible;
+}
+
+.shuffle-char-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.shuffle-strip {
+  display: inline-flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.shuffle-char {
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  box-sizing: border-box;
+}
+
+.shuffle-space {
+  display: inline-block;
+  white-space: pre;
+}
+
+.button .shuffle-parent {
+  overflow: visible;
+  visibility: visible;
+}
+
+.button {
+  overflow: hidden;
+}

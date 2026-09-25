@@ -1,0 +1,48 @@
+.agency-name {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  font-family: 'Eagle Lake', cursive;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.agency-name__layout {
+  visibility: hidden;
+}
+
+.agency-name__visual {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.site-header .agency-name {
+  font-size: 1.1rem;
+}
+
+.footer-brand .agency-name {
+  font-size: 1.25rem;
+}
+
+.agency-name__automate {
+  color: var(--color-white, #fff);
+}
+
+.agency-name__mind {
+  color: var(--color-gold-light, #d8b66a);
+}
+
+.agency-name__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
