@@ -1,10 +1,5 @@
-import { ServicesHeroSection, ServicesGridSection } from '../components/sections/ServicesSections'
+import { ServicesPageContent } from '../components/sections/ServicesSections'
 
 export function ServicesPage() {
-  return (
-    <>
-      <ServicesHeroSection />
-      <ServicesGridSection />
-    </>
-  )
+  return <ServicesPageContent />
 }
