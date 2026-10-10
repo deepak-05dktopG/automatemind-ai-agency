@@ -1,0 +1,42 @@
+.robot-figure {
+  position: relative;
+  display: inline-block;
+  width: var(--robot-size, 220px);
+  color: var(--robot-color);
+  vertical-align: middle;
+}
+
+.robot-figure__content {
+  position: absolute;
+  top: 72%;
+  left: 50%;
+  display: grid;
+  width: 44%;
+  min-height: 12%;
+  place-items: center;
+  color: var(--robot-face, #08090e);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.robot-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.robot-figure--animated {
+  animation: robot-figure-bob 4s ease-in-out infinite;
+}
+
+@keyframes robot-figure-bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robot-figure--animated {
+    animation: none;
+  }
+}

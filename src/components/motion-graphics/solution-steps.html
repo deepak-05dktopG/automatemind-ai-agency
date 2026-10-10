@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AutomateMind – From Friction to Freedom</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('rm')</script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--gold:#d1a85d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:#0e1a2b;color:#f5efe2;font-family:Manrope,system-ui,sans-serif}
+body.chk{background:#2a2f38 repeating-conic-gradient(#3a404b 0 25%,#2a2f38 0 50%) 0 0/24px 24px}
+.sec{max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,72px) 20px 40px}
+.grid{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr);gap:24px}}
+.card{border:1px solid #ffffff1c;border-radius:20px;padding:18px 18px 26px}
+.stage{container-type:inline-size;position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border-radius:14px}
+.sc{position:absolute;inset:0;transform-origin:50% 55%}
+.go .sc{animation:push 8s ease-out forwards}
+.js:not(.rm) .card:not(.go) .sc{opacity:0}
+.no{display:block;margin-top:18px;font:700 12px Manrope;letter-spacing:.14em;color:var(--gold)}
+h3{font:600 clamp(1.6rem,2.4vw,2rem)/1.1 'Cormorant Garamond',Georgia,serif;margin:8px 0 10px;color:#f5efe2}
+.card p{margin:0;color:#a9b0ba;font-size:14.5px;line-height:1.6;font-weight:600}
+.w{display:inline-block}
+.js:not(.rm) .card:not(.go) .w{opacity:0;transform:translateY(.45em)}
+.go .w{animation:wd .6s cubic-bezier(.2,1.3,.4,1) calc(var(--i)*.09s + .3s) backwards}
+.js:not(.rm) .card:not(.go) :is(.no,p){opacity:0}.no,.card p{transition:opacity .8s .5s}
+.mas{position:absolute;width:24cqw;z-index:6}.mas svg{width:100%;display:block;overflow:visible}
+.al,.ar{transform-box:fill-box;transform-origin:50% 10%}
+.go .eye{animation:blink 3.6s infinite}.eye{transform-box:fill-box;transform-origin:center}
+.pc{position:absolute;width:19cqw;padding:1.5cqw;border-radius:1.5cqw;background:#1a2230;border:1px solid #ffffff22;box-shadow:0 1cqw 2cqw #0009;display:flex;flex-direction:column;gap:.9cqw;rotate:var(--r)}
+.sk{display:block;height:1cqw;border-radius:9px;background:#d9d5cb44}.sk.s{width:60%}
+.bd{position:absolute;min-width:5cqw;height:5cqw;border-radius:99px;background:var(--gold);color:#1a1405;font:800 2.6cqw/5cqw Manrope;text-align:center;box-shadow:0 0 2cqw #d1a85d66;z-index:7}
+.clk{position:absolute;width:12cqw;height:12cqw;border:.6cqw solid #d1a85dcc;border-radius:50%;background:#10161f}
+.clk i{position:absolute;left:calc(50% - .3cqw);bottom:50%;width:.6cqw;background:#f0d594;transform-origin:50% 100%;border-radius:2px}.mh{height:4.6cqw}.hh{height:3cqw}
+.go .mh{animation:spin 1.4s linear infinite}.go .hh{animation:spin 9s linear infinite}
+.lane{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tr{stroke-dasharray:8 92;animation:dash 3s linear infinite}
+.nd{transform-box:fill-box;transform-origin:center}.go .nd{animation:nf 2s ease-out var(--d) infinite}
+.bb{position:absolute;width:23cqw;height:9.5cqw;border-radius:2.6cqw 2.6cqw 2.6cqw .6cqw;background:#1c2634;border:1px solid #d1a85d66;display:flex;align-items:center;gap:1.6cqw;padding:0 2cqw;z-index:5;box-shadow:0 1cqw 2cqw #0008}
+.bb em{width:4.4cqw;height:4.4cqw;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#aef0ff,#2b6fe0)}.bb span{flex:1;height:1cqw;border-radius:9px;background:#d9d5cb55;box-shadow:0 2cqw 0 -.1cqw #d9d5cb33;margin-bottom:2cqw}
+.pl{position:absolute;top:61cqw;width:24cqw;height:6cqw;border-radius:99px;background:#ffffff0f;border:1px solid #ffffff1c;display:flex;align-items:center;gap:1.6cqw;padding:0 1.2cqw;z-index:5}
+.pl u{width:3.6cqw;height:3.6cqw;border-radius:50%;text-decoration:none;background:radial-gradient(circle at 35% 30%,#f4d58c,#b98a38);color:#1a1405;font:800 2.2cqw/3.6cqw Manrope;text-align:center}.pl i{flex:1;height:.9cqw;border-radius:9px;background:#d9d5cb44}
+.rg3{position:absolute;left:50cqw;top:42cqw;width:78cqw;height:78cqw;translate:-50% -50%;border-radius:50%;border:1px solid #d1a85d66;opacity:0}
+.go .rg3{animation:ex3 3.4s ease-out calc(var(--d)*1s) 2 both}
+.go .ch{animation:dr 2.2s ease-out 1s backwards}.go .cd{animation:pop .5s cubic-bezier(.3,1.8,.5,1) 3s backwards}
+.bar3{transform-box:fill-box;transform-origin:50% 100%}.go .bar3{animation:rise .9s cubic-bezier(.3,1.3,.5,1) calc(var(--d)*1s) backwards}
+.go .a1{animation:drop .65s cubic-bezier(.3,1.5,.5,1) calc(var(--d)*1s) backwards}
+.go .a2{animation:pop .5s cubic-bezier(.3,1.7,.5,1) calc(var(--d)*1s) backwards}
+.go .a3{animation:slin .7s cubic-bezier(.3,1.5,.5,1) calc(var(--d)*1s) backwards}
+.go .jm{animation:mj 1s cubic-bezier(.3,1,.5,1) .5s backwards}
+.go .bdp{animation:pop .4s cubic-bezier(.3,1.8,.5,1) calc(var(--d)*1s) backwards,bp 1.9s ease-in-out calc(var(--d)*1s + 1s) infinite}
+.go .shk{animation:shk .26s ease-in-out 4s infinite alternate}
+.go .m1 .al{animation:fl .42s ease-in-out 4s infinite alternate}.go .m1 .ar{animation:fr .36s ease-in-out 4s infinite alternate}
+.go .sw{animation:sw 1.7s ease-in 4s infinite}.sw{opacity:0}
+.m2 .ar{rotate:-135deg}.go .m2 .ar{animation:tap 1s ease-in-out 1.2s infinite alternate}.go .m2 .bob{animation:bob 2s ease-in-out infinite alternate}
+.m3 .al{rotate:72deg}.m3 .ar{rotate:-72deg}.go .m3 .al,.go .m3 .ar{animation:out .9s cubic-bezier(.3,1.6,.5,1) 1.1s backwards}
+@keyframes push{to{transform:scale(1.04)}}@keyframes wd{from{opacity:0;transform:translateY(.45em)}}
+@keyframes blink{0%,92%,100%{transform:none}95%{transform:scaleY(.1)}}@keyframes spin{to{rotate:360deg}}
+@keyframes drop{from{opacity:0;transform:translateY(-45cqw) rotate(25deg)}}@keyframes pop{from{opacity:0;transform:scale(.3)}}
+@keyframes slin{from{opacity:0;transform:translateX(24cqw)}}@keyframes rise{from{transform:scaleY(0)}}@keyframes dr{from{stroke-dashoffset:100}}
+@keyframes mj{0%{opacity:0;transform:translateY(-22cqw) scale(.9,1.2)}55%{opacity:1;transform:scale(1.25,.75)}72%{transform:scale(.92,1.12)}100%{opacity:1;transform:none}}
+@keyframes bp{0%,70%,100%{scale:1}80%{scale:1.3}90%{scale:.92}}
+@keyframes shk{from{transform:translate(-.4cqw,0) rotate(-2deg)}to{transform:translate(.4cqw,-.3cqw) rotate(2deg)}}
+@keyframes fl{from{rotate:-25deg}to{rotate:50deg}}@keyframes fr{from{rotate:30deg}to{rotate:-55deg}}
+@keyframes sw{0%{translate:0 0;opacity:0}15%{opacity:1}100%{translate:2px 16px;opacity:0}}
+@keyframes tap{from{rotate:-135deg}to{rotate:-160deg}}@keyframes bob{to{transform:translateY(-1cqw)}}
+@keyframes out{from{rotate:0deg}}@keyframes ex3{from{opacity:.45;scale:.2}to{opacity:0;scale:1}}
+@keyframes dash{to{stroke-dashoffset:-100}}@keyframes nf{0%{opacity:1;scale:1}60%{scale:1.5;opacity:.1}100%{opacity:1;scale:1}}
+.card.off *{animation-play-state:paused!important}
+.bar{display:flex;gap:10px;justify-content:center;margin-top:24px}
+button{font:700 12px Manrope;background:#ffffff12;color:#e8e4da;border:1px solid #ffffff22;border-radius:99px;padding:8px 16px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important}.bar{display:none}}
+</style></head><body>
+<section class="sec"><div class="grid" id="grid">
+
+<article class="card" data-n="1"><div class="stage"><div class="sc">
+ <div class="clk a2" style="left:6cqw;top:6cqw;--d:.5"><i class="hh"></i><i class="mh"></i></div><div class="clk a2" style="left:82cqw;top:8cqw;--d:.8"><i class="hh"></i><i class="mh"></i></div>
+ <div class="mas a1 jm" id="m1" style="left:38cqw;top:26cqw"></div>
+ <div class="pc a1" style="left:3cqw;top:55cqw;--r:-6deg;--d:1.5"><i class="sk"></i><i class="sk s"></i></div><div class="pc a1" style="left:7cqw;top:49cqw;--r:5deg;--d:1.95"><i class="sk"></i><i class="sk s"></i></div><div class="pc a1" style="left:2cqw;top:43cqw;--r:-9deg;--d:2.4"><i class="sk"></i><i class="sk s"></i></div>
+ <div class="pc a1" style="left:78cqw;top:56cqw;--r:7deg;--d:1.7"><i class="sk"></i><i class="sk s"></i></div><div class="pc a1" style="left:74cqw;top:50cqw;--r:-4deg;--d:2.15"><i class="sk"></i><i class="sk s"></i></div><div class="pc a1" style="left:79cqw;top:44cqw;--r:9deg;--d:2.6"><i class="sk"></i><i class="sk s"></i></div>
+ <b class="bd bdp" style="left:24cqw;top:30cqw;--d:3">!</b><b class="bd bdp" style="left:70cqw;top:26cqw;--d:3.5">3</b><b class="bd bdp" style="left:62cqw;top:12cqw;--d:4">!</b>
+</div></div><span class="no">01</span><h3>Work Takes Too Long</h3><p>Repetitive tasks and manual follow-ups slow your team down.</p></article>
+
+<article class="card" data-n="2"><div class="stage"><div class="sc">
+ <svg class="lane" id="lane" viewBox="0 0 100 75" aria-hidden="true"><defs><linearGradient id="gt"><stop offset="0" stop-color="#f0d594"/><stop offset="1" stop-color="#d1a85d"/></linearGradient></defs>
+  <path d="M18 24C30 14 38 34 50 24S70 14 82 24" fill="none" stroke="#d1a85d" stroke-opacity=".4" stroke-width=".5" stroke-dasharray="1.6 1.8"/>
+  <path class="tr" pathLength="100" d="M18 24C30 14 38 34 50 24S70 14 82 24" fill="none" stroke="url(#gt)" stroke-width="1.1" stroke-linecap="round"/>
+  <circle class="nd" cx="18" cy="24" r="4.2" fill="#141b26" stroke="#d1a85d" stroke-width=".6" style="--d:0s"/><circle class="nd" cx="50" cy="24" r="4.2" fill="#141b26" stroke="#d1a85d" stroke-width=".6" style="--d:.4s"/><circle class="nd" cx="82" cy="24" r="4.2" fill="#141b26" stroke="#d1a85d" stroke-width=".6" style="--d:1.1s"/>
+  <g id="tk"></g></svg>
+ <div class="mas a1 jm m2" id="m2" style="left:38cqw;top:40cqw"></div>
+</div></div><span class="no">02</span><h3>Work Moves by Itself</h3><p>Routine steps flow from one stage to the next without constant checking.</p></article>
+
+<article class="card" data-n="3"><div class="stage"><div class="sc">
+ <i class="rg3" style="--d:.6"></i><i class="rg3" style="--d:1.4"></i>
+ <svg class="lane" viewBox="0 0 100 75" aria-hidden="true">
+  <g stroke="#d1a85d" stroke-opacity=".28" stroke-width=".5"><rect class="bar3" x="14" y="52" width=".5" height="18" style="--d:.2"/><rect class="bar3" x="30" y="46" width=".5" height="24" style="--d:.35"/><rect class="bar3" x="46" y="58" width=".5" height="12" style="--d:.5"/><rect class="bar3" x="62" y="38" width=".5" height="32" style="--d:.65"/><rect class="bar3" x="78" y="30" width=".5" height="40" style="--d:.8"/></g>
+  <path class="ch" pathLength="100" stroke-dasharray="100" d="M6 68C24 64 30 58 42 50S68 28 94 10" fill="none" stroke="#d1a85d" stroke-width=".8" stroke-linecap="round"/><circle class="cd" cx="94" cy="10" r="1.8" fill="#f0d594"/></svg>
+ <div class="mas a1 jm m3" id="m3" style="left:38cqw;top:26cqw"></div>
+ <div class="bb a2" style="left:5cqw;top:40cqw;--d:2"><em></em><span></span></div><div class="bb a2" style="left:71cqw;top:44cqw;--d:2.6"><em></em><span></span></div><div class="bb a2" style="left:66cqw;top:6cqw;--d:3.2"><em></em><span></span></div>
+ <div class="pl a3" style="left:5cqw;--d:3.8"><u>✓</u><i></i></div><div class="pl a3" style="left:38cqw;--d:4.1"><u>✓</u><i></i></div><div class="pl a3" style="left:71cqw;--d:4.4"><u>✓</u><i></i></div>
+</div></div><span class="no">03</span><h3>More Room to Grow</h3><p>Your team gets time back to serve customers and focus on growth.</p></article>
+</div>
+<div class="bar"><button id="rp">↻ Replay</button><button id="bk">Backdrop: dark</button></div></section>
+<script>
+const M=(id,c1,c2,mouth,brows,wrapCls)=>`<div class="${wrapCls||''}"><svg viewBox="0 0 100 120" aria-hidden="true"><defs><radialGradient id="g${id}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient></defs>
+<ellipse cx="50" cy="116" rx="27" ry="4" fill="#000" opacity=".45"/><line x1="50" y1="22" x2="50" y2="9" stroke="${c2}" stroke-width="2.5"/><circle cx="50" cy="7" r="4.5" fill="#f1c978"/>
+<rect class="al" x="12" y="72" width="11" height="25" rx="5.5" fill="url(#g${id})"/><rect class="ar" x="77" y="72" width="11" height="25" rx="5.5" fill="url(#g${id})"/>
+<ellipse cx="40" cy="111" rx="9" ry="5" fill="${c2}"/><ellipse cx="60" cy="111" rx="9" ry="5" fill="${c2}"/><ellipse cx="50" cy="92" rx="25" ry="21" fill="url(#g${id})"/><circle cx="50" cy="92" r="6" fill="#0f1722"/><circle cx="50" cy="92" r="2.5" fill="#f1c978"/>
+<circle cx="14" cy="47" r="6" fill="${c2}"/><circle cx="86" cy="47" r="6" fill="${c2}"/><rect x="16" y="20" width="68" height="54" rx="26" fill="url(#g${id})"/><ellipse cx="36" cy="28" rx="11" ry="4" fill="#fff" opacity=".28" transform="rotate(-20 36 28)"/>
+<rect x="24" y="33" width="52" height="28" rx="14" fill="#0c121b"/><ellipse class="eye" cx="40" cy="48" rx="4.6" ry="6" fill="#bff3ff"/><ellipse class="eye" cx="60" cy="48" rx="4.6" ry="6" fill="#bff3ff"/>
+<path d="${brows}" stroke="#e8dccb" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="${mouth}" stroke="#bff3ff" fill="none" stroke-width="1.8" stroke-linecap="round"/>${id==1?'<path class="sw" d="M82 22 q-3.5 5 0 7.5 q3.5 -2.5 0 -7.5z" fill="#9fd3ff"/>':''}</svg></div>`;
+m1.innerHTML=M(1,'#ffa58e','#e0553f','M44 59 Q50 55 56 59','M32 41 L45 37 M68 41 L55 37','shk');
+m2.innerHTML=M(2,'#f4e27a','#9fb52a','M43 55 Q50 62 57 55','','bob');
+m3.innerHTML=M(3,'#8fd0ff','#2b6fe0','M41 54 Q50 64 59 54','M33 39 Q40 35 46 38 M54 38 Q60 35 67 39','');
+const P='M18 24C30 14 38 34 50 24S70 14 82 24';
+tk.innerHTML=[0,-2,-4].map(b=>`<g><animateMotion dur="6s" repeatCount="indefinite" begin="${b}s" path="${P}" keyPoints="0;0;.5;.5;1;1" keyTimes="0;.08;.38;.55;.88;1" calcMode="spline" keySplines=".4 0 .2 1;0 0 1 1;.4 0 .2 1;0 0 1 1;.4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.06;.5;.9;1" dur="6s" repeatCount="indefinite" begin="${b}s"/><rect x="-5.5" y="-3.4" width="11" height="6.8" rx="1.4" fill="#1a2230" stroke="#d1a85d" stroke-width=".35"/><rect x="-3.6" y="-1.6" width="7.2" height=".9" rx=".4" fill="#d9d5cb" opacity=".45"/><rect x="-3.6" y=".6" width="4.4" height=".9" rx=".4" fill="#d9d5cb" opacity=".45"/></g>`).join('');
+const cards=[...document.querySelectorAll('.card')],rm=document.documentElement.classList.contains('rm');
+cards.forEach(c=>{const h=c.querySelector('h3');h.innerHTML=h.textContent.split(' ').map((w,i)=>`<span class="w" style="--i:${i}">${w}</span>`).join(' ')});
+lane.pauseAnimations();let nf=0;
+const play=c=>{c.classList.add('go');if(c.dataset.n=='2'&&!c.classList.contains('off'))lane.unpauseAnimations()};
+const sched=c=>{const n=performance.now(),at=Math.max(n,nf);nf=at+1100;setTimeout(()=>play(c),at-n)};
+if(rm){lane.setCurrentTime(2.8)}else{
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);sched(e.target)}}),{rootMargin:'0px 0px -15% 0px',threshold:.3});cards.forEach(c=>io.observe(c))}
+new IntersectionObserver(es=>es.forEach(e=>{const c=e.target;c.classList.toggle('off',!e.isIntersecting);if(c.dataset.n=='2'&&c.classList.contains('go'))e.isIntersecting?lane.unpauseAnimations():lane.pauseAnimations()})).observe(cards[1]);
+cards.forEach(c=>{if(c!==cards[1])new IntersectionObserver(es=>c.classList.toggle('off',!es[0].isIntersecting)).observe(c)});
+rp.onclick=()=>{cards.forEach(c=>c.classList.remove('go'));lane.pauseAnimations();lane.setCurrentTime(0);void grid.offsetWidth;nf=0;cards.forEach(sched)};
+bk.onclick=()=>{const c=document.body.classList.toggle('chk');bk.textContent='Backdrop: '+(c?'checker':'dark')};
+</script></body></html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AutomateMind – Four Worlds of Business (preview)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 100% 100%,#183b36,transparent 50%),linear-gradient(160deg,#0e1a2b,#101f30 60%,#12262f);background-attachment:fixed;color:#f5efe2;font-family:Manrope,system-ui,sans-serif;min-height:100vh}
+.sec{max-width:1240px;margin:0 auto;padding:clamp(24px,5vw,60px) 20px 60px}
+.lead{font:600 clamp(2rem,5vw,3.6rem)/1.05 'Cormorant Garamond',Georgia,serif;margin:0 0 clamp(60px,12vh,140px);max-width:14ch}
+.row{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid #d1a85d99;border-bottom:1px solid #ffffff1a}
+@media(min-width:992px){.row{grid-template-columns:repeat(4,1fr)}}
+.industry-card{height:100%;min-height:190px;padding:26px 18px 34px;border-right:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
+@media(min-width:992px){.industry-card{min-height:270px;padding:30px 34px 40px;border-bottom:0}}
+.industry-no{display:block;font:500 clamp(1.7rem,3vw,2.6rem)/1 'Cormorant Garamond',serif;color:#d1a85d;margin-bottom:clamp(24px,5vw,52px)}
+h3{font:600 clamp(1.15rem,2vw,1.8rem)/1.05 'Cormorant Garamond',serif;margin:0 0 8px;color:#f5efe2}
+.industry-card p{margin:0;color:#a9b0ba;font-size:clamp(11px,1.1vw,14px);line-height:1.5;font-weight:600;max-width:24ch}
+.industry-arrow{position:absolute;right:18px;bottom:26px;color:#d1a85d}
+.bar{display:flex;gap:10px;justify-content:center;margin-top:28px}
+button{font:700 12px Manrope;background:#ffffff12;color:#e8e4da;border:1px solid #ffffff22;border-radius:99px;padding:8px 16px;cursor:pointer}
+/* Scene layer: absolutely positioned, behind card text, never affects layout */
+[data-ind-card]{position:relative;isolation:isolate}
+.ind-fx{position:absolute;inset:0;overflow:hidden;pointer-events:none;container-type:size;z-index:-1}
+@media (prefers-reduced-motion:no-preference){[data-ind-card]:not([data-ind-on]) .ind-fx>*{opacity:0}}
+.mc{position:absolute;width:max(30px,calc(var(--w,16)*1cqw))}.mc svg{width:100%;display:block;overflow:visible}
+.al,.ar{transform-box:fill-box;transform-origin:50% 10%}.eye{transform-box:fill-box;transform-origin:center}
+.hl{position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,#d1a85d,transparent);transform-origin:0 50%}
+.it{position:absolute;background:#1a2230e6;border:1px solid #ffffff22;border-radius:max(5px,1.4cqw);box-shadow:0 .8cqw 1.6cqw #0008;rotate:var(--r,0deg)}
+.it i{display:block;height:max(2px,.7cqw);border-radius:9px;background:#d9d5cb44;margin:max(3px,.9cqw) 0}.it i.s{width:60%}
+.it b{display:block;height:max(4px,1.3cqw);border-radius:3px;background:#d1a85d;opacity:.8}
+.cal{width:max(38px,13cqw);padding:max(4px,1cqw)}
+.msg{width:max(44px,15cqw);height:max(18px,6.4cqw);border-radius:99px 99px 99px 3px;display:flex;align-items:center;gap:1cqw;padding:0 1.6cqw;border-color:#d1a85d66}
+.msg.sm{width:max(30px,10cqw);height:max(14px,4.6cqw)}
+.msg em{width:max(8px,3.4cqw);height:max(8px,3.4cqw);border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#aef0ff,#2b6fe0)}.msg span{flex:1;height:max(2px,.7cqw);border-radius:9px;background:#d9d5cb66}
+.sch{display:flex;gap:max(2px,.8cqw);padding:max(3px,.8cqw)}.sch u{width:max(8px,3.4cqw);height:max(5px,2cqw);border-radius:3px;background:#ffffff22}.sch u.on{background:#d1a85d}
+.ln{position:absolute;left:62cqw;top:19cqh;width:16cqw;border-top:1px dashed #d1a85dcc;transform-origin:0 50%}
+.pg{width:max(30px,11cqw);height:max(38px,14cqw);padding:max(4px,1cqw);backface-visibility:hidden;transform-origin:0 50%}
+.hl2{position:absolute;left:12%;right:12%;top:46%;height:max(3px,1.2cqw);background:#d1a85d66;border-radius:2px;transform-origin:0 50%}
+.tk{width:max(46px,17cqw);padding:max(4px,1cqw)}.tk p{margin:max(3px,.8cqw) 0;display:flex;align-items:center;gap:1cqw}.tk s{width:max(6px,2.6cqw);height:max(6px,2.6cqw);border:1px solid #d9d5cb88;border-radius:2px;position:relative}.tk i{flex:1;margin:0}
+.tk u{position:absolute;width:max(6px,2.6cqw);height:max(6px,2.6cqw);margin-left:calc(max(6px,2.6cqw)*-1 - 1cqw - 1px);border-radius:50%;background:#d1a85d}
+.tg{width:max(22px,8cqw);height:max(11px,4cqw);border-radius:99px;background:#d1a85d44;border-color:#d1a85d99}.kb{position:absolute;right:2px;top:2px;bottom:2px;aspect-ratio:1;border-radius:50%;background:#f0d594}
+.bd{width:max(70px,24cqw);height:max(44px,16cqw);display:flex;gap:max(3px,1cqw);padding:max(4px,1cqw);transform-origin:100% 50%}.bd p{flex:1;margin:0;background:#ffffff0c;border-radius:3px;padding:max(2px,.6cqw)}.bd i{height:max(5px,2.4cqw);margin:max(2px,.6cqw) 0;background:#d1a85d55;border-radius:2px}
+.ac{position:absolute;display:flex;align-items:flex-end;gap:max(2px,.8cqw);height:max(14px,5cqw)}.ac i{width:max(4px,1.6cqw);border-radius:2px;background:#d1a85d}.ac i:nth-child(1){height:45%}.ac i:nth-child(2){height:75%}.ac i:nth-child(3){height:100%}
+.rg{position:absolute;left:68cqw;top:6cqh;width:max(40px,16cqw);aspect-ratio:1;border:1px solid #d1a85d99;border-radius:50%;opacity:0}
+/* Motion — base styles are the final state; keyframes only define the "from" side */
+[data-ind-on] .hl{animation:hl 1.4s ease-out backwards}[data-ind-on] .eye{animation:blink 3.8s infinite}
+[data-ind-on] .mc{animation:mj .9s cubic-bezier(.3,1,.5,1) calc(var(--d,0)*1s) backwards}
+[data-ind-on] .it{animation:pop .5s cubic-bezier(.3,1.6,.5,1) calc(var(--d,0)*1s) backwards}
+[data-ind-on] .it.float{animation:pop .5s cubic-bezier(.3,1.6,.5,1) calc(var(--d)*1s) backwards,fl 4.6s ease-in-out calc(var(--d)*1s + 1s) infinite alternate}
+[data-ind-on] .sq{animation:mj .9s cubic-bezier(.3,1,.5,1) .2s backwards,sq .5s ease-out 3s}
+[data-ind-on] .wv .ar{animation:wv .45s ease-in-out 1.2s 6 alternate}
+[data-ind-on] .cat{animation:toh 1s cubic-bezier(.3,1.4,.5,1) 2s backwards}
+[data-ind-on] .ln{animation:ln .8s ease-out .8s backwards}
+[data-ind-on] .bA{animation:xA 3.2s ease-in-out 1.2s 3 backwards}[data-ind-on] .bB{animation:xB 3.2s ease-in-out 2.2s 3 backwards}
+[data-ind-on] .req{animation:req 1s cubic-bezier(.3,1.5,.5,1) 3.6s backwards}
+[data-ind-on] .snd .ar{animation:wv .5s ease-in-out 1.2s 6 alternate}[data-ind-on] .rcv .al{animation:wl .5s ease-in-out 2s 6 alternate}
+[data-ind-on] .f1{animation:pop .5s cubic-bezier(.3,1.6,.5,1) .8s backwards,flip 1.1s cubic-bezier(.5,0,.3,1) 1.6s 2 alternate}
+[data-ind-on] .hl2{animation:sweep .9s ease-in-out 2.9s 3 alternate backwards}
+[data-ind-on] .tk u{animation:pop .4s calc(var(--d)*1s) backwards}[data-ind-on] .kb{animation:kb .5s cubic-bezier(.3,1.5,.5,1) 3s backwards}
+[data-ind-on] .pt .ar{animation:wv .5s ease-in-out 1.6s 4 alternate}
+[data-ind-on] .bd{animation:exp 1.2s cubic-bezier(.3,1.4,.5,1) 1s backwards}[data-ind-on] .late{animation:pop .4s calc(var(--d)*1s) backwards}
+[data-ind-on] .rg{animation:ex 2.4s ease-out 1s 2 both}[data-ind-on] .ac i{transform-origin:50% 100%;animation:bars 1.2s ease-in-out calc(var(--d)*1s) 4 alternate backwards}
+[data-ind-on] .w1 .ar{animation:wv .5s ease-in-out 1.4s 4 alternate}[data-ind-on] .w3 .al{animation:wl .5s ease-in-out 1.8s 4 alternate}
+[data-ind-off] .ind-fx *{animation-play-state:paused!important}
+@keyframes hl{from{transform:scaleX(0)}}@keyframes blink{0%,92%,100%{transform:none}95%{transform:scaleY(.1)}}
+@keyframes mj{0%{opacity:0;transform:translateY(-14cqh) scale(.9,1.2)}55%{opacity:1;transform:scale(1.22,.78)}75%{transform:scale(.94,1.1)}100%{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.3)}}@keyframes fl{to{translate:0 1.6cqh}}@keyframes sq{40%{transform:scale(1.1,.9)}}
+@keyframes wv{from{rotate:-130deg}to{rotate:-165deg}}@keyframes wl{from{rotate:130deg}to{rotate:165deg}}
+@keyframes toh{from{opacity:0;transform:translate(-26cqw,-4cqh) rotate(-20deg) scale(.8)}}
+@keyframes ln{from{scale:0 1}}
+@keyframes xA{0%{opacity:0;transform:translateX(-3cqw) scale(.6)}15%{opacity:1;transform:none}60%{transform:translateX(7cqw)}82%{opacity:1;transform:translateX(9cqw) scale(1.1,.9)}92%{opacity:0;transform:translateX(9cqw)}100%{opacity:1;transform:none}}
+@keyframes xB{0%{opacity:0;transform:translateX(3cqw) scale(.6)}15%{opacity:1;transform:none}60%{transform:translateX(-7cqw)}82%{opacity:1;transform:translateX(-9cqw) scale(1.1,.9)}92%{opacity:0;transform:translateX(-9cqw)}100%{opacity:1;transform:none}}
+@keyframes req{from{opacity:0;transform:translateX(-14cqw) scale(.6)}}
+@keyframes flip{to{transform:perspective(300px) rotateY(-170deg)}}@keyframes sweep{from{scale:0 1}}@keyframes kb{from{transform:translateX(-120%)}}
+@keyframes exp{from{opacity:0;scale:.5}}@keyframes ex{from{opacity:.5;scale:.3}to{opacity:0;scale:3}}@keyframes bars{from{scale:1 .25}}
+@media (max-width:575.98px){.p-x{display:none}[data-ind-on] .it.float{animation:pop .5s cubic-bezier(.3,1.6,.5,1) calc(var(--d)*1s) backwards}}
+@media (prefers-reduced-motion:reduce){.ind-fx *{animation:none!important}}
+</style></head><body><section class="sec"><h2 class="lead">Every industry has its own kind of busy.</h2><div class="row industry-points" id="ref">
+<article class="industry-card" data-ind-card><div class="ind-fx" data-i="0" aria-hidden="true"></div><span class="industry-no">01</span><h3>People-first operations</h3><p>When service, scheduling, and follow-up all need to move together.</p><span class="industry-arrow">↗</span></article>
+<article class="industry-card" data-ind-card><div class="ind-fx" data-i="1" aria-hidden="true"></div><span class="industry-no">02</span><h3>Relationship-led businesses</h3><p>When every opportunity depends on timely communication and trust.</p><span class="industry-arrow">↗</span></article>
+<article class="industry-card" data-ind-card><div class="ind-fx" data-i="2" aria-hidden="true"></div><span class="industry-no">03</span><h3>Expert-led services</h3><p>When client work is valuable, but admin keeps getting in the way.</p><span class="industry-arrow">↗</span></article>
+<article class="industry-card" data-ind-card><div class="ind-fx" data-i="3" aria-hidden="true"></div><span class="industry-no">04</span><h3>Growing teams</h3><p>When the business is growing faster than the way work is organized.</p><span class="industry-arrow">↗</span></article>
+</div><div class="bar"><button id="rp">↻ Replay</button></div></section><script>
+// Static, authored markup for the four industry scenes (no user input → safe for dangerouslySetInnerHTML).
+const face=(id,c1,c2,mouth,brows)=>`<svg viewBox="0 0 100 120" aria-hidden="true"><defs><radialGradient id="ig${id}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient></defs>
+<ellipse cx="50" cy="116" rx="27" ry="4" fill="#000" opacity=".45"/><line x1="50" y1="22" x2="50" y2="9" stroke="${c2}" stroke-width="2.5"/><circle cx="50" cy="7" r="4.5" fill="#f1c978"/>
+<rect class="al" x="12" y="72" width="11" height="25" rx="5.5" fill="url(#ig${id})"/><rect class="ar" x="77" y="72" width="11" height="25" rx="5.5" fill="url(#ig${id})"/>
+<ellipse cx="40" cy="111" rx="9" ry="5" fill="${c2}"/><ellipse cx="60" cy="111" rx="9" ry="5" fill="${c2}"/><ellipse cx="50" cy="92" rx="25" ry="21" fill="url(#ig${id})"/><circle cx="50" cy="92" r="6" fill="#0f1722"/><circle cx="50" cy="92" r="2.5" fill="#f1c978"/>
+<circle cx="14" cy="47" r="6" fill="${c2}"/><circle cx="86" cy="47" r="6" fill="${c2}"/><rect x="16" y="20" width="68" height="54" rx="26" fill="url(#ig${id})"/><ellipse cx="36" cy="28" rx="11" ry="4" fill="#fff" opacity=".28" transform="rotate(-20 36 28)"/>
+<rect x="24" y="33" width="52" height="28" rx="14" fill="#0c121b"/><ellipse class="eye" cx="40" cy="48" rx="4.6" ry="6" fill="#bff3ff"/><ellipse class="eye" cx="60" cy="48" rx="4.6" ry="6" fill="#bff3ff"/>
+<path d="${brows}" stroke="#e8dccb" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="${mouth}" stroke="#bff3ff" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+const mc=(id,c1,c2,mouth,brows,cls,st)=>`<div class="mc ${cls}" style="${st}">${face(id,c1,c2,mouth,brows)}</div>`;
+const SM='M43 55 Q50 62 57 55',FOC='M45 57 Q50 59 55 57',BR='M33 39 Q40 35 46 38 M54 38 Q60 35 67 39',FW='M32 41 L45 38 M68 41 L55 38';
+const HL='<i class="hl"></i>';
+const cal=(st,cls='')=>`<div class="it cal ${cls}" style="${st}"><b></b><i></i><i class="s"></i></div>`;
+const msg=(st,cls='')=>`<div class="it msg ${cls}" style="${st}"><em></em><span></span></div>`;
+const S1=HL+mc('1a','#ffa58e','#e0553f',SM,'','wv sq','right:6cqw;top:5cqh;--w:16;--d:.2')
++cal('left:34cqw;top:5cqh;--r:-6deg;--d:.5','float')+msg('left:50cqw;top:22cqh;--d:.8','float p-x')
++'<div class="it sch p-x" style="left:31cqw;top:27cqh;--d:1.1"><u></u><u></u><u class="on"></u></div>'
++cal('left:60cqw;top:12cqh;--r:5deg;--d:2','cat');
+const S2=HL+mc('2a','#8fd0ff','#2b6fe0',SM,'','snd','left:46cqw;top:6cqh;--w:14;--d:.2')+mc('2b','#f4e27a','#9fb52a',SM,'','rcv','left:78cqw;top:6cqh;--w:14;--d:.45')
++'<i class="ln"></i>'+msg('left:62cqw;top:5cqh;--d:1.2','sm bA p-x')+msg('left:70cqw;top:11cqh;--d:2.2','sm bB p-x')
++'<div class="it cal req p-x" style="left:67cqw;top:22cqh;--d:3.6"><b></b><i></i><i class="s"></i></div>';
+const S3=HL+mc('3a','#7fe0c8','#2a9d8f',FOC,BR,'pt','right:6cqw;top:5cqh;--w:16;--d:.2')
++'<div class="it pg" style="left:34cqw;top:10cqh;--d:.6"><i></i><i class="s"></i></div><div class="it pg f1" style="left:36cqw;top:8cqh;--d:.8"><i></i><i class="s"></i><u class="hl2"></u></div>'
++'<div class="it tk p-x" style="left:51cqw;top:6cqh;--d:1"><p><s></s><i></i><u style="--d:2.4"></u></p><p><s></s><i></i><u style="--d:2.8"></u></p><p><s></s><i></i><u style="--d:3.2"></u></p></div>'
++'<div class="it tg p-x" style="left:52cqw;top:27cqh;--d:1.4"><u class="kb"></u></div>';
+const S4=HL+mc('4a','#ffa58e','#e0553f',SM,'','w1','left:54cqw;top:14cqh;--w:11;--d:.2')+mc('4b','#8fd0ff','#2b6fe0',SM,'','w2','left:67cqw;top:4cqh;--w:11;--d:.4')+mc('4c','#f4e27a','#9fb52a',SM,'','w3','left:81cqw;top:14cqh;--w:11;--d:.6')
++'<i class="rg p-x"></i><div class="it bd" style="left:28cqw;top:5cqh"><p><i></i><i></i></p><p><i></i><i class="late" style="--d:2.6"></i></p><p><i class="late" style="--d:3.2"></i><i class="late" style="--d:3.6"></i></p></div>'
++'<div class="ac p-x" style="left:30cqw;top:27cqh"><i style="--d:1.4"></i><i style="--d:1.6"></i><i style="--d:1.8"></i></div>'+msg('left:42cqw;top:25cqh;--d:2','sm float p-x');
+const SCENES=[S1,S2,S3,S4];
+const ref=document.getElementById('ref'),cards=[...ref.querySelectorAll('[data-ind-card]')];
+cards.forEach(c=>{const f=c.querySelector('.ind-fx');f.innerHTML=SCENES[+f.dataset.i]});
+let next=0;const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;io.unobserve(e.target);const now=performance.now(),at=Math.max(now,next);next=at+700;setTimeout(()=>e.target.setAttribute('data-ind-on',''),at-now)}),{rootMargin:'0px 0px -12% 0px',threshold:.35});
+const vis=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?e.target.removeAttribute('data-ind-off'):e.target.setAttribute('data-ind-off','')));
+cards.forEach(c=>{io.observe(c);vis.observe(c)});
+document.getElementById('rp').onclick=()=>{cards.forEach(c=>c.removeAttribute('data-ind-on'));void ref.offsetWidth;next=0;cards.forEach(c=>{const now=performance.now(),at=Math.max(now,next);next=at+700;setTimeout(()=>c.setAttribute('data-ind-on',''),at-now)})};
+</script></body></html>

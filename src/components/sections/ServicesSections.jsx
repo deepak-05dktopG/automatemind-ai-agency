@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { serviceData } from '../../data/siteData'
+import { ServicesMotionGraphic } from '../motion-graphics/ServicesMotionGraphic'
 import './ServicesSections.css'
 
 const displayNames = {
@@ -49,10 +50,15 @@ export function ServicesPageContent() {
     <div className="services-page">
       <section className="services-hero">
         <div className="container services-hero__inner" data-reveal>
-          <span className="services-kicker">AUTOMATEMIND / SERVICES</span>
-          <h1>Services built<br /><em>around the work.</em></h1>
-          <p>Practical AI, automation, and software services for businesses ready to work better.</p>
-          <a className="services-mobile-action" href="#services-catalogue">See all services <span>↓</span></a>
+          <div className="services-hero__content">
+            <span className="services-kicker">AUTOMATEMIND / SERVICES</span>
+            <h1>Services built<br /><em>around the work.</em></h1>
+            <p>Practical AI, automation, and software services for businesses ready to work better.</p>
+            <a className="services-mobile-action" href="#services-catalogue">See all services <span>↓</span></a>
+          </div>
+          <div className="services-hero__visual">
+            <ServicesMotionGraphic />
+          </div>
         </div>
         <div className="services-marquee"><div>{[...orderedServices, ...orderedServices].map((service, index) => <a href={`#service-${service.displayNumber}`} key={`${service.title}-${index}`}><span>{service.displayNumber}</span>{getDisplayName(service)} <b aria-hidden="true">↗</b></a>)}</div></div>
       </section>

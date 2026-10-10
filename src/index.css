@@ -52,8 +52,6 @@ button, input, select, textarea {
   font: inherit;
 }
 
-#root { min-height: 100vh; }
-
 .site-shell {
   background: var(--off-white);
 }
@@ -1260,4 +1258,3 @@ p {
     transition: none !important;
   }
 }
-

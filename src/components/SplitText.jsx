@@ -1,9 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const SplitText = ({
   text,
@@ -36,105 +32,132 @@ const SplitText = ({
     } else setFontsLoaded(true);
   }, []);
 
-  useGSAP(
-    () => {
-      if (!ref.current || !text || !fontsLoaded) return;
-      if (animationCompletedRef.current) return;
-      const el = ref.current;
+  useEffect(() => {
+    if (!ref.current || !text || !fontsLoaded || animationCompletedRef.current) return undefined;
+    const el = ref.current;
 
-      const startPct = (1 - threshold) * 100;
-      const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
-      const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
-      const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
-      const sign =
-        marginValue === 0
-          ? ''
-          : marginValue < 0
-            ? `-=${Math.abs(marginValue)}${marginUnit}`
-            : `+=${marginValue}${marginUnit}`;
-      const start = `top ${startPct}%${sign}`;
+    const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
+    const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
+    const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
+    const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const elementFontSize = parseFloat(getComputedStyle(el).fontSize);
+    let observer;
+    let tween;
+    let animationStarted = false;
+    let isScrolling = false;
 
-      // Build DOM elements for words/chars splitting without paid SplitText plugin
-      el.innerHTML = '';
-      const words = text.split(' ');
-      const targets = [];
+    // Build DOM elements for words/chars splitting without paid SplitText plugin
+    el.innerHTML = '';
+    const words = text.split(' ');
+    const targets = [];
 
-      words.forEach((wordStr, wordIdx) => {
-        const wordWrap = document.createElement('span');
-        wordWrap.className = 'split-word';
-        wordWrap.style.display = 'inline-block';
-        wordWrap.style.whiteSpace = 'nowrap';
-        wordWrap.style.willChange = 'transform, opacity';
+    words.forEach((wordStr, wordIdx) => {
+      const wordWrap = document.createElement('span');
+      wordWrap.className = 'split-word';
+      wordWrap.style.display = 'inline-block';
+      wordWrap.style.whiteSpace = 'nowrap';
 
-        if (splitType.includes('chars')) {
-          Array.from(wordStr).forEach(charStr => {
-            const charSpan = document.createElement('span');
-            charSpan.className = 'split-char';
-            charSpan.textContent = charStr;
-            charSpan.style.display = 'inline-block';
-            charSpan.style.willChange = 'transform, opacity';
-            wordWrap.appendChild(charSpan);
-            targets.push(charSpan);
-          });
-        } else {
-          wordWrap.textContent = wordStr;
-          targets.push(wordWrap);
-        }
-
-        el.appendChild(wordWrap);
-
-        if (wordIdx < words.length - 1) {
-          const spaceSpan = document.createElement('span');
-          spaceSpan.className = 'split-space';
-          spaceSpan.textContent = '\u00A0';
-          spaceSpan.style.display = 'inline-block';
-          el.appendChild(spaceSpan);
-        }
-      });
-
-      gsap.fromTo(
-        targets,
-        { ...from },
-        {
-          ...to,
-          duration,
-          ease,
-          stagger: delay / 1000,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once: true,
-            fastScrollEnd: true
-          },
-          onComplete: () => {
-            animationCompletedRef.current = true;
-            onCompleteRef.current?.();
-          }
-        }
-      );
-
-      return () => {
-        ScrollTrigger.getAll().forEach(st => {
-          if (st.trigger === el) st.kill();
+      if (splitType.includes('chars')) {
+        Array.from(wordStr).forEach(charStr => {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'split-char';
+          charSpan.textContent = charStr;
+          charSpan.style.display = 'inline-block';
+          wordWrap.appendChild(charSpan);
+          targets.push(charSpan);
         });
-      };
-    },
-    {
-      dependencies: [
-        text,
-        delay,
+      } else {
+        wordWrap.textContent = wordStr;
+        targets.push(wordWrap);
+      }
+
+      el.appendChild(wordWrap);
+
+      if (wordIdx < words.length - 1) {
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'split-space';
+        spaceSpan.textContent = '\u00A0';
+        spaceSpan.style.display = 'inline-block';
+        el.appendChild(spaceSpan);
+      }
+    });
+
+    gsap.set(targets, { ...from, willChange: 'transform,opacity' });
+
+    const startAnimation = () => {
+      if (animationStarted) return;
+      animationStarted = true;
+      observer?.disconnect();
+      window.removeEventListener('resize', observeTrigger);
+      tween = gsap.to(targets, {
+        ...to,
         duration,
         ease,
-        splitType,
-        JSON.stringify(from),
-        JSON.stringify(to),
-        threshold,
-        rootMargin,
-        fontsLoaded
-      ],
-      scope: ref
-    }
-  );
+        stagger: delay / 1000,
+        onComplete: () => {
+          gsap.set(targets, { clearProps: 'willChange' });
+          animationCompletedRef.current = true;
+          onCompleteRef.current?.();
+        }
+      });
+      if (isScrolling) tween.pause();
+    };
+
+    const handleScrollStart = () => {
+      isScrolling = true;
+      tween?.pause();
+    };
+    const handleScrollEnd = () => {
+      isScrolling = false;
+      tween?.play();
+    };
+
+    const observeTrigger = () => {
+      observer?.disconnect();
+      if (typeof IntersectionObserver === 'undefined') {
+        startAnimation();
+        return;
+      }
+      const marginPixels = marginValue * (
+        marginUnit === 'em' ? elementFontSize :
+        marginUnit === 'rem' ? rootFontSize :
+        marginUnit === '%' ? window.innerHeight / 100 : 1
+      );
+      const triggerLine = window.innerHeight * (1 - threshold) + marginPixels;
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) startAnimation();
+        },
+        { rootMargin: `0px 0px ${triggerLine - window.innerHeight}px 0px` },
+      );
+      observer.observe(el);
+    };
+
+    observeTrigger();
+    window.addEventListener('resize', observeTrigger);
+    window.addEventListener('automatemind:scrollstart', handleScrollStart);
+    window.addEventListener('automatemind:scrollend', handleScrollEnd);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', observeTrigger);
+      window.removeEventListener('automatemind:scrollstart', handleScrollStart);
+      window.removeEventListener('automatemind:scrollend', handleScrollEnd);
+      tween?.kill();
+      gsap.set(targets, { clearProps: 'willChange' });
+    };
+  }, [
+    text,
+    delay,
+    duration,
+    ease,
+    splitType,
+    JSON.stringify(from),
+    JSON.stringify(to),
+    threshold,
+    rootMargin,
+    fontsLoaded
+  ]);
 
   const Tag = tag || 'p';
   const style = {

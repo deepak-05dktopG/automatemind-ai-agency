@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AutomateMind – Six Outcomes. One Smarter Business.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--divx:50%;--gold:#d1a85d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 100% 100%,#183b36,transparent 50%),linear-gradient(#ffffff06 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,#ffffff06 1px,transparent 1px) 0 0/32px 32px,linear-gradient(160deg,#0e1a2b,#101f30 60%,#12262f);background-attachment:fixed;color:#f5efe2;font-family:Manrope,system-ui,sans-serif;min-height:100vh}
+.sec{max-width:1120px;margin:0 auto;padding:60px 20px 120px}
+/* ===== existing-section stand-in (layout, divider, indicators, text) ===== */
+.outcomes{position:relative;padding:10px 0}.outcomes:before{content:"";position:absolute;left:var(--divx);top:0;bottom:0;width:1px;background:#ffffff22}
+.out-sig{position:absolute;left:var(--divx);top:0;bottom:0;width:2px;margin-left:-.5px;background:linear-gradient(#d1a85d,#f0d594);transform-origin:0 0;transform:scaleY(var(--ss,0));transition:transform .9s cubic-bezier(.4,0,.2,1)}
+.out-head{position:absolute;left:var(--divx);top:0;width:16px;height:16px;margin:-8px 0 0 -7px;border-radius:50%;background:radial-gradient(#fff3cf,#d1a85d 60%,transparent 72%);transform:translateY(var(--sy,0));transition:transform .9s cubic-bezier(.4,0,.2,1);opacity:0;z-index:3}[data-out-run] .out-head{opacity:1}
+.out-end{position:absolute;left:var(--divx);top:100%;height:70px;width:2px;background:linear-gradient(#d1a85d,transparent);transform-origin:0 0;scale:1 0;transition:scale .9s ease-out .6s}.out-end[data-out-on]{scale:1 1}
+.outcome-row{position:relative;min-height:200px;display:grid;grid-template-columns:1fr 1fr;align-items:center}
+.il .outcome-item{grid-column:1;text-align:right;padding-right:56px}.ir .outcome-item{grid-column:2;padding-left:56px}
+.outcome-item{position:relative;z-index:1}
+.outcome-no{display:block;font:500 1.6rem/1 'Cormorant Garamond',serif;color:var(--gold);margin-bottom:8px}
+h3{font:600 clamp(1.5rem,2.6vw,2.2rem)/1.05 'Cormorant Garamond',serif;margin:0 0 8px}
+.outcome-item p{margin:0;color:#a9b0ba;font-size:14px;line-height:1.55;font-weight:600;max-width:34ch;display:inline-block}
+.your-dot{position:absolute;left:var(--divx);top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px #d1a85d22;z-index:2}
+.out-statement{text-align:center;font:600 clamp(2rem,5vw,3.6rem)/1.1 'Cormorant Garamond',serif;margin:110px 0 0}
+.out-statement span{position:relative;display:inline-block}.out-statement span:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.outcome-row:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#d1a85d1c,transparent 60%);opacity:0;transition:opacity .6s;pointer-events:none;display:none}
+.mv{display:none}.oh{display:block}
+/* ===== motion layer: base = final state, keyframes = "from" ===== */
+.dv{position:absolute;top:0;bottom:0;width:50%;container-type:size;overflow:hidden;pointer-events:none}.dv.r{left:50%}.dv.l{left:0}
+.dv *{transform-box:fill-box}
+@media (prefers-reduced-motion:no-preference){[data-out-row]:not([data-on]) :is(.dv,.mv)>*{opacity:0}[data-out-statement]:not([data-out-on]) span:after{opacity:0}[data-out-statement][data-out-on] span:after{animation:ul 1.2s ease-out 1s backwards}}
+.mc{position:absolute;width:max(44px,calc(var(--w,12)*1cqw))}.mc svg{width:100%;display:block;overflow:visible}
+.al,.ar{transform-box:fill-box;transform-origin:50% 10%}.eye{transform-box:fill-box;transform-origin:center}.hp,.dz{opacity:0}.dz circle{transform-box:fill-box;transform-origin:center}
+.gl{position:absolute;top:50%;left:0;width:60cqw;height:90cqh;translate:0 -50%;background:radial-gradient(ellipse at 0 50%,#d1a85d33,transparent 65%)}.dv.l .gl{left:auto;right:0;background:radial-gradient(ellipse at 100% 50%,#d1a85d33,transparent 65%)}
+.it{position:absolute;background:#1a2230e6;border:1px solid #ffffff22;border-radius:max(5px,1.2cqw);box-shadow:0 .8cqw 1.6cqw #0008;rotate:var(--r,0deg)}
+.it i{display:block;height:max(2px,.6cqw);border-radius:9px;background:#d9d5cb44;margin:max(3px,.8cqw) 0}.it i.s{width:60%}.it b{display:block;height:max(4px,1.1cqw);border-radius:3px;background:var(--gold);opacity:.8}
+.cal{width:max(38px,11cqw);padding:max(4px,.9cqw)}
+/* 01 More Time */
+.bigck{position:absolute;left:44.5cqw;top:2cqh;width:max(40px,10cqw);aspect-ratio:1;border:max(2px,.6cqw) solid #e0bd72;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1d2736,#10161f);box-shadow:0 0 18px #d1a85d44}
+.bigck i{position:absolute;left:calc(50% - 1.5px);bottom:50%;width:3px;background:#f0d594;transform-origin:50% 100%;border-radius:2px;margin:0}.bigck .m{height:38%}.bigck .h{height:26%;rotate:60deg}
+/* 02 Faster Operations */
+.trk{position:absolute;left:6cqw;top:66cqh;width:84cqw;border-top:2px solid #ffffff1c}
+.sl{position:absolute;top:66cqh;translate:-50% -50%;width:max(22px,7cqw);height:max(16px,6cqh);border:1.5px dashed #d1a85d99;border-radius:3px}
+.bl{position:absolute;top:66cqh;translate:-50% -50%;width:max(22px,7cqw);height:max(16px,6cqh);border-radius:3px;background:linear-gradient(135deg,#f4e27a,#a8b82a);box-shadow:0 .6cqw 1.2cqw #0008}.bl:nth-of-type(odd){background:linear-gradient(135deg,#f0d594,#c49a4c)}
+.bl:before{content:"";position:absolute;right:100%;top:45%;width:calc(var(--dx)*.45cqw);height:2px;background:linear-gradient(90deg,transparent,#f0d594cc);opacity:0}
+/* 03 Better Customer Experience */
+.msg{position:absolute;display:flex;align-items:center;gap:1cqw;height:max(20px,6cqw);padding:0 1.6cqw;min-width:max(46px,14cqw);border-radius:99px 99px 99px 3px;background:#1c2634;border:1px solid #d1a85d66;box-shadow:0 .8cqw 1.6cqw #0008}
+.msg em{width:max(9px,3.2cqw);aspect-ratio:1;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#aef0ff,#2b6fe0)}.msg span{flex:1;height:max(2px,.6cqw);border-radius:9px;background:#d9d5cb66}
+.msg.ty{border-radius:99px 99px 3px 99px;justify-content:center}.msg.ty u{width:max(4px,1.2cqw);aspect-ratio:1;border-radius:50%;background:#d9d5cb;text-decoration:none}
+.msg svg{width:max(12px,3.4cqw)}.msg.ok em{background:radial-gradient(circle at 35% 30%,#f4d58c,#b98a38);color:#1a1405;font:800 max(8px,2.2cqw)/max(9px,3.2cqw) Manrope;text-align:center}
+.stars{position:absolute;left:38cqw;top:7cqh;display:flex;gap:1cqw}.stars svg{width:max(12px,3.2cqw);fill:var(--gold)}
+/* 04 Fewer Manual Tasks */
+.sy{position:absolute;width:max(22px,8cqw);height:max(16px,6.4cqw);border-radius:max(3px,.8cqw);background:#1a2230;border:1px solid #ffffff26}
+.sy:before{content:"";position:absolute;left:14%;top:50%;width:max(6px,2cqw);aspect-ratio:1;translate:0 -50%;border:1px solid var(--gold);border-radius:2px}.sy:after{content:"";position:absolute;left:44%;right:14%;top:50%;height:max(2px,.6cqw);translate:0 -50%;border-radius:9px;background:#d9d5cb55}
+/* 05 Smarter Decisions */
+.ig{position:absolute;left:64cqw;top:50cqh;translate:-50% -50%;width:44cqh;aspect-ratio:1;border-radius:50%;background:radial-gradient(#d1a85d77,transparent 65%)}
+.ins{position:absolute;left:64cqw;top:50cqh;translate:-50% -50%;width:max(22px,7cqw);aspect-ratio:1;rotate:45deg;border:1.5px solid #f0d594;background:radial-gradient(#fff3cf,#d1a85d 70%);box-shadow:0 0 18px #d1a85d99;z-index:2}
+.fr{position:absolute;left:64cqw;top:50cqh;translate:-50% -50%;width:max(30px,10cqw);aspect-ratio:1;border:1.5px solid #f0d594;border-radius:50%;opacity:0}
+.pa{position:absolute;left:64cqw;top:50cqh;width:0;height:0;rotate:var(--a)}.pt{position:absolute;left:0;top:0;translate:calc(var(--r)*1cqw) 0;width:max(5px,1.4cqw);aspect-ratio:1;border-radius:50%;background:#d9d5cbcc;opacity:0}.pt.g{background:var(--gold);border-radius:2px}
+/* 06 Ready to Scale */
+.net{position:absolute;right:2cqw;top:4cqh;width:62cqw;height:92cqh}.net path{fill:none;stroke:var(--gold);stroke-opacity:.6;stroke-width:.7;stroke-dasharray:1}.net circle{fill:#141b26;stroke:var(--gold);stroke-width:.9}.net .rt{fill:#2a2418;stroke-width:1.3}
+/* look direction (static) */
+.m5 .ey{translate:3px 0}.m6 .ey{translate:2px -3px}
+/* --- desktop animations: each outcome has its own entrance + hook --- */
+[data-on] .eye{animation:blink 3.8s infinite}[data-on] .gl{animation:fi 1.2s ease-out backwards}
+[data-on] .m1{animation:drp .9s cubic-bezier(.3,1,.5,1) .2s backwards,hop .6s ease-out 1.6s}
+[data-on] .m1 .al{animation:cl 2.4s ease-in-out 1.2s}[data-on] .m1 .ar{animation:cr 2.4s ease-in-out 1.2s}
+[data-on] .bigck{animation:clk 1.5s cubic-bezier(.3,1.3,.5,1) 1s backwards}[data-on] .bigck .m{animation:spn 1s cubic-bezier(.3,0,.2,1) 2.4s backwards}
+[data-on] .cl{animation:peel .8s cubic-bezier(.3,1.5,.5,1) calc(var(--d)*1s) backwards}[data-on] .c0{animation:pop .5s cubic-bezier(.3,1.6,.5,1) .4s backwards}
+[data-on] .m2{animation:slid .8s cubic-bezier(.2,1.2,.4,1) .2s backwards}[data-on] .m2 .ar{animation:cr 2.2s ease-in-out .9s}
+[data-on] .trk{animation:ln .6s ease-out .5s backwards}[data-on] .sl{animation:pop .3s calc(var(--d)*1s - .6s) backwards}
+[data-on] .bl{animation:race .95s cubic-bezier(.65,0,.25,1) calc(var(--d)*1s) backwards}[data-on] .bl:before{animation:spd .95s linear calc(var(--d)*1s) both}
+[data-on] .sl{animation:slf .5s calc(var(--d)*1s + .7s) backwards}
+[data-on] .m3{animation:peek .7s cubic-bezier(.3,1.7,.5,1) .2s backwards;transform-origin:50% 100%}
+[data-on] .m3 .hp{animation:jy 2.4s ease-in-out 1.6s both}[data-on] .m3 .ey .eye{animation:jyo 2.4s ease-in-out 1.6s both}
+[data-on] .msg{animation:pop .5s cubic-bezier(.3,1.7,.5,1) calc(var(--d)*1s) backwards}[data-on] .msg.ty u{animation:dot .9s ease-in-out calc(var(--d)*1s + .6s) 2}
+[data-on] .stars svg{animation:fillst .5s ease-out calc(var(--d)*1s) backwards}
+[data-on] .m4{animation:spin .9s cubic-bezier(.3,1.2,.5,1) .2s backwards}[data-on] .m4 .dz{animation:jy 2.4s ease-in-out 1.2s both}[data-on] .m4 .ey .eye{animation:jyo 2.4s ease-in-out 1.2s both}
+[data-on] .m4 .dz circle{animation:rot .5s linear 1.2s 5}[data-on] .m4 .al{animation:fl .2s ease-in-out 1.2s 12 alternate}[data-on] .m4 .ar{animation:fr .18s ease-in-out 1.2s 12 alternate}
+[data-on] .sy{animation:dup .26s cubic-bezier(.3,1.8,.5,1) calc(var(--d)*1s) backwards}
+[data-on] .m5{animation:mat 1s ease-out .2s backwards}[data-on] .m5 .ey{animation:lk 1.8s ease-in-out 1s backwards}
+[data-on] .pa{animation:spi 1.8s cubic-bezier(.5,0,.3,1) calc(var(--d)*1s) both}[data-on] .pt{animation:conv 1.8s cubic-bezier(.5,0,.3,1) calc(var(--d)*1s) both}
+[data-on] .ins{animation:insi .7s cubic-bezier(.3,1.7,.5,1) 2.5s backwards}[data-on] .ig{animation:flash 1.1s ease-out 2.5s backwards}[data-on] .fr{animation:ex 1.1s ease-out 2.5s both}
+[data-on] .m6{animation:rise 1.4s cubic-bezier(.2,.8,.3,1) .2s backwards}[data-on] .m6 .ey{animation:lk 1.4s ease-in-out 1s backwards}
+[data-on] .net path{animation:ed .5s ease-out calc(var(--d)*1s) backwards}[data-on] .net circle{animation:npop .45s cubic-bezier(.3,1.8,.5,1) calc(var(--d)*1s) backwards}
+[data-out-row][data-on] [data-out-dot]{animation:dp 1.2s ease-out}[data-out-dot][data-out-glow]{animation:dg 1.4s ease-out}
+[data-off] :is(.dv,.mv) *{animation-play-state:paused!important}
+@keyframes fi{from{opacity:0}}@keyframes blink{0%,92%,100%{transform:none}95%{transform:scaleY(.1)}}@keyframes ul{from{scale:0 1}}@keyframes ln{from{scale:0 1}}
+@keyframes drp{0%{opacity:0;transform:translateY(-14cqh) scale(.9,1.2)}55%{opacity:1;transform:scale(1.22,.78)}75%{transform:scale(.94,1.1)}100%{opacity:1;transform:none}}
+@keyframes hop{40%{transform:translateY(-6cqh) scale(.95,1.08)}70%{transform:scale(1.12,.88)}}
+@keyframes cl{0%,100%{rotate:0deg}25%,75%{rotate:150deg}}@keyframes cr{0%,100%{rotate:0deg}25%,75%{rotate:-150deg}}
+@keyframes clk{from{opacity:0;transform:translate(26cqw,-6cqh) scale(1.4) rotate(40deg)}}@keyframes spn{from{rotate:-1080deg}}
+@keyframes peel{from{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--dy)*1cqh))}}@keyframes pop{from{opacity:0;transform:scale(.3)}}
+@keyframes slid{0%{opacity:0;transform:translateX(-30cqw) skewX(-20deg)}60%{opacity:1;transform:translateX(1.5cqw) skewX(8deg) scale(1.1,.9)}100%{opacity:1;transform:none}}
+@keyframes race{0%{opacity:0;transform:translateX(calc(var(--dx)*-1cqw))}8%{opacity:1}75%{transform:translateX(1.4cqw) scale(1.12,.88)}100%{transform:none}}
+@keyframes spd{0%{opacity:0}20%{opacity:.9}75%{opacity:0}100%{opacity:0}}@keyframes slf{50%{border-color:#f0d594;box-shadow:0 0 14px #d1a85d99}}
+@keyframes peek{from{opacity:0;transform:scale(0)}}@keyframes jy{0%,100%{opacity:0}12%,85%{opacity:1}}@keyframes jyo{0%,100%{opacity:1}12%,85%{opacity:0}}
+@keyframes dot{50%{translate:0 -35%}}@keyframes fillst{from{fill:#ffffff22;scale:.6}}
+@keyframes spin{from{opacity:0;transform:translateX(30cqw) rotate(-540deg) scale(.2)}80%{opacity:1;transform:rotate(12deg) scale(1.1)}100%{opacity:1;transform:none}}
+@keyframes rot{to{rotate:360deg}}@keyframes fl{from{rotate:-30deg}to{rotate:70deg}}@keyframes fr{from{rotate:30deg}to{rotate:-70deg}}
+@keyframes dup{from{opacity:0;scale:.2}}@keyframes mat{from{opacity:0;scale:.6}}@keyframes lk{0%{translate:0 0}30%{translate:-3px 1px}65%{translate:4px -2px}}
+@keyframes spi{from{rotate:calc(var(--a) + 220deg)}}@keyframes conv{0%{opacity:0;translate:calc(var(--r)*1cqw) 0}15%{opacity:1}100%{opacity:1;translate:0 0;scale:.3}}
+@keyframes insi{from{opacity:0;scale:.2}}@keyframes flash{0%{opacity:0;scale:.3}40%{opacity:1;scale:1.5}}@keyframes ex{0%{opacity:.9;scale:.3}100%{opacity:0;scale:4}}
+@keyframes rise{from{opacity:0;transform:translateY(30cqh)}}@keyframes ed{from{stroke-dashoffset:1}}@keyframes npop{from{opacity:0;scale:0}}
+@keyframes dp{from{box-shadow:0 0 0 0 #d1a85d99}to{box-shadow:0 0 0 16px #d1a85d00}}@keyframes dg{0%{box-shadow:0 0 0 0 #f0d594cc}100%{box-shadow:0 0 0 20px #d1a85d00}}
+/* ================= MOBILE: separate, native layout ================= */
+@media (max-width:767.98px){
+:root{--divx:14px}.sec{padding:36px 18px 90px}.dv{display:none}
+.outcome-row{display:block;min-height:0;padding:26px 0 26px 44px}.outcome-row:before{display:block}.outcome-row[data-active]:before{opacity:1}
+.outcome-row .outcome-item{text-align:left;padding:0;grid-column:auto}
+.oh{display:flex;align-items:center;gap:12px;margin-bottom:10px}.outcome-no{margin-bottom:4px;font-size:1.2rem}h3{font-size:1.45rem;margin:0}.outcome-item p{max-width:none;display:block}
+.mv{display:block;flex:none;width:64px;height:64px}.mv svg{width:100%;height:100%;display:block;overflow:visible}.mv *{transform-box:fill-box;transform-origin:center}
+.mv .hand{transform-origin:50% 100%}
+.mgl{fill:none}
+[data-on] .mv .me{animation:blink 3.8s infinite}
+[data-on] .k1c{animation:mdrop .8s cubic-bezier(.3,1.6,.5,1) .2s backwards}[data-on] .k1c .hand{animation:rot .9s ease-out .9s backwards}[data-on] .k1h{animation:msq .5s ease-out .9s}[data-on] .k1k{animation:mslide .5s cubic-bezier(.3,1.5,.5,1) calc(var(--d)*1s) backwards}
+[data-on] .k2b{animation:mrace .8s cubic-bezier(.65,0,.25,1) .3s backwards}[data-on] .k2s{animation:slf .4s 1s backwards}[data-on] .k2h{animation:msq .4s ease-out 1s}
+[data-on] .k3a{animation:pop .45s cubic-bezier(.3,1.7,.5,1) .4s backwards}[data-on] .k3b{animation:pop .45s cubic-bezier(.3,1.7,.5,1) 1s backwards}[data-on] .k3h{animation:mbob .7s ease-in-out .4s 3}
+[data-on] .k4k{animation:dup .2s cubic-bezier(.3,1.8,.5,1) calc(var(--d)*1s) backwards}[data-on] .k4h{animation:msh .12s linear .8s 10 alternate}
+[data-on] .k5d{animation:mconv 1s cubic-bezier(.5,0,.3,1) calc(var(--d)*1s) both}[data-on] .k5i{animation:insi .6s cubic-bezier(.3,1.7,.5,1) 1.3s backwards}[data-on] .k5f{animation:ex .9s ease-out 1.3s both}[data-on] .k5h{animation:mbob .6s ease-in-out .3s 2}
+[data-on] .k6e{animation:ed .4s ease-out calc(var(--d)*1s) backwards}[data-on] .k6n{animation:npop .4s cubic-bezier(.3,1.8,.5,1) calc(var(--d)*1s) backwards}[data-on] .k6h{animation:mup .8s ease-out .3s backwards}
+@keyframes mdrop{from{opacity:0;transform:translateY(-26px) scale(.9,1.2)}}@keyframes msq{40%{transform:scale(1.15,.85)}}@keyframes mslide{from{opacity:0;transform:translateX(-12px)}}
+@keyframes mrace{0%{opacity:0;transform:translateX(-34px)}75%{transform:translateX(2px) scale(1.15,.85)}}@keyframes mbob{50%{transform:translateY(-3px) rotate(-4deg)}}
+@keyframes msh{from{transform:translateX(-1.5px)}to{transform:translateX(1.5px)}}@keyframes mconv{0%{opacity:0;transform:translate(var(--x),var(--y))}20%{opacity:1}100%{opacity:1;transform:scale(.3)}}@keyframes mup{from{transform:rotate(0)}30%{transform:rotate(-8deg) translateY(-2px)}}}
+.bar{display:flex;gap:10px;justify-content:center;margin-top:36px}button{font:700 12px Manrope;background:#ffffff12;color:#e8e4da;border:1px solid #ffffff22;border-radius:99px;padding:8px 16px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){:is(.dv,.mv) *,[data-out-dot]{animation:none!important}.out-sig,.out-head,.out-end{transition:none!important}}
+</style></head><body><section class="sec"><div class="outcomes" id="box"><span class="out-sig"></span><span class="out-head"></span><span class="out-end" data-out-end></span>
+<div class="outcome-row il" data-out-row><div class="dv r" data-i="0" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="0" aria-hidden="true"></span><div><span class="outcome-no">01</span><h3>More Time</h3></div></div><p>Less time on repeat work, more time for what matters.</p></div><span class="your-dot" data-out-dot></span></div>
+<div class="outcome-row ir" data-out-row><div class="dv l" data-i="1" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="1" aria-hidden="true"></span><div><span class="outcome-no">02</span><h3>Faster Operations</h3></div></div><p>Work moves from request to done without the waiting.</p></div><span class="your-dot" data-out-dot></span></div>
+<div class="outcome-row il" data-out-row><div class="dv r" data-i="2" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="2" aria-hidden="true"></span><div><span class="outcome-no">03</span><h3>Better Customer Experience</h3></div></div><p>Customers get quicker, clearer, more consistent responses.</p></div><span class="your-dot" data-out-dot></span></div>
+<div class="outcome-row ir" data-out-row><div class="dv l" data-i="3" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="3" aria-hidden="true"></span><div><span class="outcome-no">04</span><h3>Fewer Manual Tasks</h3></div></div><p>Less copying, chasing, and re-entering across your team.</p></div><span class="your-dot" data-out-dot></span></div>
+<div class="outcome-row il" data-out-row><div class="dv r" data-i="4" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="4" aria-hidden="true"></span><div><span class="outcome-no">05</span><h3>Smarter Decisions</h3></div></div><p>The right information, in front of the right people, sooner.</p></div><span class="your-dot" data-out-dot></span></div>
+<div class="outcome-row ir" data-out-row><div class="dv l" data-i="5" aria-hidden="true"></div><div class="outcome-item"><div class="oh"><span class="mv" data-i="5" aria-hidden="true"></span><div><span class="outcome-no">06</span><h3>Ready to Scale</h3></div></div><p>Your systems grow with the business, not against it.</p></div><span class="your-dot" data-out-dot></span></div>
+</div><p class="out-statement" data-out-statement><span>A business that works better.</span></p><div class="bar"><button id="rp">↻ Replay</button></div></section><script>
+/* ---------- desktop scenes (one mascot design, six different compositions) ---------- */
+const face=id=>`<svg viewBox="0 0 100 120" aria-hidden="true"><defs><radialGradient id="g${id}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ffa58e"/><stop offset="1" stop-color="#e0553f"/></radialGradient></defs><ellipse cx="50" cy="116" rx="27" ry="4" fill="#000" opacity=".45"/><line x1="50" y1="22" x2="50" y2="9" stroke="#e0553f" stroke-width="2.5"/><circle cx="50" cy="7" r="4.5" fill="#f1c978"/><rect class="al" x="12" y="72" width="11" height="25" rx="5.5" fill="url(#g${id})"/><rect class="ar" x="77" y="72" width="11" height="25" rx="5.5" fill="url(#g${id})"/><ellipse cx="40" cy="111" rx="9" ry="5" fill="#e0553f"/><ellipse cx="60" cy="111" rx="9" ry="5" fill="#e0553f"/><ellipse cx="50" cy="92" rx="25" ry="21" fill="url(#g${id})"/><circle cx="50" cy="92" r="6" fill="#0f1722"/><circle cx="50" cy="92" r="2.5" fill="#f1c978"/><circle cx="14" cy="47" r="6" fill="#e0553f"/><circle cx="86" cy="47" r="6" fill="#e0553f"/><rect x="16" y="20" width="68" height="54" rx="26" fill="url(#g${id})"/><ellipse cx="36" cy="28" rx="11" ry="4" fill="#fff" opacity=".28" transform="rotate(-20 36 28)"/><rect x="24" y="33" width="52" height="28" rx="14" fill="#0c121b"/><g class="ey"><ellipse class="eye" cx="40" cy="48" rx="4.6" ry="6" fill="#bff3ff"/><ellipse class="eye" cx="60" cy="48" rx="4.6" ry="6" fill="#bff3ff"/><path d="M43 55 Q50 62 57 55" stroke="#bff3ff" fill="none" stroke-width="1.8" stroke-linecap="round"/></g><path class="hp" d="M34 50 Q40 43 46 50 M54 50 Q60 43 66 50" stroke="#bff3ff" stroke-width="2.4" fill="none" stroke-linecap="round"/><g class="dz"><circle cx="40" cy="48" r="5" fill="none" stroke="#bff3ff" stroke-width="1.6" stroke-dasharray="5 4"/><circle cx="60" cy="48" r="5" fill="none" stroke="#bff3ff" stroke-width="1.6" stroke-dasharray="5 4"/></g></svg>`;
+const mc=(id,cls,st)=>`<div class="mc ${cls}" style="${st}">${face(id)}</div>`,GL='<i class="gl"></i>';
+const cal=(st,cls='',d='')=>`<div class="it cal ${cls}" style="${st}"><b></b><i></i><i class="s"></i></div>`;
+const STAR='<svg viewBox="0 0 24 24" style="--d:DD"><path d="M12 2l3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>';
+const SC=[
+ GL+cal('left:8cqw;top:44cqh;--r:-4deg','c0')+[[24,16,6],[70,16,-7],[72,64,5],[26,68,-5]].map((p,i)=>cal(`left:${p[0]}cqw;top:${p[1]}cqh;--r:${p[2]}deg;--dx:${8-p[0]};--dy:${44-p[1]};--d:${.7+i*.25}`,'cl')).join('')+'<div class="bigck"><i class="h"></i><i class="m"></i></div>'+mc(1,'m1','left:44cqw;top:36cqh;--w:11'),
+ GL+'<i class="trk"></i>'+[22,42,62,82].map((x,i)=>`<i class="sl" style="left:${x}cqw;--d:${1.2+i*.25}"></i>`).join('')+[22,42,62,82].map((x,i)=>`<i class="bl" style="left:${x}cqw;--dx:${x-6};--d:${.9+i*.25}"></i>`).join('')+mc(2,'m2','left:4cqw;top:16cqh;--w:11'),
+ GL+mc(3,'m3','left:44cqw;top:42cqh;--w:12')+'<div class="stars">'+[0,1,2,3,4].map(i=>STAR.replace('DD',2.6+i*.18)).join('')+'</div>'
+ +'<div class="msg" style="left:12cqw;top:14cqh;--d:.8"><em></em><span></span></div><div class="msg ty" style="left:68cqw;top:12cqh;--d:1.3"><u></u><u></u><u></u></div><div class="msg" style="left:74cqw;top:58cqh;--d:1.8"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.4-8-11a4.5 4.5 0 0 1 8-2.7A4.5 4.5 0 0 1 20 10c0 5.6-8 11-8 11z" fill="#d1a85d"/></svg><span></span></div><div class="msg ok" style="left:12cqw;top:62cqh;--d:2.2"><em>✓</em><span></span></div>',
+ GL+Array.from({length:16},(_,i)=>{const w=i<1?.8:i<3?1.05:i<7?1.3:i<15?1.55:1.75;return `<i class="sy" style="left:${5+(i%6)*11.5}cqw;top:${12+Math.floor(i/6)*26}cqh;--d:${(w+(i%4)*.03).toFixed(2)}"></i>`}).join('')+mc(4,'m4','left:76cqw;top:36cqh;--w:12'),
+ GL+mc(5,'m5','left:18cqw;top:36cqh;--w:12')+'<i class="ig"></i><i class="fr"></i><i class="ins"></i>'+Array.from({length:14},(_,i)=>`<div class="pa" style="--a:${i*25.7}deg;--d:${.6+i*.06}"><i class="pt${i%3?'':' g'}" style="--r:${18+(i%4)*5}"></i></div>`).join(''),
+ GL+mc(6,'m6','left:6cqw;top:44cqh;--w:11')+`<svg class="net" viewBox="0 0 100 60" aria-hidden="true">`+[[12,30,34,16,1.1],[12,30,34,44,1.1],[34,16,58,8,1.7],[34,16,58,24,1.7],[34,44,58,38,1.7],[34,44,58,54,1.7],[58,24,84,16,2.3],[58,38,84,46,2.3]].map(e=>`<path pathLength="1" d="M${e[0]} ${e[1]}L${e[2]} ${e[3]}" style="--d:${e[4]}"/>`).join('')+[[12,30,3.4,.6,'rt'],[34,16,2.5,1.1],[34,44,2.5,1.1],[58,8,2.2,1.7],[58,24,2.2,1.7],[58,38,2.2,1.7],[58,54,2.2,1.7],[84,16,2.2,2.3],[84,46,2.2,2.3]].map(n=>`<circle class="${n[4]||''}" cx="${n[0]}" cy="${n[1]}" r="${n[2]}" style="--d:${n[3]}"/>`).join('')+'</svg>'
+];
+/* ---------- mobile visuals (separate, compact: 64px, large objects, mascot head only) ---------- */
+const HD=(i,x,y,s,c)=>`<g class="${c}" transform="translate(${x} ${y}) scale(${s})"><line x1="16" y1="3" x2="16" y2="-3" stroke="#e0553f" stroke-width="1.6"/><circle cx="16" cy="-4" r="2.4" fill="#f1c978"/><rect y="2" width="32" height="27" rx="12" fill="url(#h${i})"/><rect x="4" y="8" width="24" height="13" rx="6.5" fill="#0c121b"/><g class="me"><ellipse cx="11" cy="14.5" rx="2.4" ry="3.2" fill="#bff3ff"/><ellipse cx="21" cy="14.5" rx="2.4" ry="3.2" fill="#bff3ff"/></g><path d="M12.5 18.8Q16 21.5 19.5 18.8" stroke="#bff3ff" fill="none" stroke-width="1.2" stroke-linecap="round"/><rect x="6" y="28" width="20" height="9" rx="4.5" fill="url(#h${i})"/></g>`;
+const G=i=>`<defs><radialGradient id="h${i}" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ffa58e"/><stop offset="1" stop-color="#e0553f"/></radialGradient></defs>`;
+const MV=[
+ G(0)+HD(0,3,24,.9,'k1h')+'<g class="k1c"><circle cx="44" cy="22" r="14" fill="#141b26" stroke="#e0bd72" stroke-width="3"/><line class="hand" x1="44" y1="22" x2="44" y2="12" stroke="#f0d594" stroke-width="2.4" stroke-linecap="round"/><line x1="44" y1="22" x2="51" y2="25" stroke="#f0d594" stroke-width="2.4" stroke-linecap="round"/></g><rect class="k1k" style="--d:.9" x="40" y="46" width="18" height="12" rx="3" fill="#1a2230" stroke="#fff3" /><rect class="k1k" style="--d:1.1" x="44" y="50" width="18" height="12" rx="3" fill="#1a2230" stroke="#d1a85d99"/>',
+ G(1)+HD(1,2,2,.62,'k2h')+'<line x1="2" y1="52" x2="62" y2="52" stroke="#ffffff30" stroke-width="2"/><rect class="k2s" x="42" y="40" width="18" height="12" rx="3" fill="none" stroke="#d1a85d" stroke-width="1.6" stroke-dasharray="3 2.5"/><rect x="22" y="40" width="18" height="12" rx="3" fill="none" stroke="#d1a85d99" stroke-width="1.4" stroke-dasharray="3 2.5"/><rect class="k2b" x="42" y="40" width="18" height="12" rx="3" fill="#c3d44a"/>',
+ G(2)+'<g class="k3h">'+HD(2,16,22,1,'')+'</g><g class="k3a"><rect x="2" y="2" width="26" height="14" rx="7" fill="#1c2634" stroke="#d1a85d99"/><circle cx="9" cy="9" r="3" fill="#7fc4ff"/><rect x="15" y="8" width="9" height="2" rx="1" fill="#d9d5cb99"/></g><g class="k3b"><rect x="36" y="8" width="26" height="14" rx="7" fill="#1c2634" stroke="#d1a85d99"/><path d="M49 18s-5-3.2-5-6.6a2.7 2.7 0 0 1 5-1.6 2.7 2.7 0 0 1 5 1.6c0 3.4-5 6.6-5 6.6z" fill="#d1a85d"/></g>',
+ G(3)+[[2,6,.1],[12,14,.2],[22,22,.3],[2,28,.4],[12,36,.5],[2,50,.6]].map(c=>`<rect class="k4k" style="--d:${c[2]+.3}" x="${c[0]}" y="${c[1]}" width="26" height="14" rx="3" fill="#1a2230" stroke="#ffffff33"/>`).join('')+HD(3,32,24,.95,'k4h'),
+ G(4)+HD(4,1,26,.8,'k5h')+[[40,12],[56,22],[54,44],[42,52],[30,36],[34,8]].map((p,i)=>`<circle class="k5d" style="--x:${p[0]-44}px;--y:${p[1]-30}px;--d:${.2+i*.1}" cx="44" cy="30" r="3" fill="${i%2?'#d1a85d':'#d9d5cb'}"/>`).join('')+'<circle class="k5f" cx="44" cy="30" r="8" fill="none" stroke="#f0d594" stroke-width="1.6"/><rect class="k5i" x="36" y="22" width="16" height="16" rx="2" transform="rotate(45 44 30)" fill="#e8c46f" stroke="#fff3cf"/>',
+ G(5)+HD(5,2,28,.7,'k6h')+[[16,32,38,16,.5],[16,32,38,48,.5],[38,16,58,8,.9],[38,16,58,26,.9],[38,48,58,40,.9],[38,48,58,58,.9]].map(e=>`<path class="k6e" pathLength="1" style="--d:${e[4]};stroke-dasharray:1" d="M${e[0]} ${e[1]}L${e[2]} ${e[3]}" fill="none" stroke="#d1a85d99" stroke-width="1.4"/>`).join('')+[[38,16,.5],[38,48,.5],[58,8,.9],[58,26,.9],[58,40,.9],[58,58,.9]].map(n=>`<circle class="k6n" style="--d:${n[2]}" cx="${n[0]}" cy="${n[1]}" r="4" fill="#141b26" stroke="#d1a85d" stroke-width="1.6"/>`).join('')
+];
+const box=document.getElementById('box');
+box.querySelectorAll('.dv').forEach(f=>f.innerHTML=SC[+f.dataset.i]);
+box.querySelectorAll('.mv').forEach(f=>f.innerHTML=`<svg viewBox="0 0 64 64">${MV[+f.dataset.i]}</svg>`);
+/* ---------- activation: sequential on desktop, independent on mobile; gold progress + active highlight ---------- */
+function run(box){
+ const rows=[...box.querySelectorAll('[data-out-row]')],n=rows.length,seen=Array(n).fill(0),isOn=Array(n).fill(0),T=[];
+ const end=box.querySelector('[data-out-end]'),st=document.querySelector('[data-out-statement]'),mob=()=>matchMedia('(max-width:767.98px)').matches;
+ const dot=i=>rows[i].querySelector('[data-out-dot]'),later=(f,ms)=>T.push(setTimeout(f,ms));
+ const y=i=>{const d=dot(i).getBoundingClientRect();return d.top+d.height/2-box.getBoundingClientRect().top};
+ let maxI=-1,full=0,nxt=0,busy=0,done=0;
+ const set=py=>{box.style.setProperty('--sy',py+'px');box.style.setProperty('--ss',(py/box.offsetHeight).toFixed(4))};
+ const finale=()=>{if(done)return;done=1;rows.forEach(r=>r.removeAttribute('data-active'));rows.forEach((r,j)=>later(()=>dot(j).setAttribute('data-out-glow',''),j*140));later(()=>{full=1;set(box.offsetHeight);end.setAttribute('data-out-on','');st&&st.setAttribute('data-out-on','')},n*140+200)};
+ const act=i=>{if(isOn[i])return;isOn[i]=1;box.setAttribute('data-out-run','');rows.forEach(r=>r.removeAttribute('data-active'));rows[i].setAttribute('data-on','');rows[i].setAttribute('data-active','');if(i>maxI){maxI=i;set(y(i))}if(isOn.every(Boolean))later(finale,1400)};
+ const pump=()=>{if(busy)return;if(nxt<n&&seen[nxt]){busy=1;act(nxt++);later(()=>{busy=0;pump()},950)}};
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const i=rows.indexOf(e.target);io.unobserve(e.target);seen[i]=1;mob()?act(i):pump()}),{rootMargin:'0px 0px -15% 0px',threshold:.4});
+ const vis=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?e.target.removeAttribute('data-off'):e.target.setAttribute('data-off','')));
+ rows.forEach(r=>{io.observe(r);vis.observe(r)});
+ const ro=new ResizeObserver(()=>{if(full)set(box.offsetHeight);else if(maxI>=0)set(y(maxI))});ro.observe(box);
+ return()=>{io.disconnect();vis.disconnect();ro.disconnect();T.forEach(clearTimeout)};
+}
+let stop=run(box);
+document.getElementById('rp').onclick=()=>{stop();document.querySelectorAll('[data-on],[data-active],[data-out-on],[data-out-glow],[data-off]').forEach(e=>['data-on','data-active','data-out-on','data-out-glow','data-off'].forEach(a=>e.removeAttribute(a)));box.removeAttribute('data-out-run');box.style.setProperty('--ss',0);box.style.setProperty('--sy','0px');void box.offsetWidth;stop=run(box)};
+</script></body></html>

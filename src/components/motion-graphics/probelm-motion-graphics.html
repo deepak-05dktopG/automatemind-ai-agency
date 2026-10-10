@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AutomateMind – The Hidden Chaos Behind Every Business</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--red:#d8453b;--gold:#c9a45c;--ink:#dcd8cd}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:#0b111a;color:var(--ink);font-family:Manrope,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px}
+body.chk{background:#2a2f38 repeating-conic-gradient(#3a404b 0 25%,#2a2f38 0 50%) 0 0/24px 24px}
+.stage{container-type:inline-size;position:relative;width:min(100%,calc((100vh - 90px)*5/4));aspect-ratio:5/4;overflow:hidden;background:transparent}
+.cam{position:absolute;inset:0}.go .cam{animation:cam 30s ease-out both}
+svg.ln{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.ln line{stroke:#d9d5cb;stroke-width:.28;stroke-linecap:round}
+.c{position:absolute;opacity:0;z-index:5}
+.go .c{animation:cin .5s cubic-bezier(.3,1.5,.5,1) calc(var(--d)*1s) both}
+.ci{width:11cqw;padding:1cqw;border-radius:1cqw;background:#1a2230e6;border:1px solid #ffffff18;box-shadow:0 1cqw 2cqw #000a;position:relative;display:flex;flex-direction:column;gap:.6cqw;scale:var(--s);filter:blur(var(--b))}
+.go .ci{animation:drift var(--p) ease-in-out calc(var(--d)*1s + .5s) infinite alternate,twitch var(--w) steps(1) infinite}
+.sk{display:block;height:.5cqw;border-radius:9px;background:#d9d5cb44}.sk.s{width:60%}
+.tg{font-size:1.1cqw;font-weight:700;color:#e08a82;letter-spacing:.04em}
+.cb{display:block;width:1.4cqw;height:1.4cqw;border:1px solid #d9d5cb66;border-radius:.3cqw}
+.ms .ci{border-radius:1.4cqw 1.4cqw 1.4cqw .3cqw;border-color:#6d8fbf44}
+.dc .ci{box-shadow:.7cqw .6cqw 0 -.1cqw #222c3a,1.3cqw 1.2cqw 0 -.2cqw #1a2230,0 1.2cqw 2cqw #000a}
+.pg{display:block;height:.7cqw;border-radius:9px;background:#ffffff14;overflow:hidden}.pg s{display:block;height:100%;background:#c98a84;border-radius:9px}
+.go .pg s{animation:stall 5s linear infinite}
+.bg{position:absolute;right:-1cqw;top:-1cqw;min-width:2.3cqw;height:2.3cqw;border-radius:99px;background:var(--red);color:#fff;font:800 1.1cqw/2.3cqw Manrope;text-align:center;text-decoration:none;padding:0 .5cqw;box-shadow:0 0 1cqw #d8453b66}
+.go .bg{animation:bpop 2.6s ease-in-out infinite}
+.n{position:absolute;width:23cqw;z-index:20;translate:-50% -50%}
+.ni{position:relative;padding:1.1cqw 1.4cqw 1.2cqw;border-radius:1.2cqw;background:linear-gradient(#1b2330,#131a25);border:1px solid #ffffff1c;box-shadow:0 1.2cqw 2.5cqw #000b;opacity:0}
+.ni:before{content:"";position:absolute;left:1.4cqw;right:1.4cqw;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7}
+.go .ni{animation:nin .8s cubic-bezier(.3,1.4,.5,1) calc(var(--d)*1s) both,np var(--q) ease-in-out calc(var(--d)*1s + 1s) infinite,jit var(--j) steps(1) calc(var(--d)*1s + 1s) infinite}
+.nn{font-size:1cqw;font-weight:800;color:var(--gold);letter-spacing:.1em;display:flex;align-items:center;gap:.6cqw}
+.nn:after{content:"";width:.7cqw;height:.7cqw;border-radius:50%;background:var(--red);box-shadow:0 0 .8cqw var(--red);margin-left:auto}
+.nt{font-size:1.75cqw;font-weight:700;line-height:1.25;margin-top:.5cqw;color:var(--ink)}
+.w{display:inline-block;opacity:0;margin-right:.45em}.go .w{animation:wd .6s cubic-bezier(.2,1.3,.4,1) calc(var(--d)*1s) both}
+.ctr{position:absolute;left:50cqw;top:40cqw;width:21cqw;height:21cqw;translate:-50% -50%;z-index:21}
+.cb2{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 30%,#222b39,#10161f 70%);border:1px solid #d8453b99;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:2cqw;line-height:1.3;letter-spacing:.09em;color:#ece8de;box-shadow:0 1.5cqw 3cqw #000c,inset 0 0 3cqw #d8453b22;opacity:0}
+.go .cb2{animation:nin .9s cubic-bezier(.3,1.4,.5,1) .2s both,pc 2.7s cubic-bezier(.5,0,.3,1) 1.4s infinite}
+.ctr:before{content:"";position:absolute;inset:-1.6cqw;border-radius:50%;border:.2cqw dashed #d8453b88;opacity:0}
+.go .ctr:before{animation:fadeIn 1s 1s both,spin 22s linear infinite}
+.ctr:after{content:"";position:absolute;inset:-.7cqw;border-radius:50%;border:1px solid transparent;border-top-color:var(--gold);opacity:.8}
+.go .ctr:after{animation:spin 6s linear infinite reverse}
+.mw{position:absolute;left:42cqw;top:55cqw;width:16cqw;z-index:12;opacity:0}
+.go .mw{animation:cin .7s cubic-bezier(.3,1.5,.5,1) 2.6s both}
+.mw svg{width:100%;display:block;overflow:visible}
+.go .shk{animation:shk .28s ease-in-out infinite alternate}.go .pan{animation:pan 3.6s ease-in-out infinite}
+.al,.ar{transform-box:fill-box;transform-origin:50% 10%}
+.go .al{animation:fl .45s ease-in-out infinite alternate}.go .ar{animation:fr .38s ease-in-out infinite alternate}
+.go .pu{animation:look 2.2s steps(1) infinite}.go .sw{animation:sw 1.6s ease-in infinite}.go .ant{animation:blk 1s steps(1) infinite}
+.ex{position:absolute;font-weight:800;font-size:2.6cqw;color:#e8a29b;opacity:0;z-index:13}
+.go .ex{animation:ex 2.4s ease-out infinite}
+.orbit{position:absolute;left:50cqw;top:65cqw;width:0;height:0;z-index:11}.go .orbit{animation:spin 8s linear infinite}
+.oc{position:absolute;left:-3cqw;top:-2cqw;width:6cqw}.oc div{padding:.7cqw;border-radius:.8cqw;background:#1a2230e6;border:1px solid #ffffff18;box-shadow:0 .6cqw 1.2cqw #000a;display:flex;flex-direction:column;gap:.4cqw}
+.go .oc div{animation:rev 8s linear infinite}
+@keyframes cam{to{transform:scale(1.04)}}
+@keyframes cin{from{opacity:0;transform:scale(.4)}to{opacity:var(--o,1);transform:none}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes drift{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
+@keyframes twitch{0%,88%,100%{rotate:0deg}91%{rotate:2.5deg}94%{rotate:-2.5deg}97%{rotate:1deg}}
+@keyframes stall{0%{width:8%}30%{width:55%}34%{width:48%}60%,100%{width:68%}80%{width:66%}}
+@keyframes bpop{0%,80%,100%{scale:1}86%{scale:1.35}92%{scale:.9}}
+@keyframes nin{from{opacity:0;transform:scale(.8);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes wd{from{opacity:0;transform:translateY(1cqw);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes np{0%,100%{scale:1;border-color:#ffffff1c;box-shadow:0 1.2cqw 2.5cqw #000b}12%{scale:1.03;border-color:#d8453bcc;box-shadow:0 1.2cqw 2.5cqw #000b,0 0 2cqw #d8453b66}20%{scale:1}55%{scale:1.015;border-color:#d8453b88}62%{scale:1.04;box-shadow:0 1.2cqw 2.5cqw #000b,0 0 2.4cqw #d8453b77}70%{scale:1}}
+@keyframes jit{0%,90%,100%{translate:0 0}92%{translate:.35cqw -.2cqw}94%{translate:-.3cqw .25cqw}96%{translate:.2cqw 0}}
+@keyframes pc{0%,100%{scale:1}10%{scale:1.035;box-shadow:0 1.5cqw 3cqw #000c,inset 0 0 3cqw #d8453b55,0 0 3cqw #d8453b77}18%{scale:.99}45%{scale:1.02}52%{scale:1}70%{scale:1.05;box-shadow:0 1.5cqw 3cqw #000c,inset 0 0 4cqw #d8453b66,0 0 4cqw #d8453b88}78%{scale:1}}
+@keyframes spin{to{rotate:360deg}}@keyframes rev{to{rotate:-360deg}}
+@keyframes shk{from{transform:translate(-.25cqw,0) rotate(-1.8deg)}to{transform:translate(.3cqw,-.2cqw) rotate(1.8deg)}}
+@keyframes pan{0%,78%,100%{transform:none}84%{transform:translateY(-2cqw) scale(.95,1.06)}90%{transform:scale(1.1,.9)}95%{transform:translateY(-.4cqw)}}
+@keyframes fl{from{rotate:-25deg}to{rotate:42deg}}@keyframes fr{from{rotate:28deg}to{rotate:-46deg}}
+@keyframes look{0%{translate:0 0}14%{translate:-2.2px -1px}28%{translate:2.2px 1px}42%{translate:-1px 2px}58%{translate:2.4px -1.5px}72%{translate:0 0}86%{translate:-2.4px 1px}}
+@keyframes sw{0%{translate:0 0;opacity:0}15%{opacity:1}100%{translate:2px 16px;opacity:0}}
+@keyframes blk{0%{fill:#d8453b}50%{fill:#5a2420}}
+@keyframes ex{0%{opacity:0;transform:translateY(1cqw) scale(.4)}15%{opacity:1;transform:scale(1.2)}30%{transform:none}70%{opacity:.9}100%{opacity:0;transform:translateY(-2.5cqw)}}
+@keyframes fk{0%,100%{opacity:.55}6%{opacity:.08}9%{opacity:.6}41%{opacity:.5}44%{opacity:0}47%{opacity:.6}72%{opacity:.35}74%{opacity:.05}77%{opacity:.55}}
+@keyframes dsh{to{stroke-dashoffset:-30}}
+@keyframes sp{0%,60%,100%{opacity:0}65%,75%{opacity:1}}
+.go .ln line{animation:fk var(--fd) linear var(--fl) infinite,dsh 3s linear infinite}
+.sx{opacity:0;stroke:var(--red);stroke-width:.3}.go .sx{animation:sp var(--fd) linear var(--fl) infinite}
+.paused,.paused *{animation-play-state:paused!important}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+button{font:700 13px Manrope,sans-serif;background:#c9a45c;color:#1a1405;border:0;border-radius:99px;padding:9px 18px;cursor:pointer}
+button.g{background:#ffffff14;color:#e8e4da}.bar span{font-size:12px;opacity:.6}
+</style></head><body>
+<div class="stage go" id="st"><div class="cam" id="cam">
+ <svg class="ln" viewBox="0 0 100 80" id="ln"></svg>
+ <div id="cards"></div>
+ <div class="orbit" id="orb"></div>
+ <div class="mw" id="mw"></div>
+ <span class="ex" style="left:43cqw;top:51cqw;--d:0;animation-delay:3s">!</span><span class="ex" style="left:55cqw;top:52cqw;animation-delay:4.2s">?</span><span class="ex" style="left:49cqw;top:49cqw;animation-delay:5.4s;color:#d8453b">!</span>
+ <div id="nodes"></div>
+ <div class="ctr"><div class="cb2">BUSINESS<br>PROBLEMS</div></div>
+</div></div>
+<div class="bar"><button id="re">▶ Replay</button><button class="g" id="pa">❚❚ Pause</button><button class="g" id="bk">Backdrop: dark</button><span>5:4 · transparent background · problems only</span></div>
+<script>
+const S=[['01','Doing the Same Work Again',24,13,3.2,.2],['02','Work Does Not Connect',76,13,3.6,.5],['03','Chasing People for Updates',15,40,3.1,.8],['04','Information in Different Places',85,40,3.8,1.1],['05','Decisions Take Too Long',24,67,3.3,1.4],['06','Work Keeps Getting Left Behind',76,67,3.7,1.7]];
+const J=[4.1,5.3,3.7,6.1,4.7,5.7],Q=[2.3,3.1,2.7,3.7,2.9,3.3];
+nodes.innerHTML=S.map((s,i)=>{const d=.6+i*.35;return `<div class="n" style="left:${s[2]}cqw;top:${s[3]}cqw"><div class="ni" style="--d:${d};--q:${Q[i]}s;--j:${J[i]}s"><div class="nn">${s[0]}</div><div class="nt">${s[1].split(' ').map((w,k)=>`<span class="w" style="--d:${d+.3+k*.09}">${w}</span>`).join('')}</div><u class="bg" data-r="${i}">${3+i*2}</u></div></div>`}).join('');
+ln.innerHTML=S.map((s,i)=>{const da=['6 3 1.5 12','4 2 4 30','9 5 2 20','3 2 8 25','7 4 1 16','5 3 3 22'][i];return `<line x1="50" y1="40" x2="${s[2]}" y2="${s[3]}" stroke-dasharray="${da}" style="--fd:${s[4]}s;--fl:${s[5]}s"/><path class="sx" d="M${(50+s[2])/2-.8} ${(40+s[3])/2-.8}l1.6 1.6m0-1.6l-1.6 1.6" style="--fd:${s[4]}s;--fl:${s[5]}s"/>`}).join('');
+const K=[['tk',6,24,.9,1.9],['tk',70,24,1,2.6],['ms',29,27,.95,3.4],['ms',32,29,1,5.2],['ms',35,31,1.05,7.4],['dc',62,50,1,4],['dc',65,53,.95,6.6],['pr',8,52,.9,3],['pr',80,57,1,8.2],['tk',44,5,.85,9.4],['dc',3,66,.9,10.6],['ms',70,69,.95,6],['ms',73,71,1,11.6],['tk',24,49,.8,12.4],['pr',56,18,.8,5.8],['tk',88,30,.85,13.4]];
+const R=n=>{let x=Math.sin(n*91.7)*1e4;return x-Math.floor(x)};
+const H={tk:'<b class="tg">Overdue</b><i class="sk"></i><i class="sk s"></i><i class="cb"></i>',ms:'<b class="tg">Re: Re:</b><i class="sk"></i><i class="sk s"></i>',dc:'<b class="tg">final_v7</b><i class="sk"></i><i class="sk"></i><i class="sk s"></i>',pr:'<b class="tg">Pending</b><span class="pg"><s></s></span>'};
+cards.innerHTML=K.map((k,i)=>{const s=k[3],far=s<.9;return `<div class="c ${k[0]}" style="left:${k[1]}cqw;top:${k[2]}cqw;--d:${k[4]};--o:${far?.55:.95};z-index:${far?3:6}"><div class="ci" style="--s:${s};--b:${far?.12:0}cqw;--dx:${(R(i)*8-4).toFixed(1)}cqw;--dy:${(R(i+9)*8-4).toFixed(1)}cqw;--r:${(R(i+3)*30-15).toFixed(0)}deg;--p:${(2.6+R(i+5)*3.4).toFixed(1)}s;--w:${(1.8+R(i+7)*2.4).toFixed(1)}s">${H[k[0]]}<u class="bg" data-r="${i+1}" style="animation-delay:${(i%5)*.4}s">${2+i}</u></div></div>`}).join('');
+orb.innerHTML=[0,120,240].map(a=>`<div class="oc" style="transform:rotate(${a}deg) translateX(10.5cqw)"><div><i class="sk"></i><i class="sk s"></i></div></div>`).join('');
+mw.innerHTML=`<div class="pan"><div class="shk"><svg viewBox="0 0 100 120"><defs><radialGradient id="rg" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ff8f84"/><stop offset="1" stop-color="#b92b2b"/></radialGradient></defs>
+<ellipse cx="50" cy="116" rx="28" ry="4" fill="#000" opacity=".5"/><line x1="50" y1="22" x2="56" y2="9" stroke="#b92b2b" stroke-width="2.5"/><circle class="ant" cx="57" cy="7" r="4.5" fill="#d8453b"/>
+<rect class="al" x="12" y="72" width="11" height="25" rx="5.5" fill="url(#rg)"/><rect class="ar" x="77" y="72" width="11" height="25" rx="5.5" fill="url(#rg)"/>
+<ellipse cx="40" cy="111" rx="9" ry="5" fill="#b92b2b"/><ellipse cx="60" cy="111" rx="9" ry="5" fill="#b92b2b"/>
+<ellipse cx="50" cy="92" rx="25" ry="21" fill="url(#rg)"/><circle cx="50" cy="92" r="6" fill="#0f1722"/><circle cx="50" cy="92" r="2.5" fill="#c9a45c"/>
+<circle cx="14" cy="47" r="6" fill="#b92b2b"/><circle cx="86" cy="47" r="6" fill="#b92b2b"/>
+<rect x="16" y="20" width="68" height="54" rx="26" fill="url(#rg)"/><ellipse cx="36" cy="28" rx="11" ry="4" fill="#fff" opacity=".28" transform="rotate(-20 36 28)"/>
+<rect x="24" y="33" width="52" height="28" rx="14" fill="#0c121b"/>
+<ellipse cx="39" cy="47" rx="6" ry="5.5" fill="#fff0ec"/><ellipse cx="61" cy="47" rx="6" ry="5.5" fill="#fff0ec"/>
+<circle class="pu" cx="39" cy="47" r="2.4" fill="#1a0c0c"/><circle class="pu" cx="61" cy="47" r="2.4" fill="#1a0c0c"/>
+<path d="M32 41 L45 37 M68 41 L55 37" stroke="#ffd9d0" stroke-width="1.8" stroke-linecap="round"/><path d="M44 59 Q50 55.5 56 59" stroke="#ffd9d0" fill="none" stroke-width="1.8" stroke-linecap="round"/>
+<path class="sw" d="M82 22 q-3.5 5 0 7.5 q3.5 -2.5 0 -7.5z" fill="#9fd3ff"/></svg></div></div>`;
+let ct;const tick=()=>document.querySelectorAll('.bg').forEach(b=>{if(Math.random()<.35)b.textContent=Math.min(99,(+b.textContent||1)+1+(Math.random()*3|0))});
+const start=()=>{clearInterval(ct);ct=setInterval(tick,1100)};start();
+const st=document.getElementById('st');
+re.onclick=()=>{st.classList.remove('go','paused');void st.offsetWidth;st.classList.add('go');pa.textContent='❚❚ Pause'};
+pa.onclick=()=>{const p=st.classList.toggle('paused');pa.textContent=p?'▶ Resume':'❚❚ Pause'};
+bk.onclick=()=>{const c=document.body.classList.toggle('chk');bk.textContent='Backdrop: '+(c?'checker':'dark')};
+</script></body></html>

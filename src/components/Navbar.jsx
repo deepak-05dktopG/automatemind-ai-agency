@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { industryList, navItems, serviceData, solutionData } from '../data/siteData'
@@ -7,8 +7,9 @@ import { AgencyName } from './AgencyName'
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const [expandedMenu, setExpandedMenu] = useState(null)
+  const isScrolledRef = useRef(false)
+  const headerRef = useRef(null)
 
   const mobileGroups = {
     Services: serviceData.slice(0, 5).map((item) => item.title),
@@ -31,12 +32,22 @@ export function Navbar() {
   }
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 12)
+    const handleScroll = () => {
+      const nextIsScrolled = window.scrollY > 12
+      if (nextIsScrolled === isScrolledRef.current) return
+
+      isScrolledRef.current = nextIsScrolled
+      headerRef.current?.classList.toggle('is-scrolled', nextIsScrolled)
+    }
 
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useLayoutEffect(() => {
+    headerRef.current?.classList.toggle('is-scrolled', isScrolledRef.current)
+  }, [menuOpen])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -120,7 +131,7 @@ export function Navbar() {
 
   return (
     <>
-    <header className={`site-header${isScrolled ? ' is-scrolled' : ''}${menuOpen ? ' menu-open' : ''}`}>
+    <header ref={headerRef} className={`site-header${menuOpen ? ' menu-open' : ''}`}>
       <div className="container nav-wrap">
         <Link to="/" className="brand-mark" aria-label="AutomateMind home">
           <span className="brand-logo" aria-hidden="true">

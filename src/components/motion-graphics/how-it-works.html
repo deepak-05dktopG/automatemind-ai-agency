@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AutomateMind – The Journey in Motion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add('js')</script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--gold:#d1a85d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:#0e1a2b;color:#f5efe2;font-family:Manrope,system-ui,sans-serif}
+.sec{min-height:100vh;background:radial-gradient(ellipse at 50% 30%,#1b2531 0,transparent 55%),radial-gradient(ellipse at 100% 100%,#183b36 0,transparent 50%),linear-gradient(160deg,#0e1a2b,#101f30 60%,#12262f);padding:clamp(48px,8vw,96px) 20px 40px;overflow:hidden}
+.wrap{max-width:1200px;margin:0 auto;container-type:inline-size}
+h2{font:600 clamp(2.4rem,6.2vw,5rem)/1.05 'Cormorant Garamond',Georgia,serif;margin:0 0 clamp(28px,5vw,56px);color:#f5efe2}
+.track{position:relative;--k:1.15px}
+@container (min-width:760px){.track{--k:.10417cqw;aspect-ratio:960/330}}
+svg.p{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none}
+.steps{list-style:none;margin:0;padding:0}
+.step{position:relative;min-height:176px}.step:last-child{min-height:190px}
+.step:nth-child(odd){padding-right:calc(50% + 22px);text-align:right}
+.step:nth-child(even){padding-left:calc(50% + 22px)}
+.dot{position:absolute;left:50%;top:0;width:calc(var(--k)*15.5);height:calc(var(--k)*15.5);margin-left:calc(var(--k)*-7.75);border-radius:50%;background:radial-gradient(circle at 35% 30%,#efce85,#c49a4c);box-shadow:0 0 0 calc(var(--k)*5) #d1a85d22;z-index:3}
+.num{display:block;font:700 calc(var(--k)*10.4)/calc(var(--k)*15.5) Manrope;letter-spacing:.14em;color:var(--gold)}
+h3{font:600 calc(var(--k)*21)/1.1 'Cormorant Garamond',Georgia,serif;margin:calc(var(--k)*8) 0 calc(var(--k)*9);color:#f5efe2}
+.step p{font-size:calc(var(--k)*12.2);line-height:1.55;color:#a9b0ba;margin:0;font-weight:600}
+@container (min-width:760px){
+.steps{position:absolute;inset:0}
+.step,.step:nth-child(odd),.step:nth-child(even),.step:last-child{position:absolute;min-height:0;padding:0;text-align:left;left:calc((var(--x) - 8)/9.6*1%);top:calc(var(--y)/3.3*1%);width:calc(var(--k)*182)}
+.dot{left:calc(var(--k)*8);width:calc(var(--k)*11);height:calc(var(--k)*11);margin:0;translate:-50% -50%}
+.num{margin-top:calc(var(--k)*12);font-size:max(10px,calc(var(--k)*10));line-height:1.4}
+h3{font-size:calc(var(--k)*20);margin:calc(var(--k)*4) 0 calc(var(--k)*5)}
+.step p{font-size:max(12px,calc(var(--k)*11.2))}}
+.tx{position:relative;z-index:3}
+.js .tx>*{opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .step.on .tx>*{opacity:1;transform:none}.tx>:nth-child(2){transition-delay:.12s!important}.tx>:nth-child(3){transition-delay:.24s!important}
+.js .dot{opacity:.3;scale:.7;transition:opacity .5s,scale .6s cubic-bezier(.3,1.6,.5,1)}
+.js .step.on .dot{opacity:1;scale:1;animation:dp 1.3s ease-out}
+.q{text-align:center;font:600 clamp(1.3rem,2.5vw,2.1rem)/1.3 'Cormorant Garamond',Georgia,serif;color:var(--gold);margin:clamp(28px,4vw,52px) 0 0;letter-spacing:.02em}
+.mas{position:absolute;left:0;top:0;width:calc(var(--k)*34);margin:calc(var(--k)*-21) 0 0 calc(var(--k)*-17);z-index:6;opacity:0;pointer-events:none;will-change:transform}
+.mas svg{width:100%;display:block;overflow:visible}.mi{transform-origin:50% 100%}
+.al,.ar{transform-box:fill-box;transform-origin:50% 10%}.ey{transform-box:fill-box}
+.fx{position:absolute;width:0;height:0;z-index:5;pointer-events:none}
+.fx i{position:absolute;left:calc(var(--k)*var(--x,0));top:calc(var(--k)*var(--y,0));translate:-50% -50%;opacity:0;display:block}
+.bub{--x:30;--y:-30;width:calc(var(--k)*26);height:calc(var(--k)*15);border-radius:calc(var(--k)*7) calc(var(--k)*7) calc(var(--k)*7) calc(var(--k)*2);background:#d1a85d1f;border:1px solid #d1a85d99;display:flex!important;gap:calc(var(--k)*3);align-items:center;justify-content:center}
+.bub b{width:calc(var(--k)*3.2);height:calc(var(--k)*3.2);border-radius:50%;background:#f0d594}
+.sig{--x:30;--y:-30;width:calc(var(--k)*6);height:calc(var(--k)*6);border-radius:50%;background:radial-gradient(#fff3cf,#d1a85d)}
+.gl{--x:23;--y:0;width:1px;height:calc(var(--k)*44);background:linear-gradient(transparent,#d1a85d,transparent);transform-origin:50% 0}
+.fr{width:calc(var(--k)*var(--w));height:calc(var(--k)*6);border-radius:calc(var(--k)*2);background:#d1a85d2a;border:1px solid #d1a85d88}
+.spot{--x:38;--y:0;width:calc(var(--k)*76);height:calc(var(--k)*76);background:radial-gradient(circle,#d1a85d50,transparent 65%)}
+.dm{--x:38;--y:0;width:calc(var(--k)*13);height:calc(var(--k)*13);border:1.5px solid #ecc97c;background:#d1a85d30}
+.pr{--x:38;--y:0;width:calc(var(--k)*13);height:calc(var(--k)*13);border:1px solid #ecc97c;border-radius:50%}
+.tl{width:calc(var(--k)*11);height:calc(var(--k)*11);border-radius:calc(var(--k)*3);background:linear-gradient(135deg,#e8c47c55,#d1a85d22);border:1px solid #d1a85dcc}
+.lk{width:calc(var(--k)*3);height:calc(var(--k)*1.2);background:var(--gold)}.lk.v{width:calc(var(--k)*1.2);height:calc(var(--k)*3)}
+.tr{--x:38;--y:19;width:calc(var(--k)*46);height:calc(var(--k)*1.6);background:linear-gradient(90deg,#f0d594,transparent);transform-origin:0 50%}
+.rg{--x:38;--y:0;width:calc(var(--k)*14);height:calc(var(--k)*14);border:1px solid #ecc97c;border-radius:50%}
+.core{--x:38;--y:0;width:calc(var(--k)*9);height:calc(var(--k)*9);border-radius:50%;background:radial-gradient(#fff3cf,#d1a85d 60%,transparent 72%)}
+.go .bub{animation:pop .7s cubic-bezier(.3,1.6,.5,1) .2s both,sett .6s 1.6s forwards}
+.go .sig{animation:sg 1s ease-in 1.1s forwards}
+.go .gl{animation:gr .8s ease-out .1s both}
+.go .fr{animation:asm .8s cubic-bezier(.3,1.4,.5,1) calc(var(--dl)*1s) both}
+.go .spot{animation:fi .9s ease-out .1s both}
+.go .dm{animation:dmA 1.2s cubic-bezier(.3,1.5,.5,1) .3s both}
+.go .pr{animation:rp 1.5s ease-out .9s 2 forwards}
+.go .tl{animation:asm .8s cubic-bezier(.3,1.4,.5,1) calc(var(--dl)*1s) both}
+.go .lk{animation:fi .4s 1.2s both}.go .tr{animation:tg 1s ease-out 1.3s both}
+.go .core{animation:fi .6s both}
+.fin .fx5 .rg{animation:rp 2.4s ease-out calc(var(--dl)*1s) 3 forwards}
+.fin .core{animation:br 2.4s ease-in-out 3}
+#endg{transform-box:fill-box;transform-origin:center}.fin #endg{animation:eg 2.4s ease-out 3}
+.g1 .ar{animation:wv .45s ease-in-out 4 alternate both}
+.g2 .ey{animation:lk 1.6s steps(1) both}.g2 .mi{animation:tl 1.6s ease-in-out both}
+.g3 .mi{animation:jp .55s ease-out 2}.g3 .ar{animation:a150 .5s ease-out both}
+.g4 .al{animation:hm .25s ease-in-out 6 alternate both}.g4 .ar{animation:hm2 .25s ease-in-out 6 alternate both}
+.g5 .al{animation:a150l .6s ease-out both}.g5 .ar{animation:a150 .6s ease-out both}.g5 .mi{animation:jp .6s ease-out 3}
+@keyframes dp{from{box-shadow:0 0 0 0 #d1a85d99}to{box-shadow:0 0 0 calc(var(--k)*16) #d1a85d00}}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@keyframes sett{to{opacity:.6}}@keyframes fi{to{opacity:1}}
+@keyframes sg{0%{opacity:0;transform:scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate(calc(var(--k)*(var(--dx) - 30)),calc(var(--k)*(var(--dy) + 30))) scale(.6)}}
+@keyframes gr{from{opacity:0;scale:1 0}to{opacity:.8;scale:1 1}}
+@keyframes asm{from{opacity:0;transform:translate(calc(var(--k)*var(--ox)),calc(var(--k)*var(--oy))) rotate(var(--or))}to{opacity:1;transform:none}}
+@keyframes dmA{from{opacity:0;rotate:-90deg;scale:.2}to{opacity:1;rotate:45deg;scale:1}}
+@keyframes rp{from{opacity:.8;scale:1}to{opacity:0;scale:3.2}}
+@keyframes tg{from{opacity:0;scale:0 1}to{opacity:.9;scale:1 1}}
+@keyframes br{50%{scale:1.35}}@keyframes eg{from{opacity:.9;scale:.5}to{opacity:0;scale:5}}
+@keyframes wv{from{rotate:-130deg}to{rotate:-165deg}}@keyframes lk{0%{translate:0 0}20%{translate:-3px 0}45%{translate:3px 1px}70%{translate:0 -1px}}
+@keyframes tl{25%{rotate:-6deg}60%{rotate:6deg}100%{rotate:0deg}}@keyframes jp{40%{transform:translateY(-6px)}}
+@keyframes a150{to{rotate:-150deg}}@keyframes a150l{to{rotate:150deg}}
+@keyframes hm{from{rotate:10deg}to{rotate:55deg}}@keyframes hm2{from{rotate:-10deg}to{rotate:-55deg}}
+.off,.off *{animation-play-state:paused!important}
+.rb{display:block;margin:24px auto 0;font:700 12px Manrope;background:#ffffff12;color:#e8e4da;border:1px solid #ffffff22;border-radius:99px;padding:8px 16px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.fx,.mas,#head,#endg{display:none}.js .tx>*,.js .dot{transition:none}.rb{display:none}}
+</style></head><body>
+<section class="sec" id="how"><div class="wrap" id="wrap">
+<h2>We Build the Solution.</h2>
+<div class="track" id="trk">
+<svg class="p" id="svg" aria-hidden="true"><defs><radialGradient id="hg"><stop offset="0" stop-color="#ffe9b0"/><stop offset=".4" stop-color="#e0b865" stop-opacity=".55"/><stop offset="1" stop-color="#d1a85d" stop-opacity="0"/></radialGradient><mask id="mkm" maskUnits="userSpaceOnUse" x="0" y="0"><path id="mk" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round"/></mask></defs>
+<path id="base" fill="none" stroke="#d1a85d" stroke-opacity=".42" stroke-width="1.4"/><path id="ov" fill="none" stroke="#efce85" stroke-width="1.8" mask="url(#mkm)"/>
+<circle id="endg" r="6" fill="url(#hg)" opacity="0"/><g id="head" opacity="0"><circle r="9" fill="url(#hg)"/><circle r="2.6" fill="#fff2cc"/></g></svg>
+<ol class="steps">
+<li class="step" style="--x:44;--y:159"><i class="dot"></i><div class="tx"><span class="num">01</span><h3>Tell Us</h3><p>You share what feels slow, repetitive, or harder than it should be.</p></div></li>
+<li class="step" style="--x:229;--y:66"><i class="dot"></i><div class="tx"><span class="num">02</span><h3>Understand</h3><p>We learn how your team works today and where the friction begins.</p></div></li>
+<li class="step" style="--x:414;--y:159"><i class="dot"></i><div class="tx"><span class="num">03</span><h3>Find the Opportunity</h3><p>Together, we choose the change that can make the biggest difference.</p></div></li>
+<li class="step" style="--x:599;--y:66"><i class="dot"></i><div class="tx"><span class="num">04</span><h3>Build &amp; Connect</h3><p>We shape the solution around your people, process, and existing tools.</p></div></li>
+<li class="step" style="--x:784;--y:159"><i class="dot"></i><div class="tx"><span class="num">05</span><h3>Launch &amp; Improve</h3><p>You put it to work, and we keep refining what makes your business stronger.</p></div></li>
+</ol>
+<div class="mas" id="mas"><div class="mi" id="mi"><svg viewBox="0 0 100 120" aria-hidden="true"><defs><radialGradient id="mg" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#f6dc96"/><stop offset="1" stop-color="#b78a3a"/></radialGradient></defs>
+<ellipse cx="50" cy="116" rx="26" ry="4" fill="#000" opacity=".4"/><line x1="50" y1="22" x2="50" y2="9" stroke="#b78a3a" stroke-width="2.5"/><circle cx="50" cy="7" r="4.5" fill="#fff0c4"/>
+<rect class="al" x="12" y="72" width="11" height="25" rx="5.5" fill="url(#mg)"/><rect class="ar" x="77" y="72" width="11" height="25" rx="5.5" fill="url(#mg)"/>
+<ellipse cx="40" cy="111" rx="9" ry="5" fill="#9b722c"/><ellipse cx="60" cy="111" rx="9" ry="5" fill="#9b722c"/><ellipse cx="50" cy="92" rx="25" ry="21" fill="url(#mg)"/><circle cx="50" cy="92" r="6" fill="#0f1a2a"/><circle cx="50" cy="92" r="2.5" fill="#9fe8ff"/>
+<circle cx="14" cy="47" r="6" fill="#9b722c"/><circle cx="86" cy="47" r="6" fill="#9b722c"/><rect x="16" y="20" width="68" height="54" rx="26" fill="url(#mg)"/><ellipse cx="36" cy="28" rx="11" ry="4" fill="#fff" opacity=".3" transform="rotate(-20 36 28)"/>
+<rect x="24" y="33" width="52" height="28" rx="14" fill="#0c1624"/><g class="ey"><ellipse cx="40" cy="47" rx="4.5" ry="6" fill="#a8f0ff"/><ellipse cx="60" cy="47" rx="4.5" ry="6" fill="#a8f0ff"/><path d="M44 55 Q50 60 56 55" stroke="#a8f0ff" fill="none" stroke-width="1.8" stroke-linecap="round"/></g></svg></div></div>
+</div>
+<p class="q">You focus on your business. We make it work smarter.</p>
+<button class="rb" id="rb">↻ Replay (preview)</button>
+</div></section>
+<script>
+const $=id=>document.getElementById(id),trk=$('trk'),svg=$('svg'),wrap=$('wrap'),mas=$('mas'),mi=$('mi'),ov=$('ov'),mk=$('mk'),base=$('base'),head=$('head'),endg=$('endg');
+const steps=[...trk.querySelectorAll('.step')],rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const PD='M70 158 C110 126 150 106 210 106 S330 172 400 172 S520 87 585 87 S700 172 770 172 S860 120 920 100';
+const FR=[[37,-18,22,-30,-20,-14],[34,-6,16,-34,10,12],[36,6,20,-28,26,-9],[32.5,18,13,-33,2,16]],TL=[[26,-6,-30,-18,-25,.1],[39,-6,20,-22,30,.3],[39,7,24,20,-20,.5]];
+const FX=['<i class="bub"><b></b><b></b><b></b></i><i class="sig"></i>',
+'<i class="gl"></i>'+FR.map((f,n)=>`<i class="fr" style="--x:${f[0]};--y:${f[1]};--w:${f[2]};--ox:${f[3]};--oy:${f[4]};--or:${f[5]}deg;--dl:${.15+n*.18}"></i>`).join(''),
+'<i class="spot"></i><i class="dm"></i><i class="pr"></i>',
+TL.map(t=>`<i class="tl" style="--x:${t[0]};--y:${t[1]};--ox:${t[2]};--oy:${t[3]};--or:${t[4]}deg;--dl:${t[5]}"></i>`).join('')+'<i class="lk" style="--x:32;--y:-6"></i><i class="lk v" style="--x:39;--y:0"></i><i class="tr"></i>',
+'<i class="core"></i><i class="rg" style="--dl:0"></i><i class="rg" style="--dl:.7"></i><i class="rg" style="--dl:1.4"></i>'];
+steps.forEach((s,i)=>{const f=document.createElement('div');f.className='fx fx'+(i+1);f.innerHTML=FX[i];trk.appendChild(f)});
+const fxs=[...trk.querySelectorAll('.fx')];
+let L=1,ts=[],F=[],k=1,p=0,cur=-1,vis=false,started=false,clock=0,last=0,fin=0,rq=0,tmo;
+function layout(){const tr=trk.getBoundingClientRect(),W=tr.width,H=tr.height,desk=wrap.getBoundingClientRect().width>=760,vw=desk?960:W,vh=desk?330:H,r=vw/W;k=desk?W/960:1.15;
+svg.setAttribute('viewBox',`0 0 ${vw} ${vh}`);
+const dots=steps.map(s=>{const b=s.querySelector('.dot').getBoundingClientRect();return{x:b.left+b.width/2-tr.left,y:b.top+b.height/2-tr.top}});
+const d=desk?PD:`M${W/2} ${dots[0].y} V${dots[4].y+70}`;
+[base,ov,mk].forEach(e=>e.setAttribute('d',d));const da=desk?'6 7':'5 7';base.setAttribute('stroke-dasharray',da);ov.setAttribute('stroke-dasharray',da);
+const mm=document.getElementById('mkm');mm.setAttribute('width',vw);mm.setAttribute('height',vh);
+L=mk.getTotalLength();mk.style.strokeDasharray=L;
+ts=dots.map(dd=>{let b=0,bd=1e9;for(let t=0;t<=L;t+=L/400){const q=mk.getPointAtLength(t),m=(q.x-dd.x*r)**2+(q.y-dd.y*r)**2;if(m<bd){bd=m;b=t}}return b});
+for(let i=1;i<5;i++)ts[i]=Math.max(ts[i],ts[i-1]+L*.08);
+F=dots.map((dd,i)=>{const s=desk?1:(i%2?-1:1),f=desk?{x:dd.x,y:dd.y-34*k}:{x:dd.x+s*64*k,y:dd.y+58*k};return{...f,s,dx:(dd.x-f.x)/k*s,dy:(dd.y-f.y)/k}});
+fxs.forEach((f,i)=>{f.style.left=F[i].x+'px';f.style.top=F[i].y+'px';f.style.transform=`scaleX(${F[i].s})`;f.style.setProperty('--dx',F[i].dx);f.style.setProperty('--dy',F[i].dy)});
+const e=mk.getPointAtLength(L);endg.setAttribute('cx',e.x);endg.setAttribute('cy',e.y);endg.setAttribute('opacity',fin?1:0);
+draw();if(cur>=0){mas.getAnimations().forEach(a=>a.cancel());setPos(F[cur])}}
+function draw(){mk.style.strokeDashoffset=L*(1-p);const q=mk.getPointAtLength(p*L);head.setAttribute('transform',`translate(${q.x} ${q.y})`);head.setAttribute('opacity',p>0&&p<1?1:0)}
+const setPos=f=>{mas.style.transform=`translate(${f.x}px,${f.y}px)`;mas.style.opacity=1};
+function go(frames,dur,to,ease){const a=mas.animate(frames,{duration:dur,easing:ease||'cubic-bezier(.4,0,.3,1)',fill:'forwards'});a.finished.then(()=>{setPos(to);a.cancel()}).catch(()=>{})}
+function reach(i){steps[i].classList.add('on');fxs[i].classList.add('go');const b=F[i],a=cur>=0?F[cur]:null;
+if(!a)go([{opacity:0,transform:`translate(${b.x}px,${b.y-60*k}px) scale(.9,1.15)`},{opacity:1,transform:`translate(${b.x}px,${b.y}px) scale(1.2,.8)`,offset:.6},{opacity:1,transform:`translate(${b.x}px,${b.y}px)`}],800,b);
+else go([{transform:`translate(${a.x}px,${a.y}px)`},{transform:`translate(${(a.x+b.x)/2}px,${Math.min(a.y,b.y)-34*k}px) scale(.9,1.12)`,offset:.45},{transform:`translate(${b.x}px,${b.y}px) scale(1.18,.82)`,offset:.85},{transform:`translate(${b.x}px,${b.y}px)`}],750,b);
+cur=i;mi.className='mi g'+(i+1);clearTimeout(tmo);tmo=setTimeout(()=>mi.className='mi',2100)}
+function loop(t){if(!vis){last=t;rq=requestAnimationFrame(loop);return}
+const dt=Math.min(64,t-last);last=t;clock+=dt;if(cur<0)reach(0);
+if(clock>1300){p=Math.min(1,(clock-1300)/8600);draw();for(let i=cur+1;i<5;i++){if(p*L>=ts[i])reach(i);else break}}
+if(p>=1){fin=1;trk.classList.add('fin');endg.setAttribute('opacity',1);return}rq=requestAnimationFrame(loop)}
+function begin(){if(started)return;started=true;if(rm){steps.forEach(s=>s.classList.add('on'));p=1;draw();return}last=performance.now();rq=requestAnimationFrame(loop)}
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){o.disconnect();begin()}},{rootMargin:'0px 0px -30% 0px'}).observe(trk);
+new IntersectionObserver(e=>{vis=e[0].isIntersecting;trk.classList.toggle('off',!vis);mas.getAnimations().forEach(a=>vis?a.play():a.pause())}).observe(wrap);
+let rz;new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(layout)}).observe(trk);
+layout();document.fonts&&document.fonts.ready.then(layout);
+$('rb').onclick=()=>{cancelAnimationFrame(rq);clearTimeout(tmo);mas.getAnimations().forEach(a=>a.cancel());mas.style.opacity=0;mi.className='mi';steps.forEach(s=>s.classList.remove('on'));fxs.forEach(f=>f.classList.remove('go'));trk.classList.remove('fin');endg.setAttribute('opacity',0);p=0;clock=0;cur=-1;fin=0;started=false;draw();setTimeout(begin,300)};
+</script></body></html>

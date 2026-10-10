@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
 import './TrueFocus.css';
 
 const TrueFocus = ({
@@ -17,19 +16,42 @@ const TrueFocus = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lastActiveIndex, setLastActiveIndex] = useState(null);
   const containerRef = useRef(null);
+  const focusFrameRef = useRef(null);
   const wordRefs = useRef([]);
-  const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const isScrollingRef = useRef(false);
 
   useEffect(() => {
     if (!manualMode) {
-      const interval = setInterval(
-        () => {
-          setCurrentIndex(prev => (prev + 1) % words.length);
-        },
-        (animationDuration + pauseBetweenAnimations) * 1000
-      );
+      let interval;
 
-      return () => clearInterval(interval);
+      const startRotation = () => {
+        if (isScrollingRef.current || interval) return;
+        interval = setInterval(
+          () => setCurrentIndex(prev => (prev + 1) % words.length),
+          (animationDuration + pauseBetweenAnimations) * 1000
+        );
+      };
+      const handleScrollStart = () => {
+        isScrollingRef.current = true;
+        clearInterval(interval);
+        interval = undefined;
+        focusFrameRef.current?.getAnimations().forEach(animation => animation.pause());
+      };
+      const handleScrollEnd = () => {
+        isScrollingRef.current = false;
+        focusFrameRef.current?.getAnimations().forEach(animation => animation.play());
+        startRotation();
+      };
+
+      window.addEventListener('automatemind:scrollstart', handleScrollStart);
+      window.addEventListener('automatemind:scrollend', handleScrollEnd);
+      startRotation();
+
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('automatemind:scrollstart', handleScrollStart);
+        window.removeEventListener('automatemind:scrollend', handleScrollEnd);
+      };
     }
   }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);
 
@@ -40,13 +62,13 @@ const TrueFocus = ({
       if (!wordRefs.current[currentIndex] || !containerRef.current) return;
       const parentRect = containerRef.current.getBoundingClientRect();
       const activeRect = wordRefs.current[currentIndex].getBoundingClientRect();
+      const focusFrame = focusFrameRef.current;
+      if (!focusFrame) return;
 
-      setFocusRect({
-        x: activeRect.left - parentRect.left,
-        y: activeRect.top - parentRect.top,
-        width: activeRect.width,
-        height: activeRect.height
-      });
+      focusFrame.style.width = `${activeRect.width}px`;
+      focusFrame.style.height = `${activeRect.height}px`;
+      focusFrame.style.transform = `translate3d(${activeRect.left - parentRect.left}px, ${activeRect.top - parentRect.top}px, 0)`;
+      focusFrame.style.opacity = '1';
     };
 
     updateRect();
@@ -94,29 +116,21 @@ const TrueFocus = ({
         );
       })}
 
-      <motion.div
+      <div
+        ref={focusFrameRef}
         className="focus-frame"
-        animate={{
-          x: focusRect.x,
-          y: focusRect.y,
-          width: focusRect.width,
-          height: focusRect.height,
-          opacity: currentIndex >= 0 ? 1 : 0
-        }}
-        transition={{
-          duration: animationDuration,
-          ease: 'easeInOut'
-        }}
         style={{
           '--border-color': borderColor,
-          '--glow-color': glowColor
+          '--glow-color': glowColor,
+          '--focus-duration': `${animationDuration}s`,
+          opacity: 0
         }}
       >
         <span className="corner top-left"></span>
         <span className="corner top-right"></span>
         <span className="corner bottom-left"></span>
         <span className="corner bottom-right"></span>
-      </motion.div>
+      </div>
     </div>
   );
 };
