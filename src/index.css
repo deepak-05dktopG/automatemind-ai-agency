@@ -1258,3 +1258,149 @@ p {
     transition: none !important;
   }
 }
+
+/* AutomateMind mascot loader animation */
+/* ===== AutomateMind mascot loader — critical CSS (inline in <head>) ===== */
+#am-loader{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#071522;color:#E9E2D0;overflow:hidden;touch-action:none;overscroll-behavior:contain;animation:am-fs 0s linear 90s forwards}
+@keyframes am-fs{to{visibility:hidden;pointer-events:none}}
+/* While the loader runs, nothing else on the page (spinners, preloaders, overlays) can show.
+   The page itself keeps its layout, so nothing shifts when it is revealed. */
+html.am-boot #root{visibility:hidden;animation:am-unhide 0s linear 95s forwards}
+html.am-boot body>*:not(#am-loader):not(#root):not(script):not(style):not(link):not(meta):not(noscript){visibility:hidden}
+@keyframes am-unhide{to{visibility:visible}}
+#am-loader *{box-sizing:border-box}
+#am-loader .am-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#am-loader .am-sent{position:absolute;width:0;height:0;visibility:hidden}
+.am-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.6vh,16px)}
+.am-svg{display:block;width:min(66vw,46vh,340px);height:auto;overflow:visible}
+.am-text{display:grid;justify-items:center;align-items:start;width:min(88vw,430px);min-height:7.4em}
+.am-text>*{grid-area:1/1}
+.am-welcome{margin:0;text-align:center;opacity:0}
+.am-note{width:100%;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s ease}
+.am-note__t{margin:0;font:500 clamp(13px,2.5vw,15px)/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.02em;color:#D8B66A}
+.am-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin-top:.8rem}
+.am-actions[hidden]{display:none}
+.am-actions button{font:600 .8rem system-ui,-apple-system,"Segoe UI",sans-serif;color:#D8B66A;background:transparent;border:1px solid rgba(216,182,106,.6);border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;pointer-events:auto;transition:background .2s,border-color .2s}
+.am-actions button:hover{background:rgba(216,182,106,.12);border-color:#D8B66A}
+.am-actions button:focus-visible{outline:2px solid #D8B66A;outline-offset:3px}
+.am-w1{display:block;font:600 clamp(28px,5.6vw,38px)/1.1 "Cormorant Garamond",Georgia,"Times New Roman",serif;color:#D8B66A;letter-spacing:.01em}
+.am-w2{display:block;margin-top:.25em;font:500 clamp(14px,2.6vw,17px)/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.05em;color:#E8E4D8}
+
+/* line art */
+.lines{filter:drop-shadow(0 0 2px rgba(198,161,91,.35))}
+.seg{stroke-dasharray:1;stroke-dashoffset:0}
+.seg2{stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.seg2.cy{stroke:#8DEBFF}
+.am-tip{fill:#FFE9A8;opacity:0;filter:drop-shadow(0 0 5px #D8B66A)}
+.am-wipe{transform:translateX(430px)}
+.am-wline{transform:translateX(450px);opacity:0;filter:drop-shadow(0 0 6px #D8B66A)}
+.sparkle{opacity:0;transform-box:fill-box;transform-origin:center}
+
+/* pivots for the "comes alive" stage */
+.p-bounce{transform-origin:200px 412px}
+.p-head{transform-origin:200px 275px}
+.p-ant{transform-origin:200px 100px}
+.eyes-g{transform-origin:200px 192px}
+.chest-dot{transform-origin:200px 330px}
+.arm{transform-origin:0 -30px}
+
+/* A — line drawing (starts immediately: the class is in the markup) */
+.s-draw .seg{animation:am-draw var(--t,.5s) cubic-bezier(.45,.05,.3,1) var(--d,0s) both}
+@supports (offset-path:path('M0 0')){.s-draw .am-tip{animation:am-tip var(--t,.5s) cubic-bezier(.45,.05,.3,1) var(--d,0s) both}}
+.s-draw #am-e-draw{animation:am-end 3.7s linear both}
+@keyframes am-draw{0%{stroke-dashoffset:1;opacity:0}1%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes am-tip{0%{offset-distance:0%;opacity:0}6%{opacity:1}88%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes am-end{from{opacity:0}to{opacity:0}}
+
+/* idle: outline complete, still waiting for the site */
+.s-idle .lines{animation:am-breathe 2.6s ease-in-out infinite}
+@keyframes am-breathe{0%,100%{filter:drop-shadow(0 0 2px rgba(198,161,91,.3))}50%{filter:drop-shadow(0 0 7px rgba(216,182,106,.8))}}
+
+/* B — complete the outline */
+.s-detail .lines{animation:am-pulse .9s ease both}
+.s-detail .seg2{animation:am-draw var(--t,.5s) cubic-bezier(.45,.05,.3,1) var(--d,0s) both}
+.s-detail #am-e-detail{animation:am-end 1.2s linear both}
+@keyframes am-pulse{0%,100%{filter:drop-shadow(0 0 2px rgba(198,161,91,.35));stroke:#C6A15B}45%{filter:drop-shadow(0 0 9px rgba(216,182,106,.95));stroke:#D8B66A}}
+
+/* C — colour reveal (right-to-left wipe, as in the storyboard) */
+.s-color .am-wipe{animation:am-wipe 1s cubic-bezier(.55,0,.25,1) both}
+.s-color .am-wline{animation:am-wline 1s cubic-bezier(.55,0,.25,1) both}
+.s-color .lines{animation:am-linesout .8s ease .5s both}
+.s-color #am-e-color{animation:am-end 1.3s linear both}
+@keyframes am-wipe{from{transform:translateX(430px)}to{transform:translateX(-60px)}}
+@keyframes am-wline{0%{transform:translateX(430px);opacity:0}8%{opacity:1}90%{opacity:1}100%{transform:translateX(-60px);opacity:0}}
+@keyframes am-linesout{to{opacity:0}}
+
+/* D — the mascot comes alive */
+.s-alive .p-bounce{animation:am-settle .8s ease-out .1s both}
+.s-alive .eyes-g{animation:am-blink .32s ease .35s both}
+.s-alive .p-ant{animation:am-ant 1s ease-in-out .2s both}
+.s-alive .p-head{animation:am-tilt 1.2s ease-in-out .3s both}
+.s-alive .arm-l{animation:am-open-l .6s ease-out .5s both}
+.s-alive .arm-r{animation:am-open-r .6s ease-out .5s both}
+.s-alive .chest-dot{animation:am-chest .7s ease-in-out .9s both}
+.s-alive #am-e-alive{animation:am-end 1.6s linear both}
+@keyframes am-settle{0%{transform:scale(1,1)}30%{transform:scale(1.03,.95)}60%{transform:scale(.985,1.025)}100%{transform:scale(1,1)}}
+@keyframes am-blink{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.08)}}
+@keyframes am-ant{0%,100%{transform:rotate(0)}25%{transform:rotate(7deg)}55%{transform:rotate(-5deg)}80%{transform:rotate(2deg)}}
+@keyframes am-tilt{0%,100%{transform:rotate(0)}40%,65%{transform:rotate(-4deg)}}
+@keyframes am-open-l{from{transform:rotate(0)}to{transform:rotate(16deg)}}
+@keyframes am-open-r{from{transform:rotate(0)}to{transform:rotate(-16deg)}}
+@keyframes am-chest{0%,100%{transform:scale(1)}45%{transform:scale(1.55)}}
+
+/* waiting: the mascot is fully alive but the site is not ready yet — calm loop, same speed as everything else */
+.s-wait .p-head{animation:am-wait-head 4s ease-in-out infinite}
+.s-wait .p-ant{animation:am-wait-ant 3s ease-in-out infinite}
+.s-wait .chest-dot{animation:am-wait-chest 2.4s ease-in-out infinite}
+.s-wait .eyes-g{animation:am-wait-blink 4.5s ease-in-out infinite}
+@keyframes am-wait-head{0%,100%{transform:rotate(0)}30%{transform:rotate(-2.5deg)}70%{transform:rotate(2deg)}}
+@keyframes am-wait-ant{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
+@keyframes am-wait-chest{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+@keyframes am-wait-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+
+/* slow connection: the mascot "searches for signal"; very slow: a small shrug */
+.signal{opacity:0}
+.s-note1 .signal{opacity:1}
+.s-note1 .signal path{animation:am-signal 1.8s ease-in-out infinite;opacity:.15}
+.s-note1 .signal path:nth-child(2){animation-delay:.25s}
+.s-note1 .signal path:nth-child(3){animation-delay:.5s}
+.s-note1 .am-note{opacity:1}
+.s-note2 .arm-l{animation:am-shrug-l 3.2s ease-in-out infinite}
+.s-note2 .arm-r{animation:am-shrug-r 3.2s ease-in-out infinite}
+@keyframes am-signal{0%,100%{opacity:.15}35%{opacity:1}}
+@keyframes am-shrug-l{0%,100%{transform:rotate(16deg)}35%,60%{transform:rotate(36deg)}}
+@keyframes am-shrug-r{0%,100%{transform:rotate(-16deg)}35%,60%{transform:rotate(-36deg)}}
+
+/* E — welcome wave, nod, sparkle, real HTML text */
+.s-wave .arm-r{animation:am-wave 1.5s ease-in-out both}
+.s-wave .p-head{animation:am-nod 1.7s ease-in-out both}
+.s-wave .sparkle{animation:am-spark 1.3s ease-in-out .35s both}
+.s-wave .sparkle--2{animation-delay:.6s}
+.s-wave .am-welcome{animation:am-text .7s ease .2s both}
+.s-wave #am-e-wave{animation:am-end 1.8s linear both}
+@keyframes am-wave{0%{transform:rotate(-16deg)}22%{transform:rotate(-100deg)}34%{transform:rotate(-86deg)}46%{transform:rotate(-112deg)}58%{transform:rotate(-88deg)}70%{transform:rotate(-110deg)}84%{transform:rotate(-100deg)}100%{transform:rotate(-16deg)}}
+@keyframes am-nod{0%,70%{transform:rotate(0) translateY(0)}82%{transform:rotate(3deg) translateY(6px)}94%,100%{transform:rotate(0) translateY(0)}}
+@keyframes am-spark{0%{opacity:0;transform:scale(.3) rotate(0)}30%{opacity:1;transform:scale(1.1) rotate(10deg)}60%{opacity:.9;transform:scale(.9) rotate(20deg)}100%{opacity:0;transform:scale(.4) rotate(45deg)}}
+@keyframes am-text{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* F — transition into the website */
+#am-loader.s-exit{pointer-events:none;animation:am-fade .8s ease .2s both}
+.s-exit .am-stage{animation:am-up 1s cubic-bezier(.5,0,.2,1) both}
+.s-exit .am-sweep{animation:am-sweep .95s ease-in-out both}
+.s-exit .am-trail{animation:am-trail 1s ease-out both}
+.s-exit #am-e-exit{animation:am-end 1.05s linear both}
+.am-sweep{position:absolute;left:-10%;right:-10%;top:66%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(216,182,106,.9) 50%,transparent);box-shadow:0 0 14px rgba(216,182,106,.5);opacity:0;transform:translateX(-110%) rotate(-2deg)}
+.am-trail{position:absolute;left:50%;top:66%;width:5px;height:0;margin-left:-2.5px;border-radius:5px;background:linear-gradient(to bottom,rgba(216,182,106,0),rgba(216,182,106,.85));opacity:0}
+@keyframes am-up{from{transform:translateY(0) scale(1)}to{transform:translateY(-8vh) scale(1.07)}}
+@keyframes am-fade{to{opacity:0}}
+@keyframes am-sweep{0%{opacity:0;transform:translateX(-110%) rotate(-2deg)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(110%) rotate(-2deg)}}
+@keyframes am-trail{0%{opacity:0;height:0;transform:translateY(0)}35%{opacity:1}100%{opacity:0;height:110px;transform:translateY(40px)}}
+
+/* reduced motion: a calm, finished mascot, then a quick fade (JS adds .s-static) */
+@media (prefers-reduced-motion:reduce){#am-loader,#am-loader *{animation:none!important}}
+.s-static .am-fill{mask:none}
+.s-static .lines,.s-static .sparkle,.s-static .am-wline{display:none}
+.s-static .am-welcome{opacity:1}
+.s-static .am-note{display:none}
+.s-static.s-note1 .am-welcome{opacity:0}
+.s-static.s-note1 .am-note{display:block}

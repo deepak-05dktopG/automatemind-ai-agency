@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import agencyLogo from '../../assets/agency_logo.png'
 
 const markup = `
   <div class="services-motion-graphic">
     <div class="stage-viewport">
-      <div class="stage go" id="st">
+      <div class="stage" id="st">
         <div class="panel a" style="--d:0"></div>
         <div class="logo a" style="--d:.4">
           <img src="${agencyLogo}" alt="AutomateMind"/>
@@ -54,8 +54,8 @@ const styles = `
     box-shadow: 0 0 0 1px #ffffff12, 0 20px 60px #000a;
   }
 
-  .services-motion-graphic.is-scrolling .stage,
-  .services-motion-graphic.is-scrolling .a {
+  .services-motion-graphic.is-scrolling *,
+  .services-motion-graphic.is-offscreen * {
     animation-play-state: paused !important;
   }
 
@@ -673,7 +673,7 @@ const styles = `
 export function ServicesMotionGraphic() {
   const wrapperRef = useRef(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const wrapper = wrapperRef.current
     if (!wrapper) return undefined
 
@@ -710,7 +710,7 @@ export function ServicesMotionGraphic() {
       </svg>
     `
 
-    const mw = (k, d, s, i) => `
+    const mw = (k, d, s) => `
       <div class="mw a" style="--k:${k};--d:${d};--t:1.1s">
         <div class="hop"><div class="m">${s}</div></div>
       </div>
@@ -781,23 +781,46 @@ export function ServicesMotionGraphic() {
     `).join('')
 
     let timer = null
+    let isVisible = false
+    let isScrolling = false
 
     const play = () => {
+      if (!isVisible || isScrolling) return
+
       stage.classList.remove('go', 'paused')
       void stage.offsetWidth
       stage.classList.add('go')
       clearTimeout(timer)
-      timer = setTimeout(play, 24500)
+      timer = setTimeout(() => {
+        timer = null
+        play()
+      }, 24500)
     }
 
-    play()
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting
+      graphic.classList.toggle('is-offscreen', !isVisible)
+      if (isVisible && !isScrolling && !timer) play()
+    }, {
+      rootMargin: '120px 0px',
+      threshold: 0,
+    })
+    observer.observe(graphic)
 
-    const pauseForScroll = () => graphic.classList.add('is-scrolling')
-    const resumeAfterScroll = () => graphic.classList.remove('is-scrolling')
+    const pauseForScroll = () => {
+      isScrolling = true
+      graphic.classList.add('is-scrolling')
+    }
+    const resumeAfterScroll = () => {
+      isScrolling = false
+      graphic.classList.remove('is-scrolling')
+      if (isVisible && !timer) play()
+    }
     window.addEventListener('automatemind:scrollstart', pauseForScroll)
     window.addEventListener('automatemind:scrollend', resumeAfterScroll)
 
     return () => {
+      observer.disconnect()
       clearTimeout(timer)
       window.removeEventListener('automatemind:scrollstart', pauseForScroll)
       window.removeEventListener('automatemind:scrollend', resumeAfterScroll)

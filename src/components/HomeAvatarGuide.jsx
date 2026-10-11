@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { createAvatar } from '@bible-strong/avatar-react'
 import '@bible-strong/avatar-react/styles.css'
 import freddyDefinition from '../assets/freddy.avatar.json'
@@ -18,23 +18,14 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
   const avatarControllerRef = useRef(null)
   const isVisibleRef = useRef(false)
   const isScrollingRef = useRef(false)
-  const hasBeenVisibleRef = useRef(false)
-  const [hasBeenVisible, setHasBeenVisible] = useState(false)
-
-  const revealAvatar = () => {
-    if (hasBeenVisibleRef.current) return
-    hasBeenVisibleRef.current = true
-    setHasBeenVisible(true)
-  }
 
   useEffect(() => {
     const guide = guideRef.current
+    const avatarController = avatarControllerRef.current
     if (!guide) return undefined
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisibleRef.current = entry.isIntersecting
-      if (entry.isIntersecting && !isScrollingRef.current) revealAvatar()
-
       if (!animation) return
       if (entry.isIntersecting && !isScrollingRef.current) avatarControllerRef.current?.play(animation)
       else avatarControllerRef.current?.pause()
@@ -47,12 +38,13 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
 
     return () => {
       observer.disconnect()
-      avatarControllerRef.current?.pause()
+      avatarController?.pause()
     }
   }, [animation])
 
   useEffect(() => {
     if (!animation) return undefined
+    const avatarController = avatarControllerRef.current
 
     const handleScrollStart = () => {
       isScrollingRef.current = true
@@ -61,25 +53,18 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
 
     const handleScrollEnd = () => {
       isScrollingRef.current = false
-      if (isVisibleRef.current) {
-        revealAvatar()
-        avatarControllerRef.current?.play(animation)
-      }
+      if (isVisibleRef.current) avatarControllerRef.current?.play(animation)
     }
 
     window.addEventListener('automatemind:scrollstart', handleScrollStart)
     window.addEventListener('automatemind:scrollend', handleScrollEnd)
 
-    if (hasBeenVisible && isVisibleRef.current && !isScrollingRef.current) {
-      avatarControllerRef.current?.play(animation)
-    }
-
     return () => {
       window.removeEventListener('automatemind:scrollstart', handleScrollStart)
       window.removeEventListener('automatemind:scrollend', handleScrollEnd)
-      avatarControllerRef.current?.pause()
+      avatarController?.pause()
     }
-  }, [animation, hasBeenVisible])
+  }, [animation])
 
   return (
     <Element ref={guideRef} className={`home-avatar-guide home-avatar-guide--${side}`}>
@@ -87,26 +72,24 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
         <span className="home-avatar-guide__text">{children}</span>
       </span>
       <span className="home-avatar-guide__avatar-slot" aria-hidden="true">
-        {hasBeenVisible && (
-          animation === 'angry' ? (
-            <AngryFreddyAvatar
-              ref={avatarControllerRef}
-              defaultAnimation={animation}
-              autoplay={false}
-              size="var(--home-avatar-size)"
-              className="home-avatar-guide__robot"
-              ariaLabel="Red Freddy avatar"
-            />
-          ) : (
-            <FreddyAvatar
-              ref={avatarControllerRef}
-              defaultAnimation={animation}
-              autoplay={false}
-              size="var(--home-avatar-size)"
-              className="home-avatar-guide__robot"
-              ariaLabel="Freddy avatar"
-            />
-          )
+        {animation === 'angry' ? (
+          <AngryFreddyAvatar
+            ref={avatarControllerRef}
+            defaultAnimation={animation}
+            autoplay={false}
+            size="var(--home-avatar-size)"
+            className="home-avatar-guide__robot"
+            ariaLabel="Red Freddy avatar"
+          />
+        ) : (
+          <FreddyAvatar
+            ref={avatarControllerRef}
+            defaultAnimation={animation}
+            autoplay={false}
+            size="var(--home-avatar-size)"
+            className="home-avatar-guide__robot"
+            ariaLabel="Freddy avatar"
+          />
         )}
       </span>
     </Element>
