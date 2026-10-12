@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useHomepageSmoothScroll } from '../hooks/useHomepageSmoothScroll'
 import {
   HomeHeroSection,
   HomeProblemsSection,
@@ -11,6 +12,8 @@ import {
 } from '../components/sections/HomeSections'
 
 export function HomePage() {
+  useHomepageSmoothScroll()
+
   useEffect(() => {
     const sections = document.querySelectorAll(
       '#home-hero, #problem-section, #what-we-build-section, #solutions-section, #how-we-work-section, #industries-section, #outcomes-section, #final-cta-section',
