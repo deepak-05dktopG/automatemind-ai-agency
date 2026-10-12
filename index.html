@@ -92,7 +92,14 @@
           <path class="sparkle sparkle--2" d="M376 150l2.6 8.4 8.4 2.6-8.4 2.6-2.6 8.4-2.6-8.4-8.4-2.6 8.4-2.6z" fill="#F5D27A"/>
         </svg>
         <div class="am-text">
-          <p class="am-welcome"><span class="am-w1">Welcome</span><span class="am-w2">to AutomateMind</span></p>
+          <div class="am-welcome">
+            <div class="am-brand" aria-label="AutomateMind">
+              <img class="am-brand__logo" src="/src/assets/agency_logo.png" alt="" />
+              <span class="am-brand__name"><span>Automate</span><span>Mind</span></span>
+            </div>
+            <p class="am-w1">Welcome</p>
+            <p class="am-w2">Intelligent automation is getting ready for you</p>
+          </div>  
           <div class="am-note">
             <p class="am-note__t"></p>
             <div class="am-actions" hidden><button type="button" data-am="continue">Continue anyway</button><button type="button" data-am="reload">Try again</button></div>
@@ -117,17 +124,17 @@
         rateLate: 1.4,         // speed-up if the site becomes ready later (animation otherwise ALWAYS runs at 1x)
         fontsTimeout: 2500,    // essential readiness: fonts, capped
         imagesTimeout: 3000,   // essential readiness: above-the-fold images, capped
-        slowAfter: 6000,       // mascot starts telling the visitor it is taking longer than usual
-        longAfter: 15000,      // slow-connection message + "Continue anyway" / "Try again"
-        giveUpAfter: 45000,    // enter the site anyway (if anything has rendered)
+        slowAfter: 50000,      // only show a network message after an extended wait
+        longAfter: 50000,      // slow-connection message + "Continue anyway" / "Try again"
+        giveUpAfter: 60000,    // enter the site anyway (if anything has rendered)
         reducedHold: 400,
         // anything matching these inside #root counts as "still loading" and is hidden behind the mascot
         spinnerSelectors: '.spinner-border,.spinner-grow,.spinner,.loader,.loading,.preloader,[class*="spinner"],[role="progressbar"],[aria-busy="true"]',
         text: {
-          slow: 'Taking a little longer than usual\u2026',
-          long: 'Your connection seems slow. We\u2019re still loading \u2014 you can keep waiting or continue anyway.',
-          offline: 'You appear to be offline. We\u2019ll continue as soon as your connection is back.',
-          stuck: 'We couldn\u2019t load the site. Please check your connection and try again.'
+          slow: 'We\u2019re preparing your experience. Thank you for your patience\u2026',
+          long: 'Your connection may be taking longer than expected. We\u2019re still preparing AutomateMind \u2014 you can keep waiting or continue anyway.',
+          offline: 'You appear to be offline. Please reconnect to continue your AutomateMind experience.',
+          stuck: 'We\u2019re having trouble reaching AutomateMind. Please check your connection and try again.'
         }
       };
       var user = window.AM_LOADER_CONFIG;

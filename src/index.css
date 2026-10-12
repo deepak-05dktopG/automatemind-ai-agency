@@ -1276,15 +1276,20 @@ html.am-boot body>*:not(#am-loader):not(#root):not(script):not(style):not(link):
 .am-text{display:grid;justify-items:center;align-items:start;width:min(88vw,430px);min-height:7.4em}
 .am-text>*{grid-area:1/1}
 .am-welcome{margin:0;text-align:center;opacity:0}
+.am-brand{display:inline-flex;align-items:center;justify-content:center;gap:.7rem;margin-bottom:clamp(10px,2vh,18px)}
+.am-brand__logo{display:block;width:clamp(42px,9vw,58px);height:clamp(42px,9vw,58px);object-fit:contain;border-radius:12px}
+.am-brand__name{font:400 clamp(23px,5vw,34px)/1 'Eagle Lake',cursive;letter-spacing:0}
+.am-brand__name span:first-child{color:#fff}
+.am-brand__name span:last-child{color:#D8B66A}
 .am-note{width:100%;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s ease}
-.am-note__t{margin:0;font:500 clamp(13px,2.5vw,15px)/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.02em;color:#D8B66A}
+.am-note__t{margin:0 auto;max-width:34rem;font:400 clamp(17px,3.6vw,22px)/1.4 'Eagle Lake',cursive;letter-spacing:.01em;color:#D8B66A}
 .am-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin-top:.8rem}
 .am-actions[hidden]{display:none}
 .am-actions button{font:600 .8rem system-ui,-apple-system,"Segoe UI",sans-serif;color:#D8B66A;background:transparent;border:1px solid rgba(216,182,106,.6);border-radius:999px;padding:.5rem 1.1rem;cursor:pointer;pointer-events:auto;transition:background .2s,border-color .2s}
 .am-actions button:hover{background:rgba(216,182,106,.12);border-color:#D8B66A}
 .am-actions button:focus-visible{outline:2px solid #D8B66A;outline-offset:3px}
-.am-w1{display:block;font:600 clamp(28px,5.6vw,38px)/1.1 "Cormorant Garamond",Georgia,"Times New Roman",serif;color:#D8B66A;letter-spacing:.01em}
-.am-w2{display:block;margin-top:.25em;font:500 clamp(14px,2.6vw,17px)/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.05em;color:#E8E4D8}
+.am-w1{display:block;margin:0;font:400 clamp(34px,7vw,50px)/1.05 'Eagle Lake',cursive;color:#D8B66A;letter-spacing:0}
+.am-w2{display:block;margin:.55em auto 0;max-width:31rem;font:500 clamp(16px,3.2vw,21px)/1.4 Manrope,system-ui,sans-serif;letter-spacing:.02em;color:#E8E4D8}
 
 /* line art */
 .lines{filter:drop-shadow(0 0 2px rgba(198,161,91,.35))}
