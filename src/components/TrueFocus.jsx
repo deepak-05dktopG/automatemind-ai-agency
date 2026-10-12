@@ -18,39 +18,22 @@ const TrueFocus = ({
   const containerRef = useRef(null);
   const focusFrameRef = useRef(null);
   const wordRefs = useRef([]);
-  const isScrollingRef = useRef(false);
 
   useEffect(() => {
     if (!manualMode) {
       let interval;
 
       const startRotation = () => {
-        if (isScrollingRef.current || interval) return;
+        if (interval) return;
         interval = setInterval(
           () => setCurrentIndex(prev => (prev + 1) % words.length),
           (animationDuration + pauseBetweenAnimations) * 1000
         );
       };
-      const handleScrollStart = () => {
-        isScrollingRef.current = true;
-        clearInterval(interval);
-        interval = undefined;
-        focusFrameRef.current?.getAnimations().forEach(animation => animation.pause());
-      };
-      const handleScrollEnd = () => {
-        isScrollingRef.current = false;
-        focusFrameRef.current?.getAnimations().forEach(animation => animation.play());
-        startRotation();
-      };
-
-      window.addEventListener('automatemind:scrollstart', handleScrollStart);
-      window.addEventListener('automatemind:scrollend', handleScrollEnd);
       startRotation();
 
       return () => {
         clearInterval(interval);
-        window.removeEventListener('automatemind:scrollstart', handleScrollStart);
-        window.removeEventListener('automatemind:scrollend', handleScrollEnd);
       };
     }
   }, [manualMode, animationDuration, pauseBetweenAnimations, words.length]);

@@ -308,12 +308,6 @@
   animation-play-state: paused !important;
 }
 
-.how-it-works-motion .track.is-scrolling *,
-.how-it-works-motion .track.is-scrolling *::before,
-.how-it-works-motion .track.is-scrolling *::after {
-  animation-play-state: paused !important;
-}
-
 @keyframes how-work-dot-pulse {
   from { box-shadow: 0 0 0 0 #d1a85d99; }
   to { box-shadow: 0 0 0 calc(var(--k) * 16) #d1a85d00; }

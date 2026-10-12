@@ -86,17 +86,10 @@ function ProblemMotionGraphicComponent() {
         stage.classList.toggle('is-offscreen', !entry.isIntersecting)
       })
 
-    const pauseForScroll = () => stage.classList.add('is-scrolling')
-    const resumeAfterScroll = () => stage.classList.remove('is-scrolling')
-
     observer?.observe(stage)
-    window.addEventListener('automatemind:scrollstart', pauseForScroll)
-    window.addEventListener('automatemind:scrollend', resumeAfterScroll)
 
     return () => {
       observer?.disconnect()
-      window.removeEventListener('automatemind:scrollstart', pauseForScroll)
-      window.removeEventListener('automatemind:scrollend', resumeAfterScroll)
     }
   }, [])
 

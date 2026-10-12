@@ -44,7 +44,6 @@ const SplitText = ({
     let observer;
     let tween;
     let animationStarted = false;
-    let isScrolling = false;
 
     // Build DOM elements for words/chars splitting without paid SplitText plugin
     el.innerHTML = '';
@@ -100,16 +99,6 @@ const SplitText = ({
           onCompleteRef.current?.();
         }
       });
-      if (isScrolling) tween.pause();
-    };
-
-    const handleScrollStart = () => {
-      isScrolling = true;
-      tween?.pause();
-    };
-    const handleScrollEnd = () => {
-      isScrolling = false;
-      tween?.play();
     };
 
     const observeTrigger = () => {
@@ -135,14 +124,9 @@ const SplitText = ({
 
     observeTrigger();
     window.addEventListener('resize', observeTrigger);
-    window.addEventListener('automatemind:scrollstart', handleScrollStart);
-    window.addEventListener('automatemind:scrollend', handleScrollEnd);
-
     return () => {
       observer?.disconnect();
       window.removeEventListener('resize', observeTrigger);
-      window.removeEventListener('automatemind:scrollstart', handleScrollStart);
-      window.removeEventListener('automatemind:scrollend', handleScrollEnd);
       tween?.kill();
       gsap.set(targets, { clearProps: 'willChange' });
     };

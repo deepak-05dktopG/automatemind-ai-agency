@@ -12,10 +12,6 @@
   background: transparent;
 }
 
-.problem-motion__stage.is-scrolling * {
-  animation-play-state: paused !important;
-}
-
 .problem-motion__camera {
   position: absolute;
   inset: 0;

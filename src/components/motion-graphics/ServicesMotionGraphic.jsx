@@ -54,7 +54,6 @@ const styles = `
     box-shadow: 0 0 0 1px #ffffff12, 0 20px 60px #000a;
   }
 
-  .services-motion-graphic.is-scrolling *,
   .services-motion-graphic.is-offscreen * {
     animation-play-state: paused !important;
   }
@@ -782,10 +781,8 @@ export function ServicesMotionGraphic() {
 
     let timer = null
     let isVisible = false
-    let isScrolling = false
-
     const play = () => {
-      if (!isVisible || isScrolling) return
+      if (!isVisible) return
 
       stage.classList.remove('go', 'paused')
       void stage.offsetWidth
@@ -800,30 +797,16 @@ export function ServicesMotionGraphic() {
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting
       graphic.classList.toggle('is-offscreen', !isVisible)
-      if (isVisible && !isScrolling && !timer) play()
+      if (isVisible && !timer) play()
     }, {
       rootMargin: '120px 0px',
       threshold: 0,
     })
     observer.observe(graphic)
 
-    const pauseForScroll = () => {
-      isScrolling = true
-      graphic.classList.add('is-scrolling')
-    }
-    const resumeAfterScroll = () => {
-      isScrolling = false
-      graphic.classList.remove('is-scrolling')
-      if (isVisible && !timer) play()
-    }
-    window.addEventListener('automatemind:scrollstart', pauseForScroll)
-    window.addEventListener('automatemind:scrollend', resumeAfterScroll)
-
     return () => {
       observer.disconnect()
       clearTimeout(timer)
-      window.removeEventListener('automatemind:scrollstart', pauseForScroll)
-      window.removeEventListener('automatemind:scrollend', resumeAfterScroll)
     }
   }, [])
 

@@ -4,11 +4,40 @@ import '@bible-strong/avatar-react/styles.css'
 import freddyDefinition from '../assets/freddy.avatar.json'
 import './HomeAvatarGuide.css'
 
-const FreddyAvatar = createAvatar(freddyDefinition)
+const MASCOT_SPEED = 2
+
+function speedUpDefinition(definition) {
+  return {
+    ...definition,
+    animations: Object.fromEntries(Object.entries(definition.animations).map(([key, animation]) => [
+      key,
+      {
+        ...animation,
+        steps: animation.steps?.map((step) => ({
+          ...step,
+          holdMs: step.holdMs / MASCOT_SPEED,
+          transitionMs: step.transitionMs / MASCOT_SPEED,
+        })),
+        blink: animation.blink
+          ? {
+              ...animation.blink,
+              initialDelayMs: animation.blink.initialDelayMs / MASCOT_SPEED,
+              minIntervalMs: animation.blink.minIntervalMs / MASCOT_SPEED,
+              maxIntervalMs: animation.blink.maxIntervalMs / MASCOT_SPEED,
+              durationMs: animation.blink.durationMs / MASCOT_SPEED,
+            }
+          : animation.blink,
+      },
+    ])),
+  }
+}
+
+const fastFreddyDefinition = speedUpDefinition(freddyDefinition)
+const FreddyAvatar = createAvatar(fastFreddyDefinition)
 const AngryFreddyAvatar = createAvatar({
-  ...freddyDefinition,
+  ...fastFreddyDefinition,
   colors: {
-    ...freddyDefinition.colors,
+    ...fastFreddyDefinition.colors,
     body: '#c53535',
   },
 })
@@ -16,8 +45,6 @@ const AngryFreddyAvatar = createAvatar({
 export function HomeAvatarGuide({ as: Element = 'span', children, animation, side = 'right' }) {
   const guideRef = useRef(null)
   const avatarControllerRef = useRef(null)
-  const isVisibleRef = useRef(false)
-  const isScrollingRef = useRef(false)
 
   useEffect(() => {
     const guide = guideRef.current
@@ -25,9 +52,8 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
     if (!guide) return undefined
 
     const observer = new IntersectionObserver(([entry]) => {
-      isVisibleRef.current = entry.isIntersecting
       if (!animation) return
-      if (entry.isIntersecting && !isScrollingRef.current) avatarControllerRef.current?.play(animation)
+      if (entry.isIntersecting) avatarControllerRef.current?.play(animation)
       else avatarControllerRef.current?.pause()
     }, {
       rootMargin: '120px 0px',
@@ -38,30 +64,6 @@ export function HomeAvatarGuide({ as: Element = 'span', children, animation, sid
 
     return () => {
       observer.disconnect()
-      avatarController?.pause()
-    }
-  }, [animation])
-
-  useEffect(() => {
-    if (!animation) return undefined
-    const avatarController = avatarControllerRef.current
-
-    const handleScrollStart = () => {
-      isScrollingRef.current = true
-      avatarControllerRef.current?.pause()
-    }
-
-    const handleScrollEnd = () => {
-      isScrollingRef.current = false
-      if (isVisibleRef.current) avatarControllerRef.current?.play(animation)
-    }
-
-    window.addEventListener('automatemind:scrollstart', handleScrollStart)
-    window.addEventListener('automatemind:scrollend', handleScrollEnd)
-
-    return () => {
-      window.removeEventListener('automatemind:scrollstart', handleScrollStart)
-      window.removeEventListener('automatemind:scrollend', handleScrollEnd)
       avatarController?.pause()
     }
   }, [animation])
