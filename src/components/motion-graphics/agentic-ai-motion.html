@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agentic AI – multi-agent collaboration</title>
+<style>
+:root{--navy:#070d1f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:transparent}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#9db3d8;font:13px/1 system-ui,-apple-system,"Segoe UI",sans-serif}
+body.tp{background:transparent}
+/* Scene container: drop this element (.stage) into any section. 16:9, scales with width. */
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:0;overflow:hidden;contain:layout paint;
+ background:radial-gradient(ellipse at 50% 46%,#13224d 0%,#0a1331 46%,#060b1b 100%)}
+.stage,.stage.transparent{background:none}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ctl{display:none;gap:8px;align-items:center}
+.ctl.off{display:none}
+.ctl button,.ctl label{background:#101a3a;color:#bcd0f2;border:1px solid #27407a;border-radius:999px;padding:9px 16px;font:inherit;cursor:pointer}
+.ctl button:hover,.ctl label:hover{background:#17255a}
+.ctl button:focus-visible,.ctl input:focus-visible+span{outline:2px solid #38e8ff;outline-offset:2px}
+.ctl label{display:flex;gap:8px;align-items:center}
+.stage.paused svg *{animation-play-state:paused!important}
+
+/* ---- motion: every duration divides 12s, so the loop closes exactly ---- */
+.robot{color:var(--c)}
+.fl{animation:fl 6s ease-in-out infinite;animation-delay:calc(var(--i)*-1s)}
+.hubr .fl{animation-name:flc}
+@keyframes fl{50%{transform:translateY(-4px)}}
+@keyframes flc{50%{transform:translateY(-9px)}}
+.head{transform-origin:0 -90px;animation:hd 6s ease-in-out infinite;animation-delay:calc(var(--i)*-1.3s)}
+@keyframes hd{0%,100%{transform:rotate(-2deg)}30%{transform:rotate(3deg) translateY(1px)}65%{transform:rotate(-4deg)}}
+.bl{transform-origin:0 -119px;animation:bl 6s infinite;animation-delay:calc(var(--i)*-1.7s);filter:drop-shadow(0 0 3px currentColor)}
+@keyframes bl{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
+.ch{transform-origin:0 -30px;animation:ch 3s ease-in-out infinite;animation-delay:calc(var(--i)*-.6s)}
+@keyframes ch{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
+.aL{transform-origin:-46px -78px;animation:aL 4s ease-in-out infinite;animation-delay:calc(var(--i)*-.8s)}
+.aR{transform-origin:46px -78px;animation:aR 6s ease-in-out infinite;animation-delay:calc(var(--i)*-1.1s)}
+@keyframes aL{0%,100%{transform:rotate(0)}25%{transform:rotate(-24deg)}50%{transform:rotate(-6deg)}75%{transform:rotate(-28deg)}}
+@keyframes aR{0%,100%{transform:rotate(0)}30%{transform:rotate(22deg)}55%{transform:rotate(4deg)}80%{transform:rotate(26deg)}}
+.hubr .aL,.hubr .aR{animation-duration:6s}
+.bar{transform-box:fill-box;transform-origin:0 50%;animation:bar 6s ease-in-out infinite;animation-delay:calc(var(--k)*-.9s)}
+@keyframes bar{0%,100%{transform:scaleX(.45)}40%{transform:scaleX(1)}70%{transform:scaleX(.7)}}
+.dot{animation:dot 3s ease-in-out infinite;animation-delay:calc(var(--k)*-.5s)}
+@keyframes dot{0%,100%{opacity:.2}50%{opacity:1}}
+.ln{stroke-dasharray:140;animation:ln 6s ease-in-out infinite;animation-delay:calc(var(--i)*-1s)}
+@keyframes ln{0%{stroke-dashoffset:140;opacity:0}15%{opacity:1}55%,85%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.act{animation:act 12s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes act{0%,6%{opacity:.22}13%{opacity:1}30%{opacity:.32}100%{opacity:.22}}
+.br{animation:br 6s ease-in-out infinite}
+@keyframes br{0%,100%{opacity:.45}10%{opacity:1}55%{opacity:.5}}
+.pr{transform-box:fill-box;transform-origin:center;animation:pr 6s ease-out infinite}
+@keyframes pr{0%{transform:scale(.6);opacity:0}8%{opacity:.75}100%{transform:scale(1.55);opacity:0}}
+.fin{animation:fin 3s linear infinite}
+@keyframes fin{from{stroke-dashoffset:25}to{stroke-dashoffset:0}}
+.fout{opacity:0;animation:fout 12s linear infinite;animation-delay:var(--d)}
+@keyframes fout{0%{stroke-dashoffset:.1;opacity:0}1%{opacity:1}10%{stroke-dashoffset:100;opacity:1}11%,100%{stroke-dashoffset:100;opacity:0}}
+.scan{animation:scan 6s linear infinite;animation-delay:calc(var(--i)*-1s)}
+@keyframes scan{0%{transform:translateY(0);opacity:0}10%,90%{opacity:.6}100%{transform:translateY(60px);opacity:0}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated network of AI agents collaborating around a central coordinator robot">
+<defs>
+<radialGradient id="bw" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#dbe4f6"/><stop offset="1" stop-color="#8ea2c9"/></radialGradient>
+<linearGradient id="vz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#202a55"/><stop offset="1" stop-color="#060918"/></linearGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<radialGradient id="hg"><stop offset="0" stop-color="#38e8ff" stop-opacity=".26"/><stop offset="1" stop-color="#38e8ff" stop-opacity="0"/></radialGradient>
+<filter id="gl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<ellipse cx="800" cy="560" rx="620" ry="250" fill="url(#hg)"/>
+<g id="pipes"></g><g id="rings"></g><g id="nodes"></g>
+<g id="top"></g><g id="hub"></g><g id="bottom"></g>
+</svg>
+</div>
+<div class="ctl" id="ctl">
+<button id="bp" type="button" aria-pressed="false">Pause</button>
+<button id="br" type="button">Restart</button>
+<label><input id="tp" type="checkbox"><span>Transparent background</span></label>
+</div>
+<script>
+(()=>{
+const A={cyan:'#38e8ff',green:'#35f19a',violet:'#a98bff',gold:'#ffc94d',pink:'#ff7fc8',blue:'#4d8dff'};
+/* Add or remove entries to change the number of agents (left-side paths are mirrored for the right). */
+const outs=[
+ {x:350,y:215,c:A.green,s:-1},{x:1250,y:215,c:A.violet,s:1},
+ {x:190,y:490,c:A.blue,s:-1},{x:1410,y:490,c:A.gold,s:1},
+ {x:390,y:745,c:A.pink,s:-1},{x:1210,y:745,c:A.cyan,s:1}];
+const P=[[[400,225],[520,300],[520,470],[560,500]],[[260,490],[420,490],[470,550],[540,550]],[[440,740],[560,740],[620,690],[620,610]]];
+const RH='M-130,0L0,-62L130,0L0,62Z';
+const rp=(p,r=16)=>{let d='M'+p[0];for(let i=1;i<p.length-1;i++){const a=p[i-1],b=p[i],c=p[i+1];
+ const f=(q)=>{const dx=q[0]-b[0],dy=q[1]-b[1],l=Math.hypot(dx,dy),k=Math.min(r,l/2)/l;return[b[0]+dx*k,b[1]+dy*k]};
+ d+=`L${f(a)}Q${b} ${f(c)}`}return d+'L'+p[p.length-1]};
+const cyl=(x,y,rx,ry,h,top,side,rim)=>`<g transform="translate(${x},${y})"><rect x="${-rx}" width="${2*rx}" height="${h}" fill="${side}"/><ellipse cy="${h}" rx="${rx}" ry="${ry}" fill="${side}"/><ellipse rx="${rx}" ry="${ry}" fill="${top}"${rim?` stroke="${rim}" stroke-opacity=".5" stroke-width="1.5"`:''}/></g>`;
+const cube=(x,y,s,led)=>`<g transform="translate(${x},${y})"><path d="M0,0L${s},${-s/2}L${2*s},0L${s},${s/2}Z" fill="#59668f"/><path d="M0,0L${s},${s/2}V${s*1.6}L0,${s*1.1}Z" fill="#2b3556"/><path d="M${2*s},0L${s},${s/2}V${s*1.6}L${2*s},${s*1.1}Z" fill="#1c2441"/>${led?`<rect class="dot" x="${s*.25}" y="${s*.75}" width="${s*.5}" height="3" rx="1.5" fill="currentColor" style="--k:${led}"/>`:''}</g>`;
+const robot=(s,i,cls='')=>`<g class="robot ${cls}" style="--i:${i}" transform="scale(${s})"><ellipse cy="6" rx="54" ry="15" fill="url(#sh)"/><g class="fl">
+<g class="aL"><rect x="-56" y="-78" width="19" height="46" rx="9.5" fill="url(#bw)" transform="rotate(10 -46 -78)"/></g>
+<g class="aR"><rect x="37" y="-78" width="19" height="46" rx="9.5" fill="url(#bw)" transform="rotate(-10 46 -78)"/></g>
+<ellipse cy="-42" rx="40" ry="46" fill="url(#bw)"/><ellipse cx="-16" cy="-62" rx="9" ry="18" fill="#fff" opacity=".35" transform="rotate(18 -16 -62)"/>
+<circle cy="-30" r="11" fill="#0b1228" stroke="currentColor" stroke-width="3"/><circle class="ch" cy="-30" r="5.5" fill="currentColor"/>
+<g class="head"><rect x="-59" y="-134" width="15" height="32" rx="7.5" fill="#e3eaf8"/><rect x="44" y="-134" width="15" height="32" rx="7.5" fill="#e3eaf8"/>
+<rect x="-59" y="-122" width="15" height="5" fill="currentColor"/><rect x="44" y="-122" width="15" height="5" fill="currentColor"/>
+<line y1="-150" y2="-166" stroke="#cfd9ee" stroke-width="3"/><circle cy="-170" r="4.5" fill="currentColor"/>
+<rect x="-46" y="-152" width="92" height="66" rx="30" fill="url(#bw)"/><rect x="-35" y="-141" width="70" height="43" rx="20" fill="url(#vz)"/>
+<g class="bl"><ellipse cx="-14" cy="-119" rx="6" ry="7" fill="currentColor"/><ellipse cx="14" cy="-119" rx="6" ry="7" fill="currentColor"/></g>
+<ellipse cx="-22" cy="-146" rx="14" ry="4" fill="#fff" opacity=".5"/></g></g></g>`;
+const bars=(cols,rows,step,y0,i,cv,w0)=>{let s='';cols.forEach((x,ci)=>{for(let k=0;k<rows;k++){const xc=x+30,y=y0-k*step-cv*(1-(xc/130)**2),w=w0+((k*7+i*5+ci*3)%4)*9;
+ s+=`<circle class="dot" cx="${x}" cy="${y}" r="2.6" fill="currentColor" style="--k:${k+ci+i}"/><rect class="bar" x="${x+8}" y="${y-2}" width="${w}" height="4" rx="2" fill="currentColor" opacity=".7" style="--k:${k*2+ci+i}"/>`}});return s};
+const outpost=(o,i)=>{const d=`${2*i-12}s`;
+return `<g transform="translate(${o.x},${o.y})" style="--c:${o.c};--d:${d}">
+<ellipse cy="56" rx="175" ry="58" fill="url(#sh)"/>
+<path transform="translate(0,22)" d="${RH}" fill="#070b18" stroke="#070b18" stroke-width="44" stroke-linejoin="round"/>
+<path d="${RH}" fill="#1b2446" stroke="#1b2446" stroke-width="44" stroke-linejoin="round"/>
+<path d="${RH}" fill="#242f5c" stroke="#242f5c" stroke-width="28" stroke-linejoin="round"/>
+<path d="${RH}" transform="scale(1.2)" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="1.5"/>
+<g style="color:${o.c}"><path d="M-130,-4Q0,-60 130,-4L130,-124Q0,-180 -130,-124Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-opacity=".6" stroke-width="1.5"/>
+${bars([-112,56],4,17,-22,i,28,18)}
+<polyline class="ln" style="--i:${i}" points="-42,-136 -30,-142 -18,-134 -6,-146 6,-140 18,-144 30,-134 42,-140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+<rect class="scan" style="--i:${i}" x="-100" y="-120" width="200" height="1.5" fill="currentColor" opacity="0"/></g>
+<g transform="scale(${o.s},1)">${cyl(-96,4,20,8,12,'#39456f','#1a2142','currentColor')}${cyl(-96,-6,20,8,12,'#39456f','#1a2142')}${cube(60,12,18,i+1)}${cube(92,0,13,0)}</g>
+<ellipse cy="8" rx="64" ry="25" fill="#0a1028" stroke="currentColor" stroke-opacity=".4" stroke-width="2"/>
+<ellipse class="act" cy="8" rx="52" ry="20" fill="currentColor" fill-opacity=".25"/>
+<ellipse class="act" cy="8" rx="64" ry="25" fill="none" stroke="currentColor" stroke-width="4" filter="url(#gl)"/>
+<g transform="translate(0,8)">${robot(.62,i)}</g></g>`};
+const hub=()=>`<g transform="translate(800,560)" style="--c:${A.cyan}">
+<ellipse cy="70" rx="430" ry="115" fill="url(#sh)"/>
+${cyl(0,0,340,122,26,'#161e3d','#080c1c','#38e8ff')}${cyl(0,-24,270,98,22,'#1b2547','#0a0f22','#38e8ff')}${cyl(0,-48,200,72,22,'#222d5a','#0c1226','#38e8ff')}${cyl(0,-68,130,47,14,'#27336a','#0e1530','#38e8ff')}
+<ellipse class="br" cx="0" cy="0" rx="340" ry="122" fill="none" stroke="#38e8ff" stroke-width="3" filter="url(#gl)"/>
+<ellipse class="br" cy="-48" rx="200" ry="72" fill="none" stroke="#38e8ff" stroke-width="3" filter="url(#gl)"/>
+<ellipse class="br" cy="-68" rx="104" ry="37" fill="none" stroke="#7ff3ff" stroke-width="4" filter="url(#gl)"/>
+<g style="color:#38e8ff"><rect x="-190" y="-380" width="380" height="332" fill="currentColor" fill-opacity=".05"/>
+<ellipse cy="-48" rx="190" ry="66" fill="currentColor" fill-opacity=".05"/><ellipse cy="-380" rx="190" ry="64" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-opacity=".55" stroke-width="1.5"/>
+<path d="M-190,-380V-48M190,-380V-48" stroke="currentColor" stroke-opacity=".45" fill="none"/>
+${bars([-165,60],6,32,-95,3,0,24)}
+<g transform="translate(0,-366)"><rect x="-24" y="-13" width="48" height="26" rx="8" fill="#0b1630" stroke="currentColor" stroke-opacity=".7" stroke-width="1.5"/><circle class="dot" cx="-10" r="2.5" fill="currentColor" style="--k:0"/><circle class="dot" r="2.5" fill="currentColor" style="--k:1"/><circle class="dot" cx="10" r="2.5" fill="currentColor" style="--k:2"/></g></g>
+<g transform="translate(0,-62)">${robot(1.5,0,'hubr')}</g>
+<path d="M-190,-48A190,66 0 0 0 190,-48" fill="none" stroke="#38e8ff" stroke-opacity=".55" stroke-width="1.5"/></g>`;
+let pipes='',rings='',top='',bottom='';
+outs.forEach((o,i)=>{
+ const pts=o.s<0?P[i>>1]:P[i>>1].map(([x,y])=>[1600-x,y]),d=rp(pts),dl=`${2*i-12}s`;
+ pipes+=`<g style="--d:${dl}"><path d="${d}" fill="none" stroke="#35d7f5" stroke-opacity=".28" stroke-width="21" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#08102a" stroke-width="15" stroke-linecap="round"/><path class="pp" d="${d}" fill="none" stroke="#38e8ff" stroke-opacity=".35" stroke-width="2"/>
+ <path pathLength="100" class="fin" d="${d}" fill="none" stroke="#7ff3ff" stroke-width="4" stroke-linecap="round" stroke-dasharray="4 21" style="animation-delay:${-i*.5}s"/>
+ <path pathLength="100" class="fout" d="${d}" fill="none" stroke="#38e8ff" stroke-opacity=".35" stroke-width="10" stroke-linecap="round" stroke-dasharray="7 93"/>
+ <path pathLength="100" class="fout" d="${d}" fill="none" stroke="#e6feff" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 93"/></g>`;
+ if(o.y>600)bottom+=outpost(o,i);else top+=outpost(o,i);
+});
+rings=`<ellipse class="pr" cx="800" cy="560" rx="340" ry="122" fill="none" stroke="#38e8ff" stroke-width="3"/><ellipse class="pr" style="animation-delay:-3s" cx="800" cy="560" rx="340" ry="122" fill="none" stroke="#38e8ff" stroke-width="3"/>`;
+const $=id=>document.getElementById(id);
+$('pipes').innerHTML=pipes;$('rings').innerHTML=rings;$('top').innerHTML=top;$('hub').innerHTML=hub();$('bottom').innerHTML=bottom;
+let nodes='';
+$('pipes').querySelectorAll('.pp').forEach((p,i)=>{const q=p.getPointAtLength(p.getTotalLength()*.5);
+ nodes+=`<g transform="translate(${q.x},${q.y})" style="color:#38e8ff;--d:${2*i-12}s"><rect x="-17" y="-17" width="34" height="34" rx="9" fill="#0d1838" stroke="currentColor" stroke-opacity=".7" stroke-width="2"/><rect class="act" x="-17" y="-17" width="34" height="34" rx="9" fill="currentColor" fill-opacity=".25" stroke="currentColor" stroke-width="2" filter="url(#gl)"/><rect x="-8" y="-7" width="16" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M-4,4L-6,9L2,4" fill="none" stroke="currentColor" stroke-width="1.8"/></g>`});
+$('nodes').innerHTML=nodes;
+
+/* controls */
+const stage=$('stage'),svg=$('scene'),bp=$('bp'),tp=$('tp'),q=new URLSearchParams(location.search);
+let user=false,seen=true;
+const apply=()=>stage.classList.toggle('paused',user||!seen||document.hidden);
+const setUser=v=>{user=v;bp.textContent=v?'Resume':'Pause';bp.setAttribute('aria-pressed',v);apply()};
+bp.onclick=()=>setUser(!user);
+$('br').onclick=()=>{svg.style.display='none';void svg.getBoundingClientRect();svg.style.display='';if(user)setUser(false)};
+const setTp=v=>{stage.classList.toggle('transparent',v);document.body.classList.toggle('tp',v);tp.checked=v};
+tp.onchange=()=>setTp(tp.checked);
+if(q.get('transparent')==='1')setTp(true);
+if(q.get('controls')==='0')$('ctl').classList.add('off');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)setUser(true);
+new IntersectionObserver(e=>{seen=e[0].isIntersecting;apply()}).observe(stage);
+document.addEventListener('visibilitychange',apply);
+})();
+</script>
+</body>
+</html>

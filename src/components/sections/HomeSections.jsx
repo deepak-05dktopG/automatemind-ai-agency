@@ -1,7 +1,5 @@
 import { PrimaryButton, SecondaryButton } from '../Buttons'
 import { EmptySection } from './EmptySection'
-import SplitText from '../SplitText'
-import FoldText from '../FoldText'
 import TrueFocus from '../TrueFocus'
 import { HomeAvatarGuide } from '../HomeAvatarGuide'
 import { ProblemMotionGraphic } from '../motion-graphics/ProblemMotionGraphic'
@@ -31,40 +29,10 @@ export function HomeHeroSection() {
             </div>
           </HomeAvatarGuide>
           <h1>
-            <span>
-              < FoldText
-                text="Make Your Business Work Smarter."
-                splitBy="word"
-                hinge="top"
-                duration={1.5}
-                stagger={0.06}
-                fontSize="inherit"
-                fontWeight="inherit"
-                color="inherit"
-                className="hero-reference__headline-animation"
-              />
-            </span>
-            <SplitText
-              text="Automate the Work. Accelerate the Growth."
-              className="hero-reference__headline-animation"
-              tag="em"
-              splitType="chars"
-              delay={24}
-              duration={1.5}
-              from={{ opacity: 0, y: 12 }}
-            />
+            <span>Make Your Business Work Smarter.</span>
+            <em>Automate the Work. Accelerate the Growth.</em>
           </h1>
-          <p>
-            <SplitText
-              text={'We turn repetitive processes into intelligent systems that save time,\nreduce complexity, and help your business grow.'}
-              tag="em"
-              splitType="chars"
-              delay={50}
-              duration={1.5}
-              from={{ opacity: 0, y: 12 }}
-              className="hero-reference__support-animation"
-            />
-          </p>
+          <p><em>We turn repetitive processes into intelligent systems that save time,<br />reduce complexity, and help your business grow.</em></p>
           <div className="hero-actions">
             <PrimaryButton to="/contact">Start a Conversation</PrimaryButton>
             <SecondaryButton to="/how-we-work">See How We Work →</SecondaryButton>

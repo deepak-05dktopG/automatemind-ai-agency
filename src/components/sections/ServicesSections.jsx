@@ -1,17 +1,11 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { serviceData } from '../../data/siteData'
+import { AgenticAiMotionGraphic } from '../motion-graphics/AgenticAiMotionGraphic'
+import { AiAgentMotionGraphic } from '../motion-graphics/AiAgentMotionGraphic'
+import { AiAssistantsMotionGraphic } from '../motion-graphics/AiAssistantsMotionGraphic'
+import { SmartWorkflowsMotionGraphic } from '../motion-graphics/SmartWorkflowsMotionGraphic'
 import { ServicesMotionGraphic } from '../motion-graphics/ServicesMotionGraphic'
 import './ServicesSections.css'
-
-const displayNames = {
-  'Custom Intelligent Systems': 'Custom AI Solutions',
-  'Custom Software Solutions': 'Intelligent Business Systems',
-}
-
-const getDisplayName = (service) => displayNames[service.title] || service.title
-const serviceOrder = ['AI Agents', 'Agentic AI', 'Business Automation', 'Workflow Automation', 'Intelligent Process Automation', 'AI Integration', 'Custom Intelligent Systems', 'Custom Software Solutions']
-const orderedServices = serviceOrder.map((title, index) => ({ ...serviceData.find((service) => service.title === title), displayNumber: String(index + 1).padStart(2, '0') }))
 
 const serviceSpecs = [
   {
@@ -88,6 +82,11 @@ const serviceSpecs = [
   },
 ]
 
+const finalServices = serviceSpecs.map((service) => ({
+  ...service,
+  displayNumber: service.number,
+}))
+
 function useReveal() {
   useEffect(() => {
     const items = document.querySelectorAll('[data-reveal]')
@@ -114,19 +113,16 @@ function ServiceVisual({ service }) {
 
   return (
     <div className={`service-visual service-visual--${service.visual}`} aria-label={`${service.title} visual`}>
+      {service.visual === 'command-center' && <AiAgentMotionGraphic />}
+      {service.visual === 'system-map' && <AgenticAiMotionGraphic />}
+      {service.visual === 'conversation' && <AiAssistantsMotionGraphic />}
+      {service.visual === 'operations-rail' && <SmartWorkflowsMotionGraphic />}
       <div className="service-visual__grid" aria-hidden="true" />
-      <div className="service-visual__core">{service.visual === 'conversation' ? 'AI' : service.number}</div>
+      {service.visual !== 'command-center' && service.visual !== 'system-map' && service.visual !== 'conversation' && service.visual !== 'operations-rail' && <div className="service-visual__core">{service.number}</div>}
       <div className="service-visual__path" aria-hidden="true" />
       <div className="service-visual__nodes">
         {labels.map((label, index) => <span key={label} style={{ '--node-index': index }}>{label}</span>)}
       </div>
-      {service.visual === 'conversation' && (
-        <div className="service-visual__conversation">
-          <span>How did last quarter perform?</span>
-          <i>Q4 performance brief.pdf</i>
-          <b>Revenue grew 18% with the strongest lift from repeat customers.</b>
-        </div>
-      )}
       {service.visual === 'before-after' && (
         <div className="service-visual__compare"><span>FRAGMENTED</span><b>→</b><span>CONNECTED</span></div>
       )}
@@ -148,7 +144,6 @@ function ServiceDetail({ service }) {
         <div className="service-detail__copy">
           <h2>{service.headline}</h2>
           <p className="service-detail__summary">{service.description}</p>
-          <ul>{service.capabilities.map((capability) => <li key={capability}>{capability}</li>)}</ul>
           <Link to="/contact">Discuss {service.title} <b aria-hidden="true">↗</b></Link>
         </div>
         <ServiceVisual service={service} />
@@ -174,7 +169,7 @@ export function ServicesPageContent() {
             <ServicesMotionGraphic />
           </div>
         </div>
-        <div className="services-marquee"><div>{[...orderedServices, ...orderedServices].map((service, index) => <a href={`#service-${service.displayNumber}`} key={`${service.title}-${index}`}><span>{service.displayNumber}</span>{getDisplayName(service)} <b aria-hidden="true">↗</b></a>)}</div></div>
+        <div className="services-marquee"><div>{[...finalServices, ...finalServices].map((service, index) => <a href={`#service-${service.displayNumber}`} key={`${service.title}-${index}`}><span>{service.displayNumber}</span>{service.title} <b aria-hidden="true">↗</b></a>)}</div></div>
       </section>
 
       <main className="services-catalogue" id="services-catalogue">
@@ -183,7 +178,7 @@ export function ServicesPageContent() {
             <div><span className="services-kicker">OUR SERVICES</span><h2>What we<br /><em>do best.</em></h2></div>
             <p>Explore each service to understand where AutomateMind can help your business.</p>
           </header>
-          <nav className="services-selector" aria-label="Services list" data-reveal>{orderedServices.map((service) => <a href={`#service-${service.displayNumber}`} key={service.title}><span>{service.displayNumber}</span>{getDisplayName(service)}<b aria-hidden="true">↘</b></a>)}</nav>
+          <nav className="services-selector" aria-label="Services list" data-reveal>{finalServices.map((service) => <a href={`#service-${service.displayNumber}`} key={service.title}><span>{service.displayNumber}</span>{service.title}<b aria-hidden="true">↘</b></a>)}</nav>
           <div className="services-details">{serviceSpecs.map((service) => <ServiceDetail service={service} key={service.title} />)}</div>
         </div>
       </main>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Assistants – Ask, Find context, Process, Answer</title>
+<style>
+:root{--navy:#050b1e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:transparent}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#9db3d8;font:13px/1 system-ui,-apple-system,"Segoe UI",sans-serif}
+body.tp{background:transparent}
+/* .stage = isolated scene container: fixed 1920x1080 artboard, scales to fit, 16:9 */
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:0;overflow:hidden;contain:layout paint;background:none}
+.stage.transparent{background:none}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ctl{display:none;gap:8px;align-items:center}
+.ctl.off{display:none}
+.ctl button,.ctl label{background:#101a3a;color:#bcd0f2;border:1px solid #27407a;border-radius:999px;padding:9px 16px;font:inherit;cursor:pointer}
+.ctl button:hover,.ctl label:hover{background:#17255a}
+.ctl button:focus-visible,.ctl input:focus-visible+span{outline:2px solid #38d6ff;outline-offset:2px}
+.ctl label{display:flex;gap:8px;align-items:center}
+svg text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.o{transform-box:fill-box;transform-origin:50% 50%}
+.ob{transform-box:fill-box;transform-origin:50% 100%}
+.ol{transform-box:fill-box;transform-origin:0 50%}
+/* idle loops: durations divide 12s so they close with the main timeline */
+.fl{animation:fl 6s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-6px)}}
+.head{transform-origin:0 -60px;animation:hd 6s ease-in-out infinite}
+@keyframes hd{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+.hq{transform-origin:0 -60px}
+.aL{transform-origin:-34px -56px}.aR{transform-origin:34px -56px}
+.bl{transform-box:fill-box;transform-origin:50% 50%;animation:bl 6s infinite}
+@keyframes bl{0%,91%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.ch{transform-origin:0 -36px;animation:ch 3s ease-in-out infinite}
+@keyframes ch{0%,100%{opacity:.7;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+.rg{animation:rg 6s ease-in-out infinite}
+@keyframes rg{0%,100%{opacity:.55}50%{opacity:1}}
+.gf{stroke-dasharray:5 15;animation:gf 2s linear infinite}
+@keyframes gf{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}
+.bar{transform-box:fill-box;transform-origin:0 50%;animation:bar 6s ease-in-out infinite;animation-delay:calc(var(--k)*-.9s)}
+@keyframes bar{0%,100%{transform:scaleX(.45)}40%{transform:scaleX(1)}70%{transform:scaleX(.7)}}
+.dot{animation:dot 3s ease-in-out infinite;animation-delay:calc(var(--k)*-.5s)}
+@keyframes dot{0%,100%{opacity:.2}50%{opacity:1}}
+.tw{animation:tw 6s ease-in-out infinite;animation-delay:calc(var(--k)*-.7s)}
+@keyframes tw{0%,100%{opacity:.1}50%{opacity:.6}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<svg id="scene" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-label="An AI assistant robot receives a question, gathers context, processes documents, and presents a summarised answer">
+<defs>
+<radialGradient id="bb" cx=".3" cy=".25" r=".95"><stop offset="0" stop-color="#a9ccff"/><stop offset=".45" stop-color="#4f8bf7"/><stop offset="1" stop-color="#2a55d4"/></radialGradient>
+<linearGradient id="ec" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8fbff"/><stop offset="1" stop-color="#73d3ff"/></linearGradient>
+<radialGradient id="hw" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#cdd9ff"/><stop offset="1" stop-color="#7f98ee"/></radialGradient>
+<linearGradient id="vz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16214a"/><stop offset="1" stop-color="#03060f"/></linearGradient>
+<linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe29a"/><stop offset="1" stop-color="#e9a21f"/></linearGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<radialGradient id="gg"><stop offset="0" stop-color="#f6b93b" stop-opacity=".35"/><stop offset="1" stop-color="#f6b93b" stop-opacity="0"/></radialGradient>
+<filter id="gl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- Everything below is authored on a 1600x900 grid inside one 1.2x group = the 1920x1080 artboard.
+     Persistent elements (robot, platform, holograms, glow) never move; only opacity/transform of stage items animate. -->
+<g transform="scale(1.2)">
+<g id="dust"></g>
+<ellipse cx="610" cy="690" rx="470" ry="150" fill="url(#gg)"/>
+
+<!-- step labels + progress -->
+<g fill="#f6b93b" font-size="26">
+<g id="s1"><circle cx="92" cy="84" r="22" fill="none" stroke="#f6b93b" stroke-width="2"/><text x="92" y="92" font-size="21" text-anchor="middle">01</text><text x="130" y="92" font-weight="700" letter-spacing="3" fill="#f3f7ff">ASK</text></g>
+<g id="s2"><circle cx="400" cy="84" r="22" fill="none" stroke="#f6b93b" stroke-width="2"/><text x="400" y="92" font-size="21" text-anchor="middle">02</text><text x="438" y="92" font-weight="700" letter-spacing="3" fill="#f3f7ff">FIND CONTEXT</text></g>
+<g id="s3"><circle cx="800" cy="84" r="22" fill="none" stroke="#f6b93b" stroke-width="2"/><text x="800" y="92" font-size="21" text-anchor="middle">03</text><text x="838" y="92" font-weight="700" letter-spacing="3" fill="#f3f7ff">PROCESSING</text></g>
+<g id="s4"><circle cx="1190" cy="84" r="22" fill="none" stroke="#f6b93b" stroke-width="2"/><text x="1190" y="92" font-size="21" text-anchor="middle">04</text><text x="1228" y="92" font-weight="700" letter-spacing="3" fill="#f3f7ff">ANSWER</text></g></g>
+<rect x="70" y="128" width="1460" height="2" fill="#f6b93b" fill-opacity=".18"/><rect id="pg" class="ol" x="70" y="127" width="1460" height="4" rx="2" fill="url(#gd)" filter="url(#gl)"/>
+<text x="1530" y="40" font-size="16" letter-spacing="4" fill="#f6b93b" text-anchor="end" opacity=".8">AI ASSISTANTS</text>
+
+<!-- gold signal lines (find) -->
+<g id="gl1">
+<path id="p0" d="M1090,228C960,228 900,430 790,445" fill="none" stroke="#f6b93b" stroke-opacity=".3" stroke-width="2"/>
+<path id="p1" d="M1090,358C950,358 900,470 800,480" fill="none" stroke="#f6b93b" stroke-opacity=".3" stroke-width="2"/>
+<path id="p2" d="M1090,488C960,488 900,510 800,515" fill="none" stroke="#f6b93b" stroke-opacity=".3" stroke-width="2"/>
+<g fill="none" stroke="#ffd27a" stroke-width="3.5" stroke-linecap="round" filter="url(#gl)"><path pathLength="100" class="gf" d="M1090,228C960,228 900,430 790,445"/><path pathLength="100" class="gf" d="M1090,358C950,358 900,470 800,480" style="animation-delay:-.6s"/><path pathLength="100" class="gf" d="M1090,488C960,488 900,510 800,515" style="animation-delay:-1.2s"/></g>
+</g>
+<path id="c1" pathLength="100" d="M300,402C300,480 380,420 505,395" fill="none" stroke="#ffd27a" stroke-width="3" stroke-dasharray="100" stroke-linecap="round" filter="url(#gl)"/>
+<path id="orb" d="M270,420a340,130 0 1 0 680,0a340,130 0 1 0 -680,0" fill="none" stroke="#f6b93b" stroke-width="2" stroke-dasharray="3 9" opacity="0"/>
+
+<!-- ask card -->
+<g id="ask"><rect x="60" y="195" width="400" height="205" rx="22" fill="#0b1a3e" fill-opacity=".92" stroke="#38d6ff" stroke-opacity=".6" stroke-width="2"/>
+<circle cx="112" cy="262" r="26" fill="#1666d8"/><circle cx="112" cy="254" r="9" fill="#dff1ff"/><path d="M95,277q17,-16 34,0" fill="#dff1ff"/>
+<g fill="#e8f1ff" font-size="27"><text class="ql" x="158" y="258">Can you summarise</text><text class="ql" x="158" y="296">our latest quarterly</text><text class="ql" x="158" y="334">performance report?</text></g>
+<rect x="90" y="364" width="270" height="6" rx="3" fill="#38d6ff" fill-opacity=".35"/><path d="M410,350l24,12l-24,12l5,-12z" fill="#f6b93b"/></g>
+
+<!-- persistent holograms beside the robot -->
+<g transform="translate(250,610) skewY(-8)" style="color:#38d6ff"><rect width="150" height="125" rx="10" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-opacity=".6" stroke-width="2"/>
+<rect class="bar" style="--k:0" x="16" y="22" width="90" height="7" rx="3.5" fill="currentColor"/><rect class="bar" style="--k:2" x="16" y="46" width="110" height="7" rx="3.5" fill="currentColor"/><rect class="bar" style="--k:4" x="16" y="70" width="70" height="7" rx="3.5" fill="currentColor"/><circle class="dot" style="--k:1" cx="130" cy="104" r="5" fill="#f6b93b"/></g>
+<g transform="translate(800,612) skewY(8)" style="color:#38d6ff"><rect width="110" height="110" rx="10" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-opacity=".6" stroke-width="2"/>
+<circle cx="55" cy="52" r="26" fill="none" stroke="currentColor" stroke-width="6" stroke-dasharray="90 80"/><rect class="bar" style="--k:3" x="16" y="92" width="70" height="6" rx="3" fill="currentColor"/></g>
+
+<!-- platform -->
+<g transform="translate(610,690)"><ellipse cy="26" rx="250" ry="64" fill="url(#sh)"/>
+<ellipse cy="12" rx="236" ry="58" fill="#0a1330" stroke="#c98d1d" stroke-width="3"/>
+<ellipse cy="0" rx="206" ry="50" fill="#0d1838" stroke="url(#gd)" stroke-width="4"/>
+<ellipse class="rg" cy="0" rx="170" ry="41" fill="none" stroke="#ffd27a" stroke-width="4" filter="url(#gl)"/>
+<ellipse cy="0" rx="120" ry="29" fill="#0a1330" stroke="#f6b93b" stroke-opacity=".7" stroke-width="2"/></g>
+
+<g id="docs"></g><g id="orbdot"><circle r="7" fill="#ffe29a" filter="url(#gl)"/></g><g id="panels"></g>
+
+<!-- robot (fixed position) -->
+<g transform="translate(610,665) scale(2.2)" id="robot"><g class="fl">
+<g class="aL" id="aL"><g transform="translate(-34,-56) rotate(50)"><rect x="-8" y="-8" width="16" height="48" rx="8" fill="url(#bb)"/></g></g>
+<g class="aR" id="aR"><g transform="translate(34,-56) rotate(-50)"><rect x="-8" y="-8" width="16" height="48" rx="8" fill="url(#bb)"/></g></g>
+<ellipse cy="-33" rx="33" ry="29" fill="url(#bb)"/>
+<ellipse cx="-19" cy="-5" rx="13" ry="6.5" fill="url(#bb)"/><ellipse cx="19" cy="-5" rx="13" ry="6.5" fill="url(#bb)"/>
+<circle id="cg" cy="-36" r="14" fill="#f6b93b" opacity=".2" filter="url(#gl)"/>
+<circle cy="-36" r="7" fill="#05070f" stroke="#f6b93b" stroke-width="2"/><circle class="ch" cy="-36" r="3" fill="#ffd34d"/>
+<g class="hq" id="hq"><g class="head">
+<ellipse cx="-55" cy="-94" rx="6.5" ry="9" fill="url(#bb)"/><ellipse cx="56" cy="-94" rx="6.5" ry="9" fill="url(#bb)"/>
+<line y1="-138" y2="-152" stroke="#2f5fd6" stroke-width="3"/><circle cy="-158" r="5.5" fill="url(#gd)"/>
+<rect x="-50" y="-140" width="101" height="81" rx="26" fill="url(#bb)"/>
+<rect x="-37" y="-115" width="75" height="39" rx="19.5" fill="#070a14"/><ellipse cx="-20" cy="-110" rx="17" ry="2.5" fill="#fff" opacity=".1"/>
+<g id="ey"><g class="bl" style="filter:drop-shadow(0 0 3px #7fd8ff)">
+<g id="eR" fill="url(#ec)"><ellipse cx="-15" cy="-99" rx="5.5" ry="8.5"/><ellipse cx="15" cy="-99" rx="5.5" ry="8.5"/></g>
+<g id="eD" fill="#aee9ff" opacity="0"><rect x="-22" y="-101" width="14" height="4" rx="2"/><rect x="8" y="-101" width="14" height="4" rx="2"/></g>
+<g id="eS" stroke="#aee9ff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0"><path d="M-21,-95q6,-11 12,0"/><path d="M9,-95q6,-11 12,0"/></g></g></g>
+<path d="M-7,-86q7,6 14,0" stroke="#7fd8ff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</g></g></g></g>
+
+<g id="cards"></g>
+
+<!-- answer -->
+<g id="ans" class="o"><rect x="930" y="200" width="600" height="340" rx="24" fill="#0b1a3e" fill-opacity=".94" stroke="#f6b93b" stroke-width="2.5" filter="url(#gl)"/>
+<path d="M975,236l5,11l11,5l-11,5l-5,11l-5,-11l-11,-5l11,-5z" fill="#f6b93b"/><text x="1010" y="262" font-size="30" font-weight="700" fill="#f3f7ff">Summary</text>
+<rect x="970" y="290" width="250" height="8" rx="4" fill="#38d6ff" fill-opacity=".45"/><rect x="970" y="312" width="190" height="8" rx="4" fill="#38d6ff" fill-opacity=".3"/>
+<g id="bars" fill="url(#gd)"><rect class="ob" x="1350" y="300" width="26" height="30" rx="4"/><rect class="ob" x="1388" y="280" width="26" height="50" rx="4"/><rect class="ob" x="1426" y="258" width="26" height="72" rx="4"/><rect class="ob" x="1464" y="234" width="26" height="96" rx="4"/></g>
+<g id="sl0"><rect x="970" y="372" width="24" height="24" rx="5" fill="#f6b93b"/><path d="M975,384l6,6l10,-12" stroke="#0b1a3e" stroke-width="3.5" fill="none"/><text x="1010" y="392" font-size="24" fill="#e8f1ff">Revenue grew 18% QoQ</text></g>
+<g id="sl1"><rect x="970" y="422" width="24" height="24" rx="5" fill="#f6b93b"/><path d="M975,434l6,6l10,-12" stroke="#0b1a3e" stroke-width="3.5" fill="none"/><text x="1010" y="442" font-size="24" fill="#e8f1ff">Key drivers: repeat customers</text></g>
+<g id="sl2"><rect x="970" y="472" width="24" height="24" rx="5" fill="#f6b93b"/><path d="M975,484l6,6l10,-12" stroke="#0b1a3e" stroke-width="3.5" fill="none"/><text x="1010" y="492" font-size="24" fill="#e8f1ff">Strongest growth in SaaS segment</text></g>
+<circle id="cr" class="o" cx="1500" cy="205" r="36" fill="none" stroke="#35f19a" stroke-width="3"/>
+<g id="cb" class="o"><circle cx="1500" cy="205" r="36" fill="#0d3a2a" stroke="#35f19a" stroke-width="4" filter="url(#gl)"/><path d="M1482,206l13,13l25,-28" stroke="#35f19a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+</g>
+</svg>
+</div>
+<div class="ctl" id="ctl">
+<button id="bp" type="button" aria-pressed="false">Pause</button>
+<button id="br" type="button">Restart</button>
+<label><input id="tp" type="checkbox"><span>Transparent background</span></label>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),svg=$('scene'),stage=$('stage');
+/* K: animate over the shared 12s loop. frames = [[percent,{css}],...]; first and last frames match so the loop closes. */
+const K=(el,fr)=>el.animate(fr.map(([p,s])=>({offset:p/100,easing:'ease-in-out',...s})),{duration:12000,iterations:Infinity});
+/* Stage boundaries (% of 12s): Ask 0–16.7, Find 16.7–41.7, Process 41.7–66.7, Answer 66.7–100 */
+const cards=[['Company Docs',228],['Knowledge Base',358],['Past Conversations',488]];
+let h='';
+cards.forEach(([t,y],i)=>{h+=`<g id="cd${i}" class="o"><rect x="1090" y="${y-48}" width="440" height="96" rx="18" fill="#0b1a3e" fill-opacity=".94" stroke="#38d6ff" stroke-opacity=".6" stroke-width="2"/>
+<rect id="hl${i}" x="1090" y="${y-48}" width="440" height="96" rx="18" fill="#f6b93b" fill-opacity=".05" stroke="#f6b93b" stroke-width="3" opacity="0" filter="url(#gl)"/>
+<g transform="translate(1146,${y})" fill="none" stroke="#38d6ff" stroke-width="3">${[`<rect x="-16" y="-20" width="32" height="40" rx="5"/><path d="M-8,-8h16M-8,2h16M-8,12h10"/>`,`<ellipse cy="-12" rx="18" ry="8"/><path d="M-18,-12v24c0,10 36,10 36,0v-24M-18,0c0,10 36,10 36,0"/>`,`<path d="M-20,-18h40v26h-22l-10,10v-10h-8z"/><path d="M-10,-6h20"/>`][i]}</g>
+<text x="1196" y="${y+9}" font-size="28" fill="#f3f7ff">${t}</text></g>`});
+$('cards').innerHTML=h;
+let d='';for(let i=0;i<6;i++)d+=`<g class="doc"><rect x="-18" y="-24" width="36" height="48" rx="5" fill="#0f2a5c" stroke="#6fe3ff" stroke-width="2" style="filter:drop-shadow(0 0 5px #38d6ff)"/><path d="M-9,-10h18M-9,0h18M-9,10h11" stroke="#6fe3ff" stroke-width="2.5" fill="none"/></g>`;
+$('docs').innerHTML=d;
+/* process panels: doc, PDF, spreadsheet, chart */
+const hd=c=>`<circle cx="-66" cy="-38" r="3" fill="${c}"/><circle cx="-56" cy="-38" r="3" fill="${c}" opacity=".6"/>`;
+const pn=[[300,370,-8,'#4d8dff',`<rect x="-52" y="-22" width="30" height="40" rx="4" fill="none" stroke="#4d8dff" stroke-width="3"/><path d="M-44,-8h14M-44,2h14" stroke="#4d8dff" stroke-width="2.5"/><path d="M-8,-14h56M-8,0h56M-8,14h38" stroke="#6fe3ff" stroke-width="4" stroke-linecap="round" opacity=".7"/>`],
+[480,238,-4,'#ff5a6e',`<rect x="-52" y="-22" width="36" height="42" rx="5" fill="#ff5a6e" fill-opacity=".25" stroke="#ff5a6e" stroke-width="3"/><text x="-34" y="3" font-size="14" font-weight="700" text-anchor="middle" fill="#ff8d9b">PDF</text><path d="M-4,-14h54M-4,0h54M-4,14h36" stroke="#ff8d9b" stroke-width="4" stroke-linecap="round" opacity=".6"/>`],
+[740,238,5,'#35f19a',`<rect x="-52" y="-22" width="38" height="42" rx="5" fill="#35f19a" fill-opacity=".22" stroke="#35f19a" stroke-width="3"/><text x="-33" y="6" font-size="22" font-weight="700" text-anchor="middle" fill="#35f19a">X</text><path d="M0,-18h50M0,-4h50M0,10h50M18,-22v36M36,-22v36" stroke="#35f19a" stroke-width="2" opacity=".7"/>`],
+[920,372,8,'#38d6ff',`<path d="M-50,18l24,-22l18,12l32,-30l22,12" stroke="#38d6ff" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="-46" y="4" width="12" height="16" fill="#f6b93b"/><rect x="-26" y="-4" width="12" height="24" fill="#f6b93b"/><rect x="-6" y="-12" width="12" height="32" fill="#f6b93b"/>`]];
+$('panels').innerHTML=pn.map(([x,y,r,c,i],n)=>`<g transform="translate(${x},${y}) rotate(${r})"><g class="pl o"><rect x="-80" y="-52" width="160" height="104" rx="12" fill="#0b1a3e" fill-opacity=".92" stroke="${c}" stroke-opacity=".8" stroke-width="2" style="filter:drop-shadow(0 0 8px ${c})"/>${hd(c)}${i}</g></g>`).join('');
+let s='';for(let i=0;i<18;i++){const x=(i*173)%1560+20,y=(i*271)%820+40;s+=`<circle class="tw" style="--k:${i}" cx="${x}" cy="${y}" r="${1.5+i%3}" fill="${i%3?'#38d6ff':'#f6b93b'}"/>`}
+$('dust').innerHTML=s;
+
+/* ---- ASK ---- */
+K($('ask'),[[0,{opacity:0,transform:'translateY(16px)'}],[3,{opacity:1,transform:'none'}],[17,{opacity:1,transform:'none'}],[21,{opacity:0,transform:'translateY(-6px)'}],[100,{opacity:0,transform:'translateY(16px)'}]]);
+document.querySelectorAll('.ql').forEach((t,n)=>K(t,[[0,{opacity:0}],[3+n*2,{opacity:0}],[5+n*2,{opacity:1}],[17,{opacity:1}],[20,{opacity:0}],[100,{opacity:0}]]));
+K($('c1'),[[0,{strokeDashoffset:100,opacity:0}],[2,{strokeDashoffset:100,opacity:1}],[7,{strokeDashoffset:0,opacity:1}],[15,{strokeDashoffset:0,opacity:1}],[19,{strokeDashoffset:0,opacity:0}],[100,{strokeDashoffset:0,opacity:0}]]);
+/* ---- robot (same element all loop; only pose changes) ---- */
+const R=a=>({transform:`rotate(${a}deg)`}),T=(x,y)=>({transform:`translate(${x}px,${y}px)`});
+K($('hq'),[[0,R(0)],[3,R(0)],[7,R(-8)],[16,R(-8)],[20,R(0)],[25,R(6)],[32,R(2)],[38,R(7)],[42,R(3)],[46,R(-4)],[56,R(-1)],[62,R(-4)],[68,R(-2)],[96,R(-2)],[100,R(0)]]);
+K($('ey'),[[0,T(0,0)],[3,T(0,0)],[7,T(-8,-4)],[16,T(-8,-4)],[20,T(0,0)],[24,T(7,2)],[30,T(9,0)],[36,T(5,2)],[41,T(8,0)],[46,T(0,-4)],[56,T(-5,-4)],[62,T(5,-4)],[68,T(0,0)],[100,T(0,0)]]);
+const O=v=>({opacity:v});
+K($('eR'),[[0,O(1)],[43,O(1)],[46,O(0)],[96,O(0)],[100,O(1)]]);
+K($('eD'),[[0,O(0)],[43,O(0)],[46,O(1)],[64,O(1)],[67,O(0)],[100,O(0)]]);
+K($('eS'),[[0,O(0)],[66,O(0)],[70,O(1)],[96,O(1)],[100,O(0)]]);
+K($('aL'),[[0,R(0)],[6,R(0)],[10,R(20)],[17,R(14)],[22,R(0)],[26,R(30)],[34,R(46)],[40,R(34)],[45,R(20)],[62,R(24)],[70,R(0)],[100,R(0)]]);
+K($('aR'),[[0,R(0)],[44,R(0)],[48,R(-24)],[62,R(-28)],[68,R(-50)],[72,R(-68)],[76,R(-56)],[80,R(-72)],[84,R(-56)],[88,R(-72)],[92,R(-58)],[95,R(-66)],[100,R(0)]]);
+K($('cg'),[[0,O(.2)],[3,O(.2)],[6,O(.9)],[10,O(.3)],[17,O(.8)],[40,O(1)],[44,O(.6)],[46,O(1)],[64,O(1)],[68,O(.5)],[72,O(.9)],[94,O(.9)],[100,O(.2)]]);
+/* labels + progress */
+[[1,17,'s1'],[17,42,'s2'],[42,67,'s3'],[67,96,'s4']].forEach(([a,b,n])=>K($(n),[[0,O(.35)],[a-.1,O(.35)],[a+2,O(1)],[b,O(1)],[b+3,O(.35)],[100,O(.35)]]));
+$('pg').animate([{transform:'scaleX(0)',opacity:0,offset:0},{transform:'scaleX(.01)',opacity:1,offset:.01},{transform:'scaleX(.97)',opacity:1,offset:.97},{transform:'scaleX(1)',opacity:0,offset:1}],{duration:12000,iterations:Infinity,easing:'linear'});
+/* ---- FIND CONTEXT ---- */
+K($('gl1'),[[0,O(0)],[17,O(0)],[20,O(1)],[40,O(1)],[44,O(0)],[100,O(0)]]);
+cards.forEach((c,i)=>{const a=16.7+i*2,hid={opacity:0,transform:'translateX(30px)'};
+ K($('cd'+i),[[0,hid],[a,hid],[a+4,{opacity:1,transform:'none'}],[40,{opacity:1,transform:'none'}],[44,hid],[100,hid]]);
+ const b=19+i*7;K($('hl'+i),[[0,O(0)],[b,O(0)],[b+2,O(1)],[b+6,O(1)],[b+9,O(0)],[100,O(0)]])});
+const fly=(el,path,t0,t1,lin)=>{const L=path.getTotalLength(),n=lin?60:24,P=(f,sc)=>{const q=path.getPointAtLength(L*f);return`translate(${q.x}px,${q.y}px) scale(${sc})`};
+ const e1=lin?1:.6,fr=[{offset:0,transform:P(0,1),opacity:0},{offset:t0,transform:P(0,1),opacity:0},{offset:t0+.012,transform:P(0,1),opacity:1}];
+ for(let i=1;i<n;i++){const f=i/n,e=lin?f:f*f*(3-2*f);fr.push({offset:t0+.012+(t1-t0-.03)*f,transform:P(e,lin?1:1-.35*e),opacity:1})}
+ fr.push({offset:t1-.018,transform:P(1,e1),opacity:1},{offset:t1,transform:P(1,e1),opacity:0},{offset:1,transform:P(1,e1),opacity:0});
+ el.animate(fr,{duration:12000,iterations:Infinity,easing:'linear'})};
+document.querySelectorAll('.doc').forEach((g,i)=>{const c=i>>1,t0=.175+c*.065+(i&1)*.03;fly(g,$('p'+c),t0,t0+.08)});
+/* ---- PROCESS ---- */
+K($('orb'),[[0,O(0)],[42,O(0)],[46,O(.7)],[64,O(.7)],[68,O(0)],[100,O(0)]]);
+fly($('orbdot'),$('orb'),.43,.67,true);
+document.querySelectorAll('.pl').forEach((g,i)=>{const a=41.7+i*1.5,r={opacity:0,transform:'translateY(12px) scale(.85)'},v=y=>({opacity:1,transform:`translateY(${y}px)`});
+ K(g,[[0,r],[a,r],[a+4,v(0)],[a+10,v(-8)],[a+14,v(2)],[a+18,v(-6)],[65,v(-2)],[69,{opacity:0,transform:'translateY(-4px) scale(.9)'}],[100,r]])});
+/* ---- ANSWER ---- */
+{const r={opacity:0,transform:'translateY(24px) scale(.96)'};K($('ans'),[[0,r],[67,r],[73,{opacity:1,transform:'none'}],[96,{opacity:1,transform:'none'}],[100,r]])}
+[0,1,2].forEach(n=>{const a=73+n*4,r={opacity:0,transform:'translateX(-14px)'},v={opacity:1,transform:'none'};K($('sl'+n),[[0,r],[a,r],[a+4,v],[96,v],[99,r],[100,r]])});
+document.querySelectorAll('#bars rect').forEach((b,n)=>{const a=75+n*2.5,r={transform:'scaleY(0)'},v={transform:'scaleY(1)'};K(b,[[0,r],[a,r],[a+6,v],[96,v],[99,r],[100,r]])});
+{const r={opacity:0,transform:'scale(.2)'};K($('cb'),[[0,r],[84,r],[88,{opacity:1,transform:'scale(1.22)'}],[91,{opacity:1,transform:'scale(1)'}],[96,{opacity:1,transform:'scale(1)'}],[99,r],[100,r]]);
+ K($('cr'),[[0,{opacity:0,transform:'scale(1)'}],[87,{opacity:0,transform:'scale(1)'}],[88,{opacity:.8,transform:'scale(1)'}],[96,{opacity:0,transform:'scale(2)'}],[100,{opacity:0,transform:'scale(2)'}]])}
+
+/* ---- controls ---- */
+const bp=$('bp'),tp=$('tp'),q=new URLSearchParams(location.search);
+const anims=()=>svg.getAnimations({subtree:true});
+let user=false,seen=true;
+const apply=()=>{const stop=user||!seen||document.hidden;anims().forEach(a=>stop?a.pause():a.play())};
+const setUser=v=>{user=v;bp.textContent=v?'Resume':'Pause';bp.setAttribute('aria-pressed',v);apply()};
+bp.onclick=()=>setUser(!user);
+$('br').onclick=()=>{anims().forEach(a=>a.currentTime=0);setUser(false)};
+const setTp=v=>{stage.classList.toggle('transparent',v);document.body.classList.toggle('tp',v);tp.checked=v};
+tp.onchange=()=>setTp(tp.checked);
+if(q.get('transparent')==='1')setTp(true);
+if(q.get('controls')==='0')$('ctl').classList.add('off');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){anims().forEach(a=>a.currentTime=a.effect.getTiming().duration===12000?11000:0);setUser(true)}
+new IntersectionObserver(e=>{seen=e[0].isIntersecting;apply()}).observe(stage);
+document.addEventListener('visibilitychange',apply);
+window.__anims=anims;
+})();
+</script>
+</body>
+</html>
