@@ -1,7 +1,7 @@
 import {
   SolutionsHeroSection,
   SolutionsGridSection,
-  CustomSolutionSection,
+  SolutionsBlueprintSections,
 } from '../components/sections/SolutionsSections'
 
 export function SolutionsPage() {
@@ -9,7 +9,7 @@ export function SolutionsPage() {
     <>
       <SolutionsHeroSection />
       <SolutionsGridSection />
-      <CustomSolutionSection />
+      <SolutionsBlueprintSections />
     </>
   )
 }

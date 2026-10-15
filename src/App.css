@@ -2799,79 +2799,6 @@ p { color: var(--color-muted); }
 	color: #f3efe5;
 }
 
-/* Homepage section artwork supplied in src/assets/bg_images. */
-#home-hero.hero-reference {
-	background-image:
-		linear-gradient(rgba(7, 21, 34, .3), rgba(7, 21, 34, .42)),
-		url('./assets/bg_images/home_page_hero.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#problem-section.problem-section {
-	background-image:
-		linear-gradient(rgba(3, 9, 29, .48), rgba(3, 9, 29, .62)),
-		url('./assets/bg_images/home_page_problem.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#what-we-build-section.capability-section {
-	background-image:
-		linear-gradient(rgba(2, 6, 23, .46), rgba(2, 6, 23, .62)),
-		url('./assets/bg_images/home_page_whatwebuild.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#how-we-work-section.homepage-how-it-works {
-	background-image:
-		linear-gradient(rgba(11, 16, 44, .46), rgba(11, 16, 44, .62)),
-		url('./assets/bg_images/home_page_howitworks.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#solutions-section.homepage-solutions {
-	background-image:
-		linear-gradient(rgba(2, 6, 23, .48), rgba(2, 6, 23, .64)),
-		url('./assets/bg_images/homepage_solutions.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#industries-section.homepage-industries {
-	background-image:
-		linear-gradient(rgba(3, 9, 29, .48), rgba(3, 9, 29, .64)),
-		url('./assets/bg_images/homepage_industry.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#outcomes-section.homepage-outcomes {
-	background-image:
-		linear-gradient(rgba(7, 21, 34, .5), rgba(7, 21, 34, .66)),
-		url('./assets/bg_images/homepage_businessoutcomes.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
-#final-cta-section.homepage-final-cta {
-	background-image:
-		linear-gradient(rgba(7, 21, 34, .48), rgba(7, 21, 34, .66)),
-		url('./assets/bg_images/home_page_nextstep.webp');
-	background-position: center;
-	background-size: cover;
-	background-repeat: no-repeat;
-}
-
 .skeleton-hero--home {
 	background:
 		radial-gradient(circle at top right, rgba(117, 157, 255, 0.12), transparent 34%),
@@ -3562,7 +3489,14 @@ p { color: var(--color-muted); }
 	color: #f3efe5;
 }
 .homepage-solutions::before {
-	display: none;
+	position: absolute;
+	inset: 0;
+	content: '';
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='solutions-grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23solutions-grain)' opacity='.75'/%3E%3C/svg%3E");
+	background-size: 140px 140px;
+	mix-blend-mode: screen;
+	opacity: .12;
+	pointer-events: none;
 }
 .homepage-solutions__inner {
 	position: relative;

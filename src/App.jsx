@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
+import { useEffect } from 'react';
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { HomePage } from './pages/HomePage'
@@ -11,8 +12,11 @@ import { AboutPage } from './pages/AboutPage'
 import { CareersPage } from './pages/CareersPage'
 import { ContactPage } from './pages/ContactPage'
 import { MobilePreviewPage } from './pages/MobilePreviewPage'
+import VoiceAgent from './VoiceAgent'; // 👈 1. Import the component
+
 
 function App() {
+
   return (
     <BrowserRouter>
       <div className="site-shell">
@@ -30,6 +34,7 @@ function App() {
             <Route path="/mobile-preview" element={<MobilePreviewPage />} />
           </Routes>
         </main>
+        <VoiceAgent />
         <Footer />
       </div>
     </BrowserRouter>
