@@ -34,7 +34,9 @@ function App() {
             <Route path="/mobile-preview" element={<MobilePreviewPage />} />
           </Routes>
         </main>
+        
         <VoiceAgent />
+        
         <Footer />
       </div>
     </BrowserRouter>
