@@ -1,423 +1,343 @@
-// File: src/VoiceAgent.jsx
-// AutomateMind Female Voice Receptionist (Aoede)
-// 100% Self-Contained React + Vite Component (Zero External Script Dependencies)
+import { useEffect, useRef, useState } from 'react'
+import './VoiceAgent.css'
 
-import React, { useEffect, useState, useRef } from 'react';
-import './VoiceAgent.css';
+const VOICE_ENGINE_URL = 'https://automatemind-female-ai-voice-agent-live-sdk-engin.ai.studio'
+const AGENT_ID = 'automatemind-default'
+const BAR_COUNT = 28
 
-// Configure your backend API Base URL:
-// • For local development with your Vite app (e.g. localhost:5173): use "http://localhost:3000"
-// • For production: use your published Cloud Run URL
-const VOICE_ENGINE_URL = "https://automatemind-female-ai-voice-agent-live-sdk-engin.ai.studio";
-const AGENT_ID = "automatemind-default";
-
-// Audio helper: Float32 to 16-bit PCM for mic input to Gemini Live
 function floatTo16BitPCM(input) {
-  const output = new Int16Array(input.length);
-  for (let i = 0; i < input.length; i++) {
-    const s = Math.max(-1, Math.min(1, input[i]));
-    output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+  const output = new Int16Array(input.length)
+  for (let index = 0; index < input.length; index += 1) {
+    const sample = Math.max(-1, Math.min(1, input[index]))
+    output[index] = sample < 0 ? sample * 0x8000 : sample * 0x7fff
   }
-  return output;
+  return output
 }
 
 function resampleTo16k(input, sampleRate) {
-  if (sampleRate === 16000) return input;
-  const ratio = sampleRate / 16000;
-  const outputLength = Math.floor(input.length / ratio);
-  const output = new Float32Array(outputLength);
-  for (let i = 0; i < outputLength; i += 1) {
-    const position = i * ratio;
-    const left = Math.floor(position);
-    const right = Math.min(left + 1, input.length - 1);
-    const weight = position - left;
-    output[i] = input[left] * (1 - weight) + input[right] * weight;
+  if (sampleRate === 16000) return input
+  const ratio = sampleRate / 16000
+  const output = new Float32Array(Math.floor(input.length / ratio))
+  for (let index = 0; index < output.length; index += 1) {
+    const position = index * ratio
+    const left = Math.floor(position)
+    const right = Math.min(left + 1, input.length - 1)
+    const weight = position - left
+    output[index] = input[left] * (1 - weight) + input[right] * weight
   }
-  return output;
+  return output
 }
 
-// Audio helper: ArrayBuffer to base64
 function arrayBufferToBase64(buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
+  let binary = ''
+  const bytes = new Uint8Array(buffer)
+  for (let index = 0; index < bytes.length; index += 1) binary += String.fromCharCode(bytes[index])
+  return btoa(binary)
 }
 
-// Audio helper: Base64 24kHz PCM from Gemini to Float32 for Web Audio playback
 function base64ToFloat32(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  const int16 = new Int16Array(bytes.buffer);
-  const float32 = new Float32Array(int16.length);
-  for (let i = 0; i < int16.length; i++) {
-    float32[i] = int16[i] / (int16[i] < 0 ? 0x8000 : 0x7fff);
-  }
-  return float32;
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index)
+  const samples = new Int16Array(bytes.buffer)
+  const output = new Float32Array(samples.length)
+  for (let index = 0; index < samples.length; index += 1) output[index] = samples[index] / (samples[index] < 0 ? 0x8000 : 0x7fff)
+  return output
 }
 
-export function VoiceAgent() {
-  const [isCalling, setIsCalling] = useState(false);
-  const [agentSpeaking, setAgentSpeaking] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [statusText, setStatusText] = useState('Idle');
-  const [hasMic, setHasMic] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(false);
-  const [transcript, setTranscript] = useState([]);
-  const [callDuration, setCallDuration] = useState(0);
-
-  const wsRef = useRef(null);
-  const mediaStreamRef = useRef(null);
-  const inCtxRef = useRef(null);
-  const outCtxRef = useRef(null);
-  const processorRef = useRef(null);
-  const activeSourcesRef = useRef([]);
-  const scheduledTimeRef = useRef(0);
-  const callStartedAtRef = useRef(0);
-
-  useEffect(() => {
-    if (!isCalling) return undefined;
-    const timer = window.setInterval(() => {
-      setCallDuration(Math.floor((Date.now() - callStartedAtRef.current) / 1000));
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [isCalling]);
-
-  const stopAudioPlayback = () => {
-    for (const source of activeSourcesRef.current) {
-      try {
-        source.stop();
-        source.disconnect();
-      } catch (e) {}
-    }
-    activeSourcesRef.current = [];
-    if (outCtxRef.current) {
-      scheduledTimeRef.current = outCtxRef.current.currentTime;
-    }
-    setAgentSpeaking(false);
-  };
-
-  const playAudioChunk = (base64Audio) => {
-    const outCtx = outCtxRef.current;
-    if (!outCtx || outCtx.state === 'closed') return;
-
+function VoiceAgent() {
+  const [isCalling, setIsCalling] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const [status, setStatus] = useState('Idle')
+  const [hasMic, setHasMic] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [inputLevel, setInputLevel] = useState(0)
+  const [outputLevel, setOutputLevel] = useState(0)
+  const [showTooltip, setShowTooltip] = useState(() => {
     try {
-      const float32 = base64ToFloat32(base64Audio);
-      if (float32.length === 0) return;
+      return sessionStorage.getItem('automatemind-voice-tooltip-dismissed') !== 'true'
+    } catch {
+      return true
+    }
+  })
 
-      const buffer = outCtx.createBuffer(1, float32.length, 24000);
-      buffer.getChannelData(0).set(float32);
+  const socketRef = useRef(null)
+  const mediaStreamRef = useRef(null)
+  const inputContextRef = useRef(null)
+  const outputContextRef = useRef(null)
+  const processorRef = useRef(null)
+  const inputAnalyserRef = useRef(null)
+  const outputAnalyserRef = useRef(null)
+  const activeSourcesRef = useRef([])
+  const scheduledTimeRef = useRef(0)
+  const frameRef = useRef(null)
+  const endingRef = useRef(false)
 
-      const source = outCtx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(outCtx.destination);
-
-      const now = outCtx.currentTime;
-      if (scheduledTimeRef.current < now) {
-        scheduledTimeRef.current = now + 0.02;
+  const stopPlayback = () => {
+    activeSourcesRef.current.forEach((source) => {
+      try {
+        source.stop()
+        source.disconnect()
+      } catch {
+        // The source may already have ended.
       }
+    })
+    activeSourcesRef.current = []
+    if (outputContextRef.current) scheduledTimeRef.current = outputContextRef.current.currentTime
+  }
 
-      source.start(scheduledTimeRef.current);
-      scheduledTimeRef.current += buffer.duration;
-      activeSourcesRef.current.push(source);
-
-      setAgentSpeaking(true);
-      setStatusText('Receptionist Speaking...');
-
+  const playAudio = (base64Audio) => {
+    const context = outputContextRef.current
+    if (!context || context.state === 'closed') return
+    try {
+      const samples = base64ToFloat32(base64Audio)
+      if (!samples.length) return
+      const buffer = context.createBuffer(1, samples.length, 24000)
+      buffer.getChannelData(0).set(samples)
+      const source = context.createBufferSource()
+      source.buffer = buffer
+      const analyser = outputAnalyserRef.current
+      source.connect(analyser || context.destination)
+      if (scheduledTimeRef.current < context.currentTime) scheduledTimeRef.current = context.currentTime + 0.02
+      source.start(scheduledTimeRef.current)
+      scheduledTimeRef.current += buffer.duration
+      activeSourcesRef.current.push(source)
+      setStatus('Speaking')
       source.onended = () => {
-        const idx = activeSourcesRef.current.indexOf(source);
-        if (idx !== -1) activeSourcesRef.current.splice(idx, 1);
-        if (activeSourcesRef.current.length === 0) {
-          setAgentSpeaking(false);
-          setStatusText(hasMic ? 'Listening to You...' : 'Agent Listening...');
-        }
-      };
-    } catch (e) {
-      console.error('Playback decode error:', e);
+        activeSourcesRef.current = activeSourcesRef.current.filter((item) => item !== source)
+        if (!activeSourcesRef.current.length && !endingRef.current) setStatus('Listening')
+      }
+    } catch (error) {
+      console.error('Voice playback decode failed:', error)
     }
-  };
-
-  const startCall = async () => {
-    setErrorMessage(null);
-    setIsOpen(true);
-    setIsMinimized(false);
-    setShowTranscript(false);
-    setTranscript([]);
-    callStartedAtRef.current = Date.now();
-    setCallDuration(0);
-    setStatusText('Connecting...');
-    setIsCalling(true);
-
-    try {
-      // 1. Acquire mic (with resilient fallback if denied)
-      let stream = null;
-      let micGranted = false;
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          try {
-            stream = await navigator.mediaDevices.getUserMedia({
-              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-            });
-            micGranted = true;
-          } catch (e1) {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            micGranted = true;
-          }
-        }
-      } catch (e2) {
-        console.warn('Microphone permission not granted; running in spoken-output mode:', e2);
-        micGranted = false;
-      }
-
-      setHasMic(micGranted);
-      mediaStreamRef.current = stream;
-
-      // 2. Request session ticket from Cloud Run API
-      const cleanBase = VOICE_ENGINE_URL.replace(/\/$/, '');
-      const res = await fetch(`${cleanBase}/api/agents/${encodeURIComponent(AGENT_ID)}/sessions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId: AGENT_ID })
-      });
-
-      if (!res.ok) {
-        if (res.status === 302 || res.headers.get('content-type')?.includes('text/html')) {
-          throw new Error('AI Studio preview cookie gate detected. For local dev use http://localhost:3000, or deploy via the Publish button in AI Studio.');
-        }
-        throw new Error(`Failed to create session: HTTP ${res.status}`);
-      }
-
-      const { ticket } = await res.json();
-
-      // 3. Connect to WebSocket
-      const protocol = cleanBase.startsWith('https') ? 'wss:' : 'ws:';
-      const host = cleanBase.replace(/^https?:\/\//, '');
-      const wsUrl = `${protocol}//${host}/live?ticket=${encodeURIComponent(ticket)}&agentId=${encodeURIComponent(AGENT_ID)}`;
-
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const outCtx = new AudioCtx({ sampleRate: 24000 });
-      if (outCtx.state === 'suspended') await outCtx.resume();
-      outCtxRef.current = outCtx;
-      scheduledTimeRef.current = outCtx.currentTime;
-
-      // 4. Setup microphone streaming with modern AudioWorkletNode
-      if (stream) {
-        const inCtx = new AudioCtx({ sampleRate: 16000 });
-        if (inCtx.state === 'suspended') await inCtx.resume();
-        inCtxRef.current = inCtx;
-
-        const source = inCtx.createMediaStreamSource(stream);
-
-        const handlePCMData = (channelData) => {
-          if (isMuted || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
-          const pcm16 = floatTo16BitPCM(resampleTo16k(channelData, inCtx.sampleRate));
-          const base64 = arrayBufferToBase64(pcm16.buffer);
-          wsRef.current.send(JSON.stringify({ type: 'audio', audio: base64, mimeType: 'audio/pcm;rate=16000' }));
-        };
-
-        let workletReady = false;
-        if (inCtx.audioWorklet) {
-          try {
-            const dataUri = 'data:application/javascript;charset=utf-8,' + encodeURIComponent('class AudioCaptureProcessor extends AudioWorkletProcessor{process(inputs){const input=inputs[0];if(input&&input[0]){this.port.postMessage(input[0]);}return true;}}registerProcessor("audio-capture-processor",AudioCaptureProcessor);');
-            await inCtx.audioWorklet.addModule(dataUri);
-            workletReady = true;
-          } catch (e) {
-            console.warn('AudioWorklet module fallback');
-          }
-        }
-
-        if (workletReady) {
-          const workletNode = new AudioWorkletNode(inCtx, 'audio-capture-processor');
-          workletNode.port.onmessage = (e) => handlePCMData(e.data);
-          processorRef.current = workletNode;
-          source.connect(workletNode);
-          const silentGain = inCtx.createGain();
-          silentGain.gain.value = 0;
-          workletNode.connect(silentGain);
-          silentGain.connect(inCtx.destination);
-        } else {
-          const processor = inCtx.createScriptProcessor(2048, 1, 1);
-          processorRef.current = processor;
-          processor.onaudioprocess = (e) => handlePCMData(e.inputBuffer.getChannelData(0));
-          source.connect(processor);
-          const silentGain = inCtx.createGain();
-          silentGain.gain.value = 0;
-          processor.connect(silentGain);
-          silentGain.connect(inCtx.destination);
-        }
-      }
-
-      ws.onopen = () => {
-        setStatusText('Connected');
-        ws.send(JSON.stringify({ type: 'start' }));
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          if (event.data instanceof ArrayBuffer) {
-            const binaryAudio = arrayBufferToBase64(event.data);
-            playAudioChunk(binaryAudio);
-            return;
-          }
-          const msg = JSON.parse(event.data);
-          if (msg.type === 'audio' && msg.audio) {
-            playAudioChunk(msg.audio);
-          } else if (msg.type === 'ready') {
-            setStatusText('Listening');
-            if (msg.greeting) {
-              setTranscript([{ role: 'assistant', text: msg.greeting }]);
-            }
-          } else if (msg.type === 'transcript' || msg.type === 'text') {
-            const text = msg.text || msg.transcript || msg.content;
-            if (text) {
-              setTranscript((current) => [...current, {
-                role: msg.role === 'user' ? 'user' : 'assistant',
-                text,
-              }].slice(-8));
-            }
-          } else if (msg.type === 'interrupted') {
-            stopAudioPlayback();
-            setStatusText('Listening to You...');
-          } else if (msg.type === 'ended') {
-            endCall();
-          } else if (msg.type === 'error') {
-            setErrorMessage(msg.message || 'The voice service returned an error.');
-            setStatusText('Connection error');
-          }
-        } catch (e) {
-          console.error('Invalid voice service message:', e);
-        }
-      };
-
-      ws.onerror = () => {
-        setErrorMessage('Voice WebSocket connection failed.');
-        endCall();
-      };
-
-      ws.onclose = () => {
-        setIsCalling(false);
-        setStatusText('Idle');
-      };
-    } catch (err) {
-      console.error('Call failed:', err);
-      setErrorMessage(err.message || 'Call failed');
-      setIsCalling(false);
-      setStatusText('Idle');
-      endCall();
-    }
-  };
+  }
 
   const endCall = () => {
-    stopAudioPlayback();
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((t) => t.stop());
-      mediaStreamRef.current = null;
-    }
+    endingRef.current = true
+    stopPlayback()
     if (processorRef.current) {
-      try { processorRef.current.disconnect(); } catch (e) {}
-      processorRef.current = null;
+      try { processorRef.current.disconnect() } catch { /* Already disconnected. */ }
+      processorRef.current = null
     }
-    if (inCtxRef.current) {
-      try { inCtxRef.current.close(); } catch (e) {}
-      inCtxRef.current = null;
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop())
+      mediaStreamRef.current = null
     }
-    if (outCtxRef.current) {
-      try { outCtxRef.current.close(); } catch (e) {}
-      outCtxRef.current = null;
-    }
-    if (wsRef.current) {
-      if (wsRef.current.readyState === WebSocket.OPEN) {
-        wsRef.current.send(JSON.stringify({ type: 'end' }));
-        wsRef.current.close();
+    if (inputContextRef.current) inputContextRef.current.close().catch(() => {})
+    if (outputContextRef.current) outputContextRef.current.close().catch(() => {})
+    inputContextRef.current = null
+    outputContextRef.current = null
+    inputAnalyserRef.current = null
+    outputAnalyserRef.current = null
+    if (socketRef.current) {
+      if (socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({ type: 'end' }))
+        socketRef.current.close()
       }
-      wsRef.current = null;
+      socketRef.current = null
     }
-    setIsCalling(false);
-    setAgentSpeaking(false);
-    setStatusText('Idle');
-    setCallDuration(0);
-    setIsMinimized(false);
-  };
+    setIsCalling(false)
+    setIsMuted(false)
+    setStatus('Idle')
+    setInputLevel(0)
+    setOutputLevel(0)
+    endingRef.current = false
+  }
 
-  const closeExperience = () => {
-    if (isCalling) endCall();
-    setIsOpen(false);
-  };
+  const startCall = async () => {
+    if (isCalling) return
+    setErrorMessage('')
+    setStatus('Connecting')
+    setIsCalling(true)
+    endingRef.current = false
 
-  const formatDuration = (seconds) => {
-    const elapsed = Math.max(0, Math.floor(seconds));
-    return `${String(Math.floor(elapsed / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
-  };
+    try {
+      let stream = null
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+        })
+      } catch {
+        setHasMic(false)
+      }
+      mediaStreamRef.current = stream
+      setHasMic(Boolean(stream))
+
+      const base = VOICE_ENGINE_URL.replace(/\/$/, '')
+      const response = await fetch(`${base}/api/agents/${encodeURIComponent(AGENT_ID)}/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agentId: AGENT_ID }),
+      })
+      if (!response.ok) throw new Error(`Unable to create voice session (HTTP ${response.status}).`)
+      const { ticket } = await response.json()
+      if (!ticket) throw new Error('The voice service did not return a session ticket.')
+
+      const protocol = base.startsWith('https') ? 'wss:' : 'ws:'
+      const host = base.replace(/^https?:\/\//, '')
+      const socket = new WebSocket(`${protocol}//${host}/live?ticket=${encodeURIComponent(ticket)}&agentId=${encodeURIComponent(AGENT_ID)}`)
+      socketRef.current = socket
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext
+      if (!AudioContextClass) throw new Error('This browser does not support voice calls.')
+
+      const outputContext = new AudioContextClass({ sampleRate: 24000 })
+      await outputContext.resume()
+      outputContextRef.current = outputContext
+      const outputAnalyser = outputContext.createAnalyser()
+      outputAnalyser.fftSize = 256
+      outputAnalyser.smoothingTimeConstant = 0.8
+      outputAnalyser.connect(outputContext.destination)
+      outputAnalyserRef.current = outputAnalyser
+      scheduledTimeRef.current = outputContext.currentTime
+
+      if (stream) {
+        const inputContext = new AudioContextClass({ sampleRate: 16000 })
+        await inputContext.resume()
+        inputContextRef.current = inputContext
+        const source = inputContext.createMediaStreamSource(stream)
+        const inputAnalyser = inputContext.createAnalyser()
+        inputAnalyser.fftSize = 256
+        inputAnalyser.smoothingTimeConstant = 0.8
+        source.connect(inputAnalyser)
+        inputAnalyserRef.current = inputAnalyser
+        const sendAudio = (samples) => {
+          if (isMuted || socket.readyState !== WebSocket.OPEN) return
+          const pcm = floatTo16BitPCM(resampleTo16k(samples, inputContext.sampleRate))
+          socket.send(JSON.stringify({ type: 'audio', audio: arrayBufferToBase64(pcm.buffer), mimeType: 'audio/pcm;rate=16000' }))
+        }
+        if (inputContext.audioWorklet) {
+          const module = `data:application/javascript;charset=utf-8,${encodeURIComponent('class Capture extends AudioWorkletProcessor{process(inputs){if(inputs[0]?.[0])this.port.postMessage(inputs[0][0]);return true}}registerProcessor("capture",Capture)')}`
+          await inputContext.audioWorklet.addModule(module)
+          const node = new AudioWorkletNode(inputContext, 'capture')
+          node.port.onmessage = (event) => sendAudio(event.data)
+          const silent = inputContext.createGain()
+          silent.gain.value = 0
+          node.connect(silent).connect(inputContext.destination)
+          source.connect(node)
+          processorRef.current = node
+        } else {
+          const processor = inputContext.createScriptProcessor(2048, 1, 1)
+          processor.onaudioprocess = (event) => sendAudio(event.inputBuffer.getChannelData(0))
+          const silent = inputContext.createGain()
+          silent.gain.value = 0
+          processor.connect(silent).connect(inputContext.destination)
+          source.connect(processor)
+          processorRef.current = processor
+        }
+      }
+
+      socket.onopen = () => {
+        setStatus('Listening')
+        socket.send(JSON.stringify({ type: 'start' }))
+      }
+      socket.onmessage = (event) => {
+        try {
+          if (event.data instanceof ArrayBuffer) {
+            playAudio(arrayBufferToBase64(event.data))
+            return
+          }
+          const message = JSON.parse(event.data)
+          if (message.type === 'audio' && message.audio) playAudio(message.audio)
+          else if (message.type === 'ready') setStatus('Listening')
+          else if (message.type === 'interrupted') {
+            stopPlayback()
+            setStatus('Listening')
+          } else if (message.type === 'error') {
+            setErrorMessage(message.message || 'The voice service returned an error.')
+            endCall()
+          } else if (message.type === 'ended') endCall()
+        } catch (error) {
+          console.error('Invalid voice service message:', error)
+        }
+      }
+      socket.onerror = () => {
+        setErrorMessage('The voice connection could not be established. Please try again.')
+        endCall()
+      }
+      socket.onclose = () => {
+        if (!endingRef.current) endCall()
+      }
+    } catch (error) {
+      console.error('Voice call failed:', error)
+      setErrorMessage(error instanceof Error ? error.message : 'The voice call could not start.')
+      endCall()
+    }
+  }
 
   const toggleMute = () => {
-    const next = !isMuted;
-    setIsMuted(next);
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ type: next ? 'mute' : 'unmute' }));
+    if (!hasMic || status === 'Connecting') return
+    const nextMuted = !isMuted
+    setIsMuted(nextMuted)
+    mediaStreamRef.current?.getAudioTracks().forEach((track) => { track.enabled = !nextMuted })
+    if (socketRef.current?.readyState === WebSocket.OPEN) socketRef.current.send(JSON.stringify({ type: nextMuted ? 'mute' : 'unmute' }))
+  }
+
+  useEffect(() => {
+    if (!isCalling) return undefined
+    const inputData = new Uint8Array(128)
+    const outputData = new Uint8Array(128)
+    const measure = () => {
+      if (inputAnalyserRef.current) {
+        inputAnalyserRef.current.getByteTimeDomainData(inputData)
+        setInputLevel(Math.min(1, inputData.reduce((sum, value) => sum + Math.abs(value - 128), 0) / inputData.length / 30))
+      }
+      if (outputAnalyserRef.current) {
+        outputAnalyserRef.current.getByteTimeDomainData(outputData)
+        setOutputLevel(Math.min(1, outputData.reduce((sum, value) => sum + Math.abs(value - 128), 0) / outputData.length / 30))
+      }
+      frameRef.current = requestAnimationFrame(measure)
     }
-  };
+    frameRef.current = requestAnimationFrame(measure)
+    return () => frameRef.current && cancelAnimationFrame(frameRef.current)
+  }, [isCalling])
+
+  useEffect(() => () => endCall(), [])
+
+  const dismissTooltip = () => {
+    setShowTooltip(false)
+    try { sessionStorage.setItem('automatemind-voice-tooltip-dismissed', 'true') } catch { /* Optional persistence. */ }
+  }
+
+  const level = status === 'Speaking' ? outputLevel : inputLevel
+  const bars = Array.from({ length: BAR_COUNT }, (_, index) => 4 + ((index * 5) % 8) + Math.round(level * (index % 4 + 5)))
 
   return (
-    <div className={`voice-agent ${isOpen ? 'voice-agent--open' : ''}`}>
-      {!isOpen ? (
-        <button onClick={startCall} className="voice-agent__launcher" aria-label="Start a voice conversation with AutomateMind">
-          <span className="voice-agent__launcher-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M8.6 4.3 6.9 6a2 2 0 0 0-.3 2.5 16.2 16.2 0 0 0 8.9 8.9 2 2 0 0 0 2.5-.3l1.7-1.7a1.5 1.5 0 0 0 .1-2l-1.8-2.2a1.5 1.5 0 0 0-2-.2l-1.4 1.1a12 12 0 0 1-3.8-3.8l1.1-1.4a1.5 1.5 0 0 0-.2-2L10.6 4.2a1.5 1.5 0 0 0-2-.1Z" /></svg>
-          </span>
-          <span><small>AUTOMATEMIND VOICE</small><strong>Start a conversation</strong></span>
-          <b aria-hidden="true">↗</b>
-        </button>
-      ) : (
-        <div className={`voice-agent__experience ${isMinimized ? 'voice-agent__experience--minimized' : ''}`} role="dialog" aria-modal="true" aria-label="AutomateMind Voice">
-          <div className="voice-agent__experience-shell">
-            <header className="voice-agent__experience-header">
-              <div className="voice-agent__wordmark"><span>AM</span> AUTOMATEMIND</div>
-              <div className="voice-agent__header-actions">
-                <button type="button" onClick={() => setIsMinimized(!isMinimized)} className="voice-agent__utility-button" aria-label={isMinimized ? 'Expand voice experience' : 'Minimize voice experience'}>{isMinimized ? '+' : '−'}</button>
-                <button type="button" onClick={closeExperience} className="voice-agent__utility-button" aria-label="Close voice experience">×</button>
-              </div>
-            </header>
-            {!isMinimized && (
-              <div className="voice-agent__experience-body">
-                <small className="voice-agent__experience-kicker">PRIVATE VOICE LINE</small>
-                <h2>AutomateMind <em>Voice</em></h2>
-                <p className="voice-agent__experience-intro">A direct line to intelligent, thoughtful assistance.</p>
-                <div className={`voice-agent__visualizer ${agentSpeaking ? 'voice-agent__visualizer--speaking' : ''}`} aria-label={agentSpeaking ? 'AutomateMind is speaking' : statusText}>
-                  <span className="voice-agent__visualizer-ring" />
-                  <span className="voice-agent__visualizer-core">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 4.3 6.9 6a2 2 0 0 0-.3 2.5 16.2 16.2 0 0 0 8.9 8.9 2 2 0 0 0 2.5-.3l1.7-1.7a1.5 1.5 0 0 0 .1-2l-1.8-2.2a1.5 1.5 0 0 0-2-.2l-1.4 1.1a12 12 0 0 1-3.8-3.8l1.1-1.4a1.5 1.5 0 0 0-.2-2L10.6 4.2a1.5 1.5 0 0 0-2-.1Z" /></svg>
-                  </span>
-                </div>
-                <div className="voice-agent__state"><span className={isCalling ? 'voice-agent__state-dot' : ''} />{statusText}<time>{isCalling ? formatDuration(callDuration) : ''}</time></div>
-                {showTranscript && transcript.length > 0 && <div className="voice-agent__transcript" aria-live="polite">{transcript.map((line, index) => <p key={`${line.role}-${index}`}><b>{line.role === 'user' ? 'You' : 'AutomateMind'}</b>{line.text}</p>)}</div>}
-                {errorMessage && <p className="voice-agent__experience-error" role="alert">{errorMessage}</p>}
-                <div className="voice-agent__experience-controls">
-                  <button type="button" onClick={() => setShowTranscript(!showTranscript)} className="voice-agent__text-button">{showTranscript ? 'Hide transcript' : 'Live transcript'}</button>
-                  <div className="voice-agent__primary-controls">
-                    {isCalling && hasMic && <button type="button" onClick={toggleMute} className={`voice-agent__round-control ${isMuted ? 'voice-agent__round-control--muted' : ''}`} aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}>{isMuted ? '×' : '♩'}</button>}
-                    {!isCalling ? <button type="button" onClick={startCall} className="voice-agent__start-button">Start call</button> : <button type="button" onClick={endCall} className="voice-agent__end-call">End call</button>}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+    <div className={`voice-agent ${isCalling ? 'voice-agent--active' : ''}`}>
+      {!isCalling && showTooltip && (
+        <div className="voice-agent__tooltip">
+          <button type="button" onClick={dismissTooltip} aria-label="Dismiss voice assistant introduction">×</button>
+          Need a hand? Let&apos;s talk.
         </div>
       )}
-      {!isOpen && errorMessage && <div className="voice-agent__error" role="alert">{errorMessage}</div>}
+      {!isCalling ? (
+        <button type="button" onClick={startCall} className="voice-agent__pill voice-agent__pill--collapsed" aria-label="Start a voice call with AutomateMind" title="Start a voice call">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 4.3 6.9 6a2 2 0 0 0-.3 2.5 16.2 16.2 0 0 0 8.9 8.9 2 2 0 0 0 2.5-.3l1.7-1.7a1.5 1.5 0 0 0 .1-2l-1.8-2.2a1.5 1.5 0 0 0-2-.2l-1.4 1.1a12 12 0 0 1-3.8-3.8l1.1-1.4a1.5 1.5 0 0 0-.2-2L10.6 4.2a1.5 1.5 0 0 0-2-.1Z" /></svg>
+        </button>
+      ) : (
+        <div className="voice-agent__pill voice-agent__pill--active" role="group" aria-label={`Voice call: ${status}`}>
+          <button type="button" onClick={toggleMute} disabled={!hasMic || status === 'Connecting'} className={`voice-agent__control voice-agent__mute ${isMuted ? 'voice-agent__control--muted' : ''}`} aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'} title={isMuted ? 'Unmute microphone' : 'Mute microphone'}>
+            {isMuted ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0V5ZM5 11a7 7 0 0 0 14 0M12 18v3M8 21h8" />
+                <path d="m4 4 16 16" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0V5ZM5 11a7 7 0 0 0 14 0M12 18v3M8 21h8" />
+              </svg>
+            )}
+          </button>
+          <div className={`voice-agent__waveform ${status === 'Connecting' ? 'voice-agent__waveform--connecting' : ''}`} aria-label={`${status}, audio level ${Math.round(level * 100)} percent`}>
+            {bars.map((height, index) => <i key={index} style={{ height: `${height}px` }} />)}
+          </div>
+          <button type="button" onClick={endCall} className="voice-agent__control voice-agent__hangup" aria-label="End voice call" title="End voice call">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.8 14.2c3.9-2.5 8.5-2.5 12.4 0l1.1 1a1.5 1.5 0 0 1 .1 2.1l-1.3 1.4a1.5 1.5 0 0 1-2 .2l-2.5-2a1.5 1.5 0 0 0-1.9 0l-1.4 1.1a1.5 1.5 0 0 1-1.9 0l-3.5-2.7a1.5 1.5 0 0 1-.1-2.3l1-0.8Z" transform="rotate(135 12 12)" /></svg>
+          </button>
+        </div>
+      )}
+      {!isCalling && errorMessage && <div className="voice-agent__error" role="alert">{errorMessage}<button type="button" onClick={startCall}>Retry</button></div>}
     </div>
-  );
+  )
 }
 
-// Guaranteed default export for Vite import
-export default VoiceAgent;
+export default VoiceAgent
